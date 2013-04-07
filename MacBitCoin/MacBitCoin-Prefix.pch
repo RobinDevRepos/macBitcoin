@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'MacBitCoin' target in the 'MacBitCoin' project
+//
+
+#ifdef __OBJC__
+	#import <Cocoa/Cocoa.h>
+#endif

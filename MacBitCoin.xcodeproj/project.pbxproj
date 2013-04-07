@@ -1,0 +1,467 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		41B757021712323B005931AE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B757011712323B005931AE /* Cocoa.framework */; };
+		41B7570C1712323B005931AE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41B7570A1712323B005931AE /* InfoPlist.strings */; };
+		41B7570E1712323B005931AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B7570D1712323B005931AE /* main.m */; };
+		41B757121712323B005931AE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 41B757101712323B005931AE /* Credits.rtf */; };
+		41B757151712323B005931AE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B757141712323B005931AE /* AppDelegate.m */; };
+		41B757181712323B005931AE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 41B757161712323B005931AE /* MainMenu.xib */; };
+		41B757201712323B005931AE /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B7571F1712323B005931AE /* SenTestingKit.framework */; };
+		41B757211712323B005931AE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B757011712323B005931AE /* Cocoa.framework */; };
+		41B757291712323B005931AE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41B757271712323B005931AE /* InfoPlist.strings */; };
+		41B7572C1712323B005931AE /* MacBitCoinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B7572B1712323B005931AE /* MacBitCoinTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		41B757221712323B005931AE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41B756F61712323B005931AE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 41B756FD1712323B005931AE;
+			remoteInfo = MacBitCoin;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		41B756FE1712323B005931AE /* MacBitCoin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacBitCoin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		41B757011712323B005931AE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		41B757041712323B005931AE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		41B757051712323B005931AE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		41B757061712323B005931AE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		41B757091712323B005931AE /* MacBitCoin-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MacBitCoin-Info.plist"; sourceTree = "<group>"; };
+		41B7570B1712323B005931AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		41B7570D1712323B005931AE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		41B7570F1712323B005931AE /* MacBitCoin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MacBitCoin-Prefix.pch"; sourceTree = "<group>"; };
+		41B757111712323B005931AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		41B757131712323B005931AE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		41B757141712323B005931AE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		41B757171712323B005931AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		41B7571E1712323B005931AE /* MacBitCoinTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacBitCoinTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		41B7571F1712323B005931AE /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		41B757261712323B005931AE /* MacBitCoinTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MacBitCoinTests-Info.plist"; sourceTree = "<group>"; };
+		41B757281712323B005931AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		41B7572A1712323B005931AE /* MacBitCoinTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacBitCoinTests.h; sourceTree = "<group>"; };
+		41B7572B1712323B005931AE /* MacBitCoinTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacBitCoinTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		41B756FB1712323B005931AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41B757021712323B005931AE /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41B7571A1712323B005931AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41B757201712323B005931AE /* SenTestingKit.framework in Frameworks */,
+				41B757211712323B005931AE /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		41B756F51712323B005931AE = {
+			isa = PBXGroup;
+			children = (
+				41B757071712323B005931AE /* MacBitCoin */,
+				41B757241712323B005931AE /* MacBitCoinTests */,
+				41B757001712323B005931AE /* Frameworks */,
+				41B756FF1712323B005931AE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		41B756FF1712323B005931AE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				41B756FE1712323B005931AE /* MacBitCoin.app */,
+				41B7571E1712323B005931AE /* MacBitCoinTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		41B757001712323B005931AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				41B757011712323B005931AE /* Cocoa.framework */,
+				41B7571F1712323B005931AE /* SenTestingKit.framework */,
+				41B757031712323B005931AE /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		41B757031712323B005931AE /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				41B757041712323B005931AE /* AppKit.framework */,
+				41B757051712323B005931AE /* CoreData.framework */,
+				41B757061712323B005931AE /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		41B757071712323B005931AE /* MacBitCoin */ = {
+			isa = PBXGroup;
+			children = (
+				41B757131712323B005931AE /* AppDelegate.h */,
+				41B757141712323B005931AE /* AppDelegate.m */,
+				41B757161712323B005931AE /* MainMenu.xib */,
+				41B757081712323B005931AE /* Supporting Files */,
+			);
+			path = MacBitCoin;
+			sourceTree = "<group>";
+		};
+		41B757081712323B005931AE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				41B757091712323B005931AE /* MacBitCoin-Info.plist */,
+				41B7570A1712323B005931AE /* InfoPlist.strings */,
+				41B7570D1712323B005931AE /* main.m */,
+				41B7570F1712323B005931AE /* MacBitCoin-Prefix.pch */,
+				41B757101712323B005931AE /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		41B757241712323B005931AE /* MacBitCoinTests */ = {
+			isa = PBXGroup;
+			children = (
+				41B7572A1712323B005931AE /* MacBitCoinTests.h */,
+				41B7572B1712323B005931AE /* MacBitCoinTests.m */,
+				41B757251712323B005931AE /* Supporting Files */,
+			);
+			path = MacBitCoinTests;
+			sourceTree = "<group>";
+		};
+		41B757251712323B005931AE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				41B757261712323B005931AE /* MacBitCoinTests-Info.plist */,
+				41B757271712323B005931AE /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		41B756FD1712323B005931AE /* MacBitCoin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 41B7572F1712323B005931AE /* Build configuration list for PBXNativeTarget "MacBitCoin" */;
+			buildPhases = (
+				41B756FA1712323B005931AE /* Sources */,
+				41B756FB1712323B005931AE /* Frameworks */,
+				41B756FC1712323B005931AE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacBitCoin;
+			productName = MacBitCoin;
+			productReference = 41B756FE1712323B005931AE /* MacBitCoin.app */;
+			productType = "com.apple.product-type.application";
+		};
+		41B7571D1712323B005931AE /* MacBitCoinTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 41B757321712323B005931AE /* Build configuration list for PBXNativeTarget "MacBitCoinTests" */;
+			buildPhases = (
+				41B757191712323B005931AE /* Sources */,
+				41B7571A1712323B005931AE /* Frameworks */,
+				41B7571B1712323B005931AE /* Resources */,
+				41B7571C1712323B005931AE /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				41B757231712323B005931AE /* PBXTargetDependency */,
+			);
+			name = MacBitCoinTests;
+			productName = MacBitCoinTests;
+			productReference = 41B7571E1712323B005931AE /* MacBitCoinTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		41B756F61712323B005931AE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Myles Grant";
+			};
+			buildConfigurationList = 41B756F91712323B005931AE /* Build configuration list for PBXProject "MacBitCoin" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 41B756F51712323B005931AE;
+			productRefGroup = 41B756FF1712323B005931AE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				41B756FD1712323B005931AE /* MacBitCoin */,
+				41B7571D1712323B005931AE /* MacBitCoinTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		41B756FC1712323B005931AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41B7570C1712323B005931AE /* InfoPlist.strings in Resources */,
+				41B757121712323B005931AE /* Credits.rtf in Resources */,
+				41B757181712323B005931AE /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41B7571B1712323B005931AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41B757291712323B005931AE /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		41B7571C1712323B005931AE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		41B756FA1712323B005931AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41B7570E1712323B005931AE /* main.m in Sources */,
+				41B757151712323B005931AE /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41B757191712323B005931AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41B7572C1712323B005931AE /* MacBitCoinTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		41B757231712323B005931AE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 41B756FD1712323B005931AE /* MacBitCoin */;
+			targetProxy = 41B757221712323B005931AE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		41B7570A1712323B005931AE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				41B7570B1712323B005931AE /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		41B757101712323B005931AE /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				41B757111712323B005931AE /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		41B757161712323B005931AE /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				41B757171712323B005931AE /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		41B757271712323B005931AE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				41B757281712323B005931AE /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		41B7572D1712323B005931AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		41B7572E1712323B005931AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		41B757301712323B005931AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MacBitCoin/MacBitCoin-Prefix.pch";
+				INFOPLIST_FILE = "MacBitCoin/MacBitCoin-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		41B757311712323B005931AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MacBitCoin/MacBitCoin-Prefix.pch";
+				INFOPLIST_FILE = "MacBitCoin/MacBitCoin-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		41B757331712323B005931AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MacBitCoin.app/Contents/MacOS/MacBitCoin";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MacBitCoin/MacBitCoin-Prefix.pch";
+				INFOPLIST_FILE = "MacBitCoinTests/MacBitCoinTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		41B757341712323B005931AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MacBitCoin.app/Contents/MacOS/MacBitCoin";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MacBitCoin/MacBitCoin-Prefix.pch";
+				INFOPLIST_FILE = "MacBitCoinTests/MacBitCoinTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		41B756F91712323B005931AE /* Build configuration list for PBXProject "MacBitCoin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41B7572D1712323B005931AE /* Debug */,
+				41B7572E1712323B005931AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		41B7572F1712323B005931AE /* Build configuration list for PBXNativeTarget "MacBitCoin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41B757301712323B005931AE /* Debug */,
+				41B757311712323B005931AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		41B757321712323B005931AE /* Build configuration list for PBXNativeTarget "MacBitCoinTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41B757331712323B005931AE /* Debug */,
+				41B757341712323B005931AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 41B756F61712323B005931AE /* Project object */;
+}
