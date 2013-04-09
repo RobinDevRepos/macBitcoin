@@ -14,6 +14,7 @@
 
 #define CONNECT_TIMEOUT 1.0
 #define READ_TIMEOUT 5.0
+#define PROTOCOL_VERSION 70001
 
 // Log levels: off, error, warn, info, verbose
 static const int ddLogLevel = LOG_LEVEL_INFO;
@@ -123,7 +124,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Start reading
 	[sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
 	
-	// Send version
+	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version
+	DDLogInfo(@"sending version: version %d, blocks=%d, us=%@, them=%@, peer=%@", PROTOCOL_VERSION, -1, sock.localHost, sock.connectedHost, sock.connectedHost);
 	
 }
 
