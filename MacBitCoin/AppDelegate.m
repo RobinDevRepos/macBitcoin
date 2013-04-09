@@ -13,7 +13,7 @@
 #import "DispatchQueueLogFormatter.h"
 
 #define CONNECT_TIMEOUT 1.0
-#define READ_TIMEOUT 15.0
+#define READ_TIMEOUT 5.0
 
 // Log levels: off, error, warn, info, verbose
 static const int ddLogLevel = LOG_LEVEL_INFO;
@@ -119,6 +119,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	DDLogInfo(@"socket:%p didConnectToHost:%@ port:%hu", sock, host, port);
 	
 	//	DDLogInfo(@"localHost :%@ port:%hu", [sock localHost], [sock localPort]);
+	
+	// Start reading
+	[sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
+	
+	// Send version
+	
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
@@ -152,14 +158,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	if (sock != listenSocket)
 	{
-		dispatch_async(dispatch_get_main_queue(), ^{
-			@autoreleasepool {
-				
-				DDLogInfo(@"Client Disconnected");
-				
-			}
-		});
-		
+		DDLogInfo(@"Client Disconnected");		
 		@synchronized(connectedSockets)
 		{
 			[connectedSockets removeObject:sock];
@@ -168,7 +167,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
-{	
+{
+	DDLogInfo(@"didAcceptNewSocket:%p", sock);
+	
 	@synchronized(connectedSockets)
 	{
 		[connectedSockets addObject:newSocket];
@@ -177,13 +178,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	NSString *host = [newSocket connectedHost];
 	UInt16 port = [newSocket connectedPort];
 	
-	dispatch_async(dispatch_get_main_queue(), ^{
-		@autoreleasepool {
-			
-			DDLogInfo(@"Accepted client %@:%hu", host, port);
-			
-		}
-	});
+	DDLogInfo(@"Accepted client %@:%hu", host, port);
 	
 	[newSocket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
 }
