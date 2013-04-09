@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4138AAB8171472270023BA3C /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAA9171472270023BA3C /* DDAbstractDatabaseLogger.m */; };
+		4138AAB9171472270023BA3C /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAAB171472270023BA3C /* DDASLLogger.m */; };
+		4138AABA171472270023BA3C /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAAD171472270023BA3C /* DDFileLogger.m */; };
+		4138AABB171472270023BA3C /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAAF171472270023BA3C /* DDLog.m */; };
+		4138AABC171472270023BA3C /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAB1171472270023BA3C /* DDTTYLogger.m */; };
+		4138AABD171472270023BA3C /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAB4171472270023BA3C /* ContextFilterLogFormatter.m */; };
+		4138AABE171472270023BA3C /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAB6171472270023BA3C /* DispatchQueueLogFormatter.m */; };
+		4138AABF171472270023BA3C /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4138AAB7171472270023BA3C /* README.txt */; };
+		4138ABA2171472580023BA3C /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAC3171472570023BA3C /* GCDAsyncSocket.m */; };
+		4138AC20171472FF0023BA3C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4138AC1F171472FF0023BA3C /* Security.framework */; };
 		41B757021712323B005931AE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B757011712323B005931AE /* Cocoa.framework */; };
 		41B7570C1712323B005931AE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41B7570A1712323B005931AE /* InfoPlist.strings */; };
 		41B7570E1712323B005931AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B7570D1712323B005931AE /* main.m */; };
@@ -30,6 +40,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4138AAA8171472270023BA3C /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
+		4138AAA9171472270023BA3C /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
+		4138AAAA171472270023BA3C /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
+		4138AAAB171472270023BA3C /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
+		4138AAAC171472270023BA3C /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
+		4138AAAD171472270023BA3C /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
+		4138AAAE171472270023BA3C /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
+		4138AAAF171472270023BA3C /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
+		4138AAB0171472270023BA3C /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
+		4138AAB1171472270023BA3C /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
+		4138AAB3171472270023BA3C /* ContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextFilterLogFormatter.h; sourceTree = "<group>"; };
+		4138AAB4171472270023BA3C /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
+		4138AAB5171472270023BA3C /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
+		4138AAB6171472270023BA3C /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
+		4138AAB7171472270023BA3C /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		4138AAC2171472570023BA3C /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		4138AAC3171472570023BA3C /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		4138AC1F171472FF0023BA3C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		41B756FE1712323B005931AE /* MacBitCoin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacBitCoin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B757011712323B005931AE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		41B757041712323B005931AE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -56,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4138AC20171472FF0023BA3C /* Security.framework in Frameworks */,
 				41B757021712323B005931AE /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,13 +101,56 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4138AAA7171472270023BA3C /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				4138AAA8171472270023BA3C /* DDAbstractDatabaseLogger.h */,
+				4138AAA9171472270023BA3C /* DDAbstractDatabaseLogger.m */,
+				4138AAAA171472270023BA3C /* DDASLLogger.h */,
+				4138AAAB171472270023BA3C /* DDASLLogger.m */,
+				4138AAAC171472270023BA3C /* DDFileLogger.h */,
+				4138AAAD171472270023BA3C /* DDFileLogger.m */,
+				4138AAAE171472270023BA3C /* DDLog.h */,
+				4138AAAF171472270023BA3C /* DDLog.m */,
+				4138AAB0171472270023BA3C /* DDTTYLogger.h */,
+				4138AAB1171472270023BA3C /* DDTTYLogger.m */,
+				4138AAB2171472270023BA3C /* Extensions */,
+			);
+			name = Logging;
+			path = ../CocoaAsyncSocket/Vendor/CocoaLumberjack;
+			sourceTree = "<group>";
+		};
+		4138AAB2171472270023BA3C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4138AAB3171472270023BA3C /* ContextFilterLogFormatter.h */,
+				4138AAB4171472270023BA3C /* ContextFilterLogFormatter.m */,
+				4138AAB5171472270023BA3C /* DispatchQueueLogFormatter.h */,
+				4138AAB6171472270023BA3C /* DispatchQueueLogFormatter.m */,
+				4138AAB7171472270023BA3C /* README.txt */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		4138AAC0171472570023BA3C /* TCP */ = {
+			isa = PBXGroup;
+			children = (
+				4138AAC2171472570023BA3C /* GCDAsyncSocket.h */,
+				4138AAC3171472570023BA3C /* GCDAsyncSocket.m */,
+			);
+			name = TCP;
+			path = ../CocoaAsyncSocket/GCD;
+			sourceTree = "<group>";
+		};
 		41B756F51712323B005931AE = {
 			isa = PBXGroup;
 			children = (
+				41B757001712323B005931AE /* Frameworks */,
+				4138AAA7171472270023BA3C /* Logging */,
 				41B757071712323B005931AE /* MacBitCoin */,
 				41B757241712323B005931AE /* MacBitCoinTests */,
-				41B757001712323B005931AE /* Frameworks */,
 				41B756FF1712323B005931AE /* Products */,
+				4138AAC0171472570023BA3C /* TCP */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,6 +166,7 @@
 		41B757001712323B005931AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4138AC1F171472FF0023BA3C /* Security.framework */,
 				41B757011712323B005931AE /* Cocoa.framework */,
 				41B7571F1712323B005931AE /* SenTestingKit.framework */,
 				41B757031712323B005931AE /* Other Frameworks */,
@@ -207,6 +280,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				English,
 			);
 			mainGroup = 41B756F51712323B005931AE;
 			productRefGroup = 41B756FF1712323B005931AE /* Products */;
@@ -227,6 +301,7 @@
 				41B7570C1712323B005931AE /* InfoPlist.strings in Resources */,
 				41B757121712323B005931AE /* Credits.rtf in Resources */,
 				41B757181712323B005931AE /* MainMenu.xib in Resources */,
+				4138AABF171472270023BA3C /* README.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +338,14 @@
 			files = (
 				41B7570E1712323B005931AE /* main.m in Sources */,
 				41B757151712323B005931AE /* AppDelegate.m in Sources */,
+				4138AAB8171472270023BA3C /* DDAbstractDatabaseLogger.m in Sources */,
+				4138AAB9171472270023BA3C /* DDASLLogger.m in Sources */,
+				4138AABA171472270023BA3C /* DDFileLogger.m in Sources */,
+				4138AABB171472270023BA3C /* DDLog.m in Sources */,
+				4138AABC171472270023BA3C /* DDTTYLogger.m in Sources */,
+				4138AABD171472270023BA3C /* ContextFilterLogFormatter.m in Sources */,
+				4138AABE171472270023BA3C /* DispatchQueueLogFormatter.m in Sources */,
+				4138ABA2171472580023BA3C /* GCDAsyncSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +535,7 @@
 				41B757311712323B005931AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		41B757321712323B005931AE /* Build configuration list for PBXNativeTarget "MacBitCoinTests" */ = {
 			isa = XCConfigurationList;
@@ -460,6 +544,7 @@
 				41B757341712323B005931AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
