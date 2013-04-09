@@ -10,6 +10,7 @@
 #import "GCDAsyncSocket.h"
 #import "DDLog.h"
 #import "DDTTYLogger.h"
+#import "DispatchQueueLogFormatter.h"
 
 // Log levels: off, error, warn, info, verbose
 static const int ddLogLevel = LOG_LEVEL_INFO;
@@ -20,6 +21,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
 	// Setup logging framework
 	[DDLog addLogger:[DDTTYLogger sharedInstance]];
+	
+	// Format our logging
+	DispatchQueueLogFormatter *formatter = [[DispatchQueueLogFormatter alloc] init];
+	[formatter setReplacementString:@"socket" forQueueLabel:GCDAsyncSocketQueueName];
+	[formatter setReplacementString:@"socket-cf" forQueueLabel:GCDAsyncSocketThreadName];
+	
+	[[DDTTYLogger sharedInstance] setLogFormatter:formatter];
 	
 	DDLogInfo(@"%@", THIS_METHOD);
 	
@@ -39,9 +47,25 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:mainQueue];
 	
+	// Now we tell the ASYNCHRONOUS socket to connect.
+	//
+	// Recall that GCDAsyncSocket is ... asynchronous.
+	// This means when you tell the socket to connect, it will do so ... asynchronously.
+	// After all, do you want your main thread to block on a slow network connection?
+	//
+	// So what's with the BOOL return value, and error pointer?
+	// These are for early detection of obvious problems, such as:
+	//
+	// - The socket is already connected.
+	// - You passed in an invalid parameter.
+	// - The socket isn't configured properly.
+	//
+	// The error message might be something like "Attempting to connect without a delegate. Set a delegate first."
+	//
+	// When the asynchronous sockets connects, it will invoke the socket:didConnectToHost:port: delegate method.
+	
 	NSString *host = @"google.com";
 	uint16_t port = 80;
-		
 		
 	DDLogInfo(@"Connecting to \"%@\" on port %hu...", host, port);
 		
@@ -58,6 +82,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//	{
 	//		DDLogError(@"Error connecting: %@", error);
 	//	}
+	
+	// The connect method above is asynchronous.
+	// At this point, the connection has been initiated, but hasn't completed.
+	// When the connection is establish, our socket:didConnectToHost:port: delegate method will be invoked.
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
