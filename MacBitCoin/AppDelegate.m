@@ -35,7 +35,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	DDLogInfo(@"%@", THIS_METHOD);
 	
-	// Setup our socket (GCDAsyncSocket).
+	// Setup our sockets (GCDAsyncSocket).
 	// The socket will invoke our delegate methods using the usual delegate paradigm.
 	// However, it will invoke the delegate methods on a specified GCD delegate dispatch queue.
 	//
@@ -47,7 +47,29 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	socketQueue = dispatch_queue_create("socketQueue", NULL);
 	
+
+	// Start listening for incoming requests
+	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueue];
+	
+	// Setup an array to store all accepted client connections
+	connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
+	
+	uint16_t listenPort = 18333; // Real port is 8333
+	
+	DDLogInfo(@"Starting to listen on port %hu...", listenPort);
+	
+	NSError *error = nil;
+	if(![listenSocket acceptOnPort:listenPort error:&error])
+	{
+		DDLogError(@"Error listening: %@", error);
+		return;
+	}
+
+	
+	// Outgoing socket
 	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueue];
+	
+	
 	
 	// Now we tell the ASYNCHRONOUS socket to connect.
 	//
@@ -72,7 +94,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 	DDLogInfo(@"Connecting to \"%@\" on port %hu...", host, port);
 		
-	NSError *error = nil;
+	error = nil;
 	if (![asyncSocket connectToHost:host onPort:port withTimeout:CONNECT_TIMEOUT error:&error])
 	{
 		DDLogError(@"Error connecting: %@", error);
@@ -89,26 +111,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// The connect method above is asynchronous.
 	// At this point, the connection has been initiated, but hasn't completed.
 	// When the connection is establish, our socket:didConnectToHost:port: delegate method will be invoked.
-	
-	
-	// Start listening for incoming requests
-	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueue];
-	
-	// Setup an array to store all accepted client connections
-	connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
-	
-	uint16_t listenPort = 18333; // Real port is 8333
-	
-	DDLogInfo(@"Starting to listen on port %hu...", listenPort);
-	
-	error = nil;
-	if(![listenSocket acceptOnPort:listenPort error:&error])
-	{
-		DDLogError(@"Error listening: %@", error);
-		return;
-	}
-
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
