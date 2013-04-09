@@ -11,7 +11,15 @@
 @class GCDAsyncSocket;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
-	@private GCDAsyncSocket *asyncSocket;
+@private
+	dispatch_queue_t socketQueue;
+	
+	// Outgoing
+	GCDAsyncSocket *asyncSocket;
+	
+	// Incoming
+	GCDAsyncSocket *listenSocket;
+	NSMutableArray *connectedSockets;
 }
 
 @property (assign) IBOutlet NSWindow *window;

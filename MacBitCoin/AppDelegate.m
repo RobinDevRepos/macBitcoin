@@ -12,6 +12,9 @@
 #import "DDTTYLogger.h"
 #import "DispatchQueueLogFormatter.h"
 
+#define CONNECT_TIMEOUT 1.0
+#define READ_TIMEOUT 15.0
+
 // Log levels: off, error, warn, info, verbose
 static const int ddLogLevel = LOG_LEVEL_INFO;
 
@@ -40,12 +43,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Or we could simply use the dispatch queue for the main thread.
 	//
 	// The best approach for your application will depend upon convenience, requirements and performance.
-	//
-	// For this simple example, we're just going to use the main thread.
 	
-	dispatch_queue_t mainQueue = dispatch_get_main_queue();
+	socketQueue = dispatch_queue_create("socketQueue", NULL);
 	
-	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:mainQueue];
+	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueue];
 	
 	// Now we tell the ASYNCHRONOUS socket to connect.
 	//
@@ -64,13 +65,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//
 	// When the asynchronous sockets connects, it will invoke the socket:didConnectToHost:port: delegate method.
 	
-	NSString *host = @"google.com";
-	uint16_t port = 80;
+	// http://testnet.mojocoin.com/about
+	NSString *host = @"199.26.85.40";
+	uint16_t port = 18333;
 		
 	DDLogInfo(@"Connecting to \"%@\" on port %hu...", host, port);
 		
 	NSError *error = nil;
-	if (![asyncSocket connectToHost:host onPort:port error:&error])
+	if (![asyncSocket connectToHost:host onPort:port withTimeout:CONNECT_TIMEOUT error:&error])
 	{
 		DDLogError(@"Error connecting: %@", error);
 	}
@@ -86,6 +88,26 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// The connect method above is asynchronous.
 	// At this point, the connection has been initiated, but hasn't completed.
 	// When the connection is establish, our socket:didConnectToHost:port: delegate method will be invoked.
+	
+	
+	// Start listening for incoming requests
+	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueue];
+	
+	// Setup an array to store all accepted client connections
+	connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
+	
+	uint16_t listenPort = 18333; // Real port is 8333
+	
+	DDLogInfo(@"Starting to listen on port %hu...", listenPort);
+	
+	error = nil;
+	if(![listenSocket acceptOnPort:listenPort error:&error])
+	{
+		DDLogError(@"Error listening: %@", error);
+		return;
+	}
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,10 +136,56 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	DDLogInfo(@"socket:%p didReadData:withTag:%ld", sock, tag);
 }
 
+- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
+				 elapsed:(NSTimeInterval)elapsed
+			   bytesDone:(NSUInteger)length
+{
+	
+	DDLogInfo(@"socket:%p shouldTimeoutReadWithTag:%ld:%f:%ld", sock, tag, elapsed, length);
+	
+	return 0.0;
+}
+
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
 	DDLogInfo(@"socketDidDisconnect:%p withError: %@", sock, err);
+	
+	if (sock != listenSocket)
+	{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			@autoreleasepool {
+				
+				DDLogInfo(@"Client Disconnected");
+				
+			}
+		});
+		
+		@synchronized(connectedSockets)
+		{
+			[connectedSockets removeObject:sock];
+		}
+	}
 }
 
+- (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
+{	
+	@synchronized(connectedSockets)
+	{
+		[connectedSockets addObject:newSocket];
+	}
+	
+	NSString *host = [newSocket connectedHost];
+	UInt16 port = [newSocket connectedPort];
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		@autoreleasepool {
+			
+			DDLogInfo(@"Accepted client %@:%hu", host, port);
+			
+		}
+	});
+	
+	[newSocket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
+}
 
 @end
