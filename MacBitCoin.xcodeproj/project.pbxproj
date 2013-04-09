@@ -14,7 +14,6 @@
 		4138AABC171472270023BA3C /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAB1171472270023BA3C /* DDTTYLogger.m */; };
 		4138AABD171472270023BA3C /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAB4171472270023BA3C /* ContextFilterLogFormatter.m */; };
 		4138AABE171472270023BA3C /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAB6171472270023BA3C /* DispatchQueueLogFormatter.m */; };
-		4138AABF171472270023BA3C /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4138AAB7171472270023BA3C /* README.txt */; };
 		4138ABA2171472580023BA3C /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAC3171472570023BA3C /* GCDAsyncSocket.m */; };
 		4138AC20171472FF0023BA3C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4138AC1F171472FF0023BA3C /* Security.framework */; };
 		41B757021712323B005931AE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B757011712323B005931AE /* Cocoa.framework */; };
@@ -301,7 +300,6 @@
 				41B7570C1712323B005931AE /* InfoPlist.strings in Resources */,
 				41B757121712323B005931AE /* Credits.rtf in Resources */,
 				41B757181712323B005931AE /* MainMenu.xib in Resources */,
-				4138AABF171472270023BA3C /* README.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

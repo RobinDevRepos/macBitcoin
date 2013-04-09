@@ -8,7 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+@class GCDAsyncSocket;
+
+@interface AppDelegate : NSObject <NSApplicationDelegate> {
+	@private GCDAsyncSocket *asyncSocket;
+}
 
 @property (assign) IBOutlet NSWindow *window;
 
