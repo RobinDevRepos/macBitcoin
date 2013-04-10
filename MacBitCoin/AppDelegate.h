@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 #define COMMAND_LENGTH 12
+#define ADDRESS_LENGTH 16
 
 @class GCDAsyncSocket;
 
@@ -36,11 +37,18 @@ typedef struct {
 } header;
 
 typedef struct {
+	unsigned int time;
+	uint64_t services;
+	char ip[ADDRESS_LENGTH];
+	unsigned short port;
+} address;
+
+typedef struct {
 	int32_t version;
 	uint64_t services;
 	int64_t timestamp;
-	const char* addr_recv;
-	const char* addr_from;
+	address addr_recv;
+	address addr_from;
 	uint64_t nonce;
 	uint8_t user_agent_length;
 	char user_agent[15];

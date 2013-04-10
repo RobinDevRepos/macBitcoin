@@ -19,6 +19,7 @@
 #define CONNECT_TIMEOUT 1.0
 #define READ_TIMEOUT 5.0
 #define PROTOCOL_VERSION 70001
+#define NODE_NETWORK 0x01
 
 // Log levels: off, error, warn, info, verbose
 static const int ddLogLevel = LOG_LEVEL_INFO;
@@ -65,7 +66,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if(![listenSocket acceptOnPort:listenPort error:&error])
 	{
 		DDLogError(@"Error listening: %@", error);
-		return;
 	}
 
 	
@@ -132,13 +132,27 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version
 	
+	int64_t timestamp = [[NSDate date] timeIntervalSince1970];
+	
 	// Construct version
 	version versionMessage;
 	versionMessage.version = PROTOCOL_VERSION;
-	versionMessage.services = 0x01; // NODE_NETWORK, apparently the only one
-	versionMessage.timestamp = [[NSDate date] timeIntervalSince1970];
-	versionMessage.addr_recv = [sock.localHost cStringUsingEncoding:[NSString defaultCStringEncoding]];
-	versionMessage.addr_from = [sock.connectedHost cStringUsingEncoding:[NSString defaultCStringEncoding]];
+	versionMessage.services = NODE_NETWORK;
+	versionMessage.timestamp = timestamp;
+	
+	address addr_recv;
+	addr_recv.time = 100000000;
+	addr_recv.services = NODE_NETWORK;
+	[sock.connectedHost getCString:addr_recv.ip maxLength:sizeof(addr_recv.ip) encoding:NSASCIIStringEncoding];
+	addr_recv.port = htons(sock.connectedPort);
+	versionMessage.addr_recv = addr_recv;
+	
+	address addr_from;
+	addr_from.time = 100000000;
+	addr_from.services = NODE_NETWORK;
+	[sock.localHost getCString:addr_from.ip maxLength:sizeof(addr_from.ip) encoding:NSASCIIStringEncoding];
+	addr_from.port = htons(sock.localPort);
+	versionMessage.addr_from = addr_from;
 	
 	int nonce_length = sizeof(versionMessage.nonce);
 	NSMutableData* nonce = [NSMutableData dataWithLength:nonce_length];
@@ -163,7 +177,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	NSData *hash = [[versionData sha256Hash] sha256Hash];
 	[hash getBytes:&versionHeader.checksum length:sizeof(versionHeader.checksum)]; // First 4 bytes of sha256(sha256(payload))
 	
-	DDLogInfo(@"sending version: version %d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionMessage.start_height, versionMessage.addr_recv, versionMessage.addr_from, versionMessage.addr_from);
+	DDLogInfo(@"sending version: version %d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.ip, versionMessage.addr_recv.ip, versionMessage.addr_recv.ip);
 	
 	// Send header
 	NSData *headerData = [NSData dataWithBytes:&versionHeader length:sizeof(versionHeader)];
@@ -190,8 +204,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
 	DDLogInfo(@"socket:%p didReadData:withTag:%ld", sock, tag);
 	
-	NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	DDLogInfo(@"Full response:\n%@", response);
+	DDLogInfo(@"Full response:\n%@", data);
 }
 
 /*- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
@@ -232,7 +245,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	DDLogInfo(@"Accepted client %@:%hu", host, port);
 	
-	[newSocket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
+	[newSocket readDataWithTimeout:READ_TIMEOUT tag:0];
 }
 
 @end
