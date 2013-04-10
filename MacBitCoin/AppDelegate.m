@@ -90,6 +90,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	// http://testnet.mojocoin.com/about
 	NSString *host = @"199.26.85.40";
+	//NSString *host = @"localhost";
 	uint16_t port = 18333;
 		
 	DDLogInfo(@"Connecting to \"%@\" on port %hu...", host, port);
@@ -126,8 +127,33 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Start reading
 	[sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
 	
-	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version
-	DDLogInfo(@"sending version: version %d, blocks=%d, us=%@, them=%@, peer=%@", PROTOCOL_VERSION, -1, sock.localHost, sock.connectedHost, sock.connectedHost);
+	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version	// Construct version
+	version versionMessage;
+	versionMessage.version = PROTOCOL_VERSION;
+	versionMessage.services = 1; // NODE_NETWORK, apparently the only one
+	versionMessage.timestamp = [[NSDate date] timeIntervalSince1970];
+	versionMessage.addr_recv = [sock.localHost cStringUsingEncoding:[NSString defaultCStringEncoding]];
+	versionMessage.addr_from = [sock.connectedHost cStringUsingEncoding:[NSString defaultCStringEncoding]];
+	versionMessage.nonce = 0; // TODO
+	versionMessage.user_agent_length = 15; // TODO
+	versionMessage.user_agent = "/Satoshi:0.7.2/"; // TODO
+	versionMessage.start_height = -1; // TODO: Starting with no blocks every time, for now
+	versionMessage.relay = FALSE; // TODO: Necessary?
+	
+	// Constuct header + message
+	header versionHeader;
+	versionHeader.magic = 0x0709110B; // 0xD9B4BEF9 in non-testnet
+	versionHeader.command = "version";
+	//versionHeader.payload = versionMessage;
+	versionHeader.length = sizeof(versionMessage);
+	versionHeader.checksum = 0; // First 4 bytes of sha256(sha256(payload))
+	
+	
+	DDLogInfo(@"sending version: version %d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionMessage.start_height, versionMessage.addr_recv, versionMessage.addr_from, versionMessage.addr_from);
+	
+	NSData *versionData = [NSData dataWithBytes:&versionHeader length:sizeof(versionHeader)];
+	
+	[sock writeData:versionData withTimeout:-1.0 tag:0];
 	
 }
 
@@ -144,9 +170,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
 	DDLogInfo(@"socket:%p didReadData:withTag:%ld", sock, tag);
+	
+	NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	DDLogInfo(@"Full response:\n%@", response);
 }
 
-- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
+/*- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
 				 elapsed:(NSTimeInterval)elapsed
 			   bytesDone:(NSUInteger)length
 {
@@ -154,13 +183,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	DDLogInfo(@"socket:%p shouldTimeoutReadWithTag:%ld:%f:%ld", sock, tag, elapsed, length);
 	
 	return 0.0;
-}
+}*/
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
 	DDLogInfo(@"socketDidDisconnect:%p withError: %@", sock, err);
 	
-	if (sock != listenSocket)
+	if (sock != listenSocket && sock != asyncSocket)
 	{
 		DDLogInfo(@"Client Disconnected");		
 		@synchronized(connectedSockets)
