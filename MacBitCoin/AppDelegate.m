@@ -179,15 +179,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	DDLogInfo(@"sending version: version %d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.ip, versionMessage.addr_recv.ip, versionMessage.addr_recv.ip);
 	
-	// Send header
+	// Send message
 	NSData *headerData = [NSData dataWithBytes:&versionHeader length:sizeof(versionHeader)];
 	DDLogInfo(@"header: %@", headerData);
-	[sock writeData:headerData withTimeout:-1.0 tag:0];
-	
-	// Send version
 	DDLogInfo(@"version: %@", versionData);
-	[sock writeData:versionData withTimeout:-1.0 tag:0];
 	
+	NSMutableData *fullMessage = [NSMutableData data];
+	[fullMessage appendData:headerData];
+	[fullMessage appendData:versionData];
+	
+	[sock writeData:fullMessage withTimeout:-1.0 tag:0];
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
