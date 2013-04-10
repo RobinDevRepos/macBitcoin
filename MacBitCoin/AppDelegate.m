@@ -11,6 +11,10 @@
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 #import "DispatchQueueLogFormatter.h"
+#import "NSData+CryptoHashing.h"
+
+#import <CommonCrypto/CommonDigest.h>
+#import <Security/SecRandom.h>
 
 #define CONNECT_TIMEOUT 1.0
 #define READ_TIMEOUT 5.0
@@ -135,29 +139,39 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	versionMessage.timestamp = [[NSDate date] timeIntervalSince1970];
 	versionMessage.addr_recv = [sock.localHost cStringUsingEncoding:[NSString defaultCStringEncoding]];
 	versionMessage.addr_from = [sock.connectedHost cStringUsingEncoding:[NSString defaultCStringEncoding]];
-	versionMessage.nonce = 0; // TODO
-	versionMessage.user_agent_length = 15; // TODO
-	[@"/Satoshi:0.7.2/" getCString:versionMessage.user_agent maxLength:versionMessage.user_agent_length+1 encoding:NSASCIIStringEncoding];
+	
+	int nonce_length = sizeof(versionMessage.nonce);
+	NSMutableData* nonce = [NSMutableData dataWithLength:nonce_length];
+	SecRandomCopyBytes(kSecRandomDefault, nonce_length, [nonce mutableBytes]);
+	[nonce getBytes:&versionMessage.nonce length:nonce_length];
+	
+	NSString *user_agent = @"/Satoshi:0.7.2/"; // TODO: Make this something unique
+	versionMessage.user_agent_length = user_agent.length;
+	[user_agent getCString:versionMessage.user_agent maxLength:versionMessage.user_agent_length+1 encoding:NSASCIIStringEncoding];
+	
 	versionMessage.start_height = 0; // TODO: Starting with no blocks every time, for now
 	versionMessage.relay = FALSE; // TODO: Necessary?
+	
+	NSData *versionData = [NSData dataWithBytes:&versionMessage length:sizeof(versionMessage)];
 	
 	// Construct header
 	header versionHeader;
 	versionHeader.magic = 0x0709110B; // 0xD9B4BEF9 in non-testnet
 	[@"version" getCString:versionHeader.command maxLength:COMMAND_LENGTH+1 encoding:NSASCIIStringEncoding];
 	versionHeader.length = sizeof(versionMessage);
-	versionHeader.checksum = 0; // First 4 bytes of sha256(sha256(payload))
 	
-	DDLogInfo(@"sending version: version %d, length=%d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionHeader.length, versionMessage.start_height, versionMessage.addr_recv, versionMessage.addr_from, versionMessage.addr_from);
+	NSData *hash = [[versionData sha256Hash] sha256Hash];
+	[hash getBytes:&versionHeader.checksum length:sizeof(versionHeader.checksum)]; // First 4 bytes of sha256(sha256(payload))
+	
+	DDLogInfo(@"sending version: version %d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionMessage.start_height, versionMessage.addr_recv, versionMessage.addr_from, versionMessage.addr_from);
 	
 	// Send header
-	NSData *versionData = [NSData dataWithBytes:&versionHeader length:sizeof(versionHeader)];
-	DDLogInfo(@"packet: %@", versionData);
-	[sock writeData:versionData withTimeout:-1.0 tag:0];
+	NSData *headerData = [NSData dataWithBytes:&versionHeader length:sizeof(versionHeader)];
+	DDLogInfo(@"header: %@", headerData);
+	[sock writeData:headerData withTimeout:-1.0 tag:0];
 	
 	// Send version
-	versionData = [NSData dataWithBytes:&versionMessage length:sizeof(versionMessage)];
-	DDLogInfo(@"packet: %@", versionData);
+	DDLogInfo(@"version: %@", versionData);
 	[sock writeData:versionData withTimeout:-1.0 tag:0];
 	
 }
