@@ -12,14 +12,14 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
 @private
-	dispatch_queue_t socketQueue;
-	
 	// Outgoing
 	GCDAsyncSocket *asyncSocket;
+	dispatch_queue_t socketQueueOut;
 	
 	// Incoming
 	GCDAsyncSocket *listenSocket;
 	NSMutableArray *connectedSockets;
+	dispatch_queue_t socketQueueIn;
 }
 
 @property (assign) IBOutlet NSWindow *window;

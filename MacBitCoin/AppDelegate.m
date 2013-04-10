@@ -45,11 +45,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//
 	// The best approach for your application will depend upon convenience, requirements and performance.
 	
-	socketQueue = dispatch_queue_create("socketQueue", NULL);
-	
+	socketQueueIn = dispatch_queue_create("socketQueueIn", NULL);
 
 	// Start listening for incoming requests
-	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueue];
+	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueIn];
 	
 	// Setup an array to store all accepted client connections
 	connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
@@ -67,8 +66,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 	
 	// Outgoing socket
-	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueue];
-	
+	socketQueueOut = dispatch_queue_create("socketQueueOut", NULL);
+	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueOut];
 	
 	
 	// Now we tell the ASYNCHRONOUS socket to connect.
