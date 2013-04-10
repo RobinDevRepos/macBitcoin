@@ -85,11 +85,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//
 	// The error message might be something like "Attempting to connect without a delegate. Set a delegate first."
 	//
-	// When the asynchronous sockets connects, it will invoke the socket:didConnectToHost:port: delegate method.
+	// When the asynchronous socket connects, it will invoke the socket:didConnectToHost:port: delegate method.
 	
 	// http://testnet.mojocoin.com/about
-	NSString *host = @"199.26.85.40";
-	//NSString *host = @"localhost";
+	//NSString *host = @"199.26.85.40";
+	NSString *host = @"localhost";
 	uint16_t port = 18333;
 		
 	DDLogInfo(@"Connecting to \"%@\" on port %hu...", host, port);
@@ -126,32 +126,38 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Start reading
 	[sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
 	
-	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version	// Construct version
+	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version
+	
+	// Construct version
 	version versionMessage;
 	versionMessage.version = PROTOCOL_VERSION;
-	versionMessage.services = 1; // NODE_NETWORK, apparently the only one
+	versionMessage.services = 0x01; // NODE_NETWORK, apparently the only one
 	versionMessage.timestamp = [[NSDate date] timeIntervalSince1970];
 	versionMessage.addr_recv = [sock.localHost cStringUsingEncoding:[NSString defaultCStringEncoding]];
 	versionMessage.addr_from = [sock.connectedHost cStringUsingEncoding:[NSString defaultCStringEncoding]];
 	versionMessage.nonce = 0; // TODO
 	versionMessage.user_agent_length = 15; // TODO
-	versionMessage.user_agent = "/Satoshi:0.7.2/"; // TODO
-	versionMessage.start_height = -1; // TODO: Starting with no blocks every time, for now
+	[@"/Satoshi:0.7.2/" getCString:versionMessage.user_agent maxLength:versionMessage.user_agent_length+1 encoding:NSASCIIStringEncoding];
+	versionMessage.start_height = 0; // TODO: Starting with no blocks every time, for now
 	versionMessage.relay = FALSE; // TODO: Necessary?
 	
-	// Constuct header + message
+	// Construct header
 	header versionHeader;
 	versionHeader.magic = 0x0709110B; // 0xD9B4BEF9 in non-testnet
-	versionHeader.command = "version";
-	//versionHeader.payload = versionMessage;
+	[@"version" getCString:versionHeader.command maxLength:COMMAND_LENGTH+1 encoding:NSASCIIStringEncoding];
 	versionHeader.length = sizeof(versionMessage);
 	versionHeader.checksum = 0; // First 4 bytes of sha256(sha256(payload))
 	
+	DDLogInfo(@"sending version: version %d, length=%d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionHeader.length, versionMessage.start_height, versionMessage.addr_recv, versionMessage.addr_from, versionMessage.addr_from);
 	
-	DDLogInfo(@"sending version: version %d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionMessage.start_height, versionMessage.addr_recv, versionMessage.addr_from, versionMessage.addr_from);
-	
+	// Send header
 	NSData *versionData = [NSData dataWithBytes:&versionHeader length:sizeof(versionHeader)];
+	DDLogInfo(@"packet: %@", versionData);
+	[sock writeData:versionData withTimeout:-1.0 tag:0];
 	
+	// Send version
+	versionData = [NSData dataWithBytes:&versionMessage length:sizeof(versionMessage)];
+	DDLogInfo(@"packet: %@", versionData);
 	[sock writeData:versionData withTimeout:-1.0 tag:0];
 	
 }

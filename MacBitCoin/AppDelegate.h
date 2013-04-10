@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define COMMAND_LENGTH 12
+
 @class GCDAsyncSocket;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
@@ -28,22 +30,20 @@
 
 typedef struct {
 	uint32_t magic;
-	const char *command;
+	char command[COMMAND_LENGTH];
 	uint32_t length;
 	uint32_t checksum;
-	const char *payload;
 } header;
 
 typedef struct {
 	int32_t version;
 	uint64_t services;
 	int64_t timestamp;
-	const char *addr_recv;
-	const char *addr_from;
+	const char* addr_recv;
+	const char* addr_from;
 	uint64_t nonce;
 	uint8_t user_agent_length;
-	const char * user_agent;
+	char user_agent[15];
 	int32_t start_height;
-	bool relay;
-	
+	bool relay;	
 } version;
