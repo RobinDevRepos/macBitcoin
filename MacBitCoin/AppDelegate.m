@@ -12,6 +12,7 @@
 #import "DDTTYLogger.h"
 #import "DispatchQueueLogFormatter.h"
 #import "NSData+CryptoHashing.h"
+#import "MessageHeader.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <Security/SecRandom.h>
@@ -94,7 +95,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// http://testnet.mojocoin.com/about
 	//NSString *host = @"199.26.85.40";
 	NSString *host = @"localhost";
-	uint16_t port = 18333;
+	uint16_t port = 18333; // Real port is 8333
 		
 	DDLogInfo(@"Connecting to \"%@\" on port %hu...", host, port);
 		
