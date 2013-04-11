@@ -17,7 +17,6 @@
 		4138ABA2171472580023BA3C /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAC3171472570023BA3C /* GCDAsyncSocket.m */; };
 		4138AC20171472FF0023BA3C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4138AC1F171472FF0023BA3C /* Security.framework */; };
 		4138AC231715C6290023BA3C /* NSData+CryptoHashing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AC221715C6290023BA3C /* NSData+CryptoHashing.m */; };
-		4138AC261716358E0023BA3C /* MessageHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AC251716358E0023BA3C /* MessageHeader.m */; };
 		41B757021712323B005931AE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B757011712323B005931AE /* Cocoa.framework */; };
 		41B7570C1712323B005931AE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41B7570A1712323B005931AE /* InfoPlist.strings */; };
 		41B7570E1712323B005931AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B7570D1712323B005931AE /* main.m */; };
@@ -61,8 +60,6 @@
 		4138AC1F171472FF0023BA3C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4138AC211715C6290023BA3C /* NSData+CryptoHashing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CryptoHashing.h"; sourceTree = "<group>"; };
 		4138AC221715C6290023BA3C /* NSData+CryptoHashing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CryptoHashing.m"; sourceTree = "<group>"; };
-		4138AC241716358E0023BA3C /* MessageHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageHeader.h; sourceTree = "<group>"; };
-		4138AC251716358E0023BA3C /* MessageHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageHeader.m; sourceTree = "<group>"; };
 		41B756FE1712323B005931AE /* MacBitCoin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacBitCoin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B757011712323B005931AE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		41B757041712323B005931AE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -198,8 +195,6 @@
 				41B757081712323B005931AE /* Supporting Files */,
 				4138AC211715C6290023BA3C /* NSData+CryptoHashing.h */,
 				4138AC221715C6290023BA3C /* NSData+CryptoHashing.m */,
-				4138AC241716358E0023BA3C /* MessageHeader.h */,
-				4138AC251716358E0023BA3C /* MessageHeader.m */,
 			);
 			path = MacBitCoin;
 			sourceTree = "<group>";
@@ -355,7 +350,6 @@
 				4138AABE171472270023BA3C /* DispatchQueueLogFormatter.m in Sources */,
 				4138ABA2171472580023BA3C /* GCDAsyncSocket.m in Sources */,
 				4138AC231715C6290023BA3C /* NSData+CryptoHashing.m in Sources */,
-				4138AC261716358E0023BA3C /* MessageHeader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

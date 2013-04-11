@@ -12,7 +12,6 @@
 #import "DDTTYLogger.h"
 #import "DispatchQueueLogFormatter.h"
 #import "NSData+CryptoHashing.h"
-#import "MessageHeader.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <Security/SecRandom.h>
