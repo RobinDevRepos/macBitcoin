@@ -18,8 +18,6 @@
 
 #define CONNECT_TIMEOUT 1.0
 #define READ_TIMEOUT 5.0
-#define PROTOCOL_VERSION 70001
-#define NODE_NETWORK 0x01
 
 // Log levels: off, error, warn, info, verbose
 static const int ddLogLevel = LOG_LEVEL_INFO;
@@ -159,19 +157,22 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	SecRandomCopyBytes(kSecRandomDefault, nonce_length, [nonce mutableBytes]);
 	[nonce getBytes:&versionMessage.nonce length:nonce_length];
 	
-	NSString *user_agent = @"/Satoshi:0.7.2/"; // TODO: Make this something unique
-	versionMessage.user_agent_length = user_agent.length;
-	[user_agent getCString:versionMessage.user_agent maxLength:versionMessage.user_agent_length+1 encoding:NSASCIIStringEncoding];
+	versionMessage.user_agent = (char*) malloc(18);
+	strncpy(versionMessage.user_agent, "/Satoshi:0.8.1.99/", 18); // Command
+	versionMessage.user_agent_length = sizeof(versionMessage.user_agent);
+	//NSString *user_agent = @"/Satoshi:0.7.2/"; // TODO: Make this something unique
+	//versionMessage.user_agent_length = user_agent.length;
+	//[user_agent getCString:versionMessage.user_agent maxLength:versionMessage.user_agent_length encoding:NSASCIIStringEncoding];
 	
 	versionMessage.start_height = 0; // TODO: Starting with no blocks every time, for now
 	versionMessage.relay = FALSE; // TODO: Necessary?
 	
-	NSData *versionData = [NSData dataWithBytes:&versionMessage length:sizeof(versionMessage)];
+	NSData *versionData = [NSData dataWithBytes:&versionMessage length:sizeof(version)];
 	
 	// Construct header
 	header versionHeader;
 	versionHeader.magic = 0x0709110B; // 0xD9B4BEF9 in non-testnet
-	[@"version" getCString:versionHeader.command maxLength:COMMAND_LENGTH+1 encoding:NSASCIIStringEncoding];
+	strncpy(versionHeader.command, "version", COMMAND_LENGTH);
 	versionHeader.length = sizeof(versionMessage);
 	
 	NSData *hash = [[versionData sha256Hash] sha256Hash];
@@ -180,7 +181,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	DDLogInfo(@"sending version: version %d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.ip, versionMessage.addr_recv.ip, versionMessage.addr_recv.ip);
 	
 	// Send message
-	NSData *headerData = [NSData dataWithBytes:&versionHeader length:sizeof(versionHeader)];
+	NSData *headerData = [NSData dataWithBytes:&versionHeader length:sizeof(header)];
 	DDLogInfo(@"header: %@", headerData);
 	DDLogInfo(@"version: %@", versionData);
 	

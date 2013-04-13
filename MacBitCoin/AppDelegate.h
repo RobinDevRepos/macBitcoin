@@ -10,6 +10,8 @@
 
 #define COMMAND_LENGTH 12
 #define ADDRESS_LENGTH 16
+#define PROTOCOL_VERSION 70001
+#define NODE_NETWORK 1
 
 @class GCDAsyncSocket;
 
@@ -51,7 +53,7 @@ typedef struct {
 	address addr_from;
 	uint64_t nonce;
 	uint8_t user_agent_length;
-	char user_agent[15];
+	char *user_agent;
 	int32_t start_height;
 	bool relay;	
 } version;
