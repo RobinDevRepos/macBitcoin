@@ -8,6 +8,8 @@
 
 #import "MacBitCoinTests.h"
 
+#import "BitcoinVarInt.h"
+
 @implementation MacBitCoinTests
 
 - (void)setUp
@@ -24,9 +26,14 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testVarInt
 {
-    STFail(@"Unit tests are not implemented yet in MacBitCoinTests");
+	uint64_t value = 15;
+	uint8_t size = 1;
+	
+    BitcoinVarInt *varInt = [[BitcoinVarInt alloc] initFromValue:value];
+	STAssertEquals(varInt.value, value, @"Value does not match");
+	STAssertEquals(varInt.size, size, @"Size does not match");
 }
 
 @end
