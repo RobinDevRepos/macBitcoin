@@ -27,6 +27,19 @@
     [super tearDown];
 }
 
+- (void)testNSData8Bit
+{
+	uint8_t value1 = 15;
+	NSData *data1 = [NSData dataWithInt8:value1];
+	
+	const char bytes[] = { 0x0f };
+	NSData *data2 = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	uint8_t value2 = [data2 offsetToInt8:0];
+	
+	STAssertEqualObjects(data1, data2, @"8bit NSData objects do not match");
+	STAssertEquals(value1, value2, @"8bit NSData values do not match");
+}
+
 - (void)testNSData16Bit
 {
 	uint16_t value1 = 65535;

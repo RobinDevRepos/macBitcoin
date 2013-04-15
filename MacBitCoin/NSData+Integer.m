@@ -10,6 +10,12 @@
 
 @implementation NSData (Integer)
 
+-(uint8_t)offsetToInt8:(NSUInteger)offset{
+	uint8_t *buf = (uint8_t *)[self bytes];
+	
+	return buf[offset];
+}
+
 -(uint16_t)offsetToInt16:(NSUInteger)offset{
 	uint8_t *buf = (uint8_t *)[self bytes];
 	
@@ -48,6 +54,14 @@
 		| ((uint64_t)buf[offset++] << 40)
 		| ((uint64_t)buf[offset++] << 48)
 		| ((uint64_t)buf[offset]   << 56);
+}
+
++(id)dataWithInt8:(uint8_t)value{
+	unsigned char buffer[1];
+	
+	buffer[0] = (uint8_t)value;
+	
+	return [NSData dataWithBytes:buffer length:sizeof(buffer)];
 }
 
 +(id)dataWithInt16:(uint16_t)value{
