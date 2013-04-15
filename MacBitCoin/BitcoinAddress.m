@@ -47,7 +47,8 @@
 		
 		// If the conversion worked, convert the string format array into an NSString
 		if (conversion != NULL){
-			_address = [NSString stringWithCString:ip encoding:NSASCIIStringEncoding];
+			NSString *address = [NSString stringWithCString:ip encoding:NSASCIIStringEncoding];
+			_address = [address stringByReplacingOccurrencesOfString:@"::ffff:" withString:@""];
 		}
 		
 		// Read out port from network byte order
@@ -68,6 +69,21 @@
 	// Convert to byte array
 	char bytes[16];
 	[addressData getBytes:bytes length:sizeof(bytes)];
+	if (addressData.length == 8){
+		// Looks like ipv4 -- encode it into ipv6
+		// Probably a better way to do this
+		for (int i=0; i<8; i++){
+			bytes[i+7] = bytes[i];
+		}
+		
+		bytes[0] = ':';
+		bytes[1] = ':';
+		bytes[2] = 'f';
+		bytes[3] = 'f';
+		bytes[4] = 'f';
+		bytes[5] = 'f';
+		bytes[6] = ':';
+	}
 	
 	// Convert byte array from string format to network format
 	unsigned char buf[sizeof(struct in6_addr)];

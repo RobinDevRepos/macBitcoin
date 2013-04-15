@@ -160,10 +160,10 @@
 {
 	uint32_t time = 1366044839;
 	uint64_t services = 1;
-	NSString *address = @"::ffff:10.0.0.1";
+	NSString *address = @"10.0.0.1";
 	uint16_t port = 8333;
 	
-	const char bytes[] = {
+	char bytes[] = {
 		0xA7, 0x30, 0x6C, 0x51, // Time 1366044839
 		0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 1 (NODE_NETWORK)
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x0A, 0x00, 0x00, 0x01, // IPv6: ::ffff:10.0.0.1 or IPv4: 10.0.0.1
@@ -176,8 +176,17 @@
 	STAssertEqualObjects(address1.address, address, @"Address address does not match");
 	STAssertEquals(address1.port, port, @"Address port does not match");
 	
-	NSData *dataFromAddress = [address1 getData];
-	STAssertEqualObjects(dataFromAddress, data, @"Address data does not match");
+	NSData *dataFromAddress1 = [address1 getData];
+	STAssertEqualObjects(dataFromAddress1, data, @"Address data does not match");
+	
+	BitcoinAddress *address2 = [BitcoinAddress addressFromAddress:@"10.0.0.1" withPort:8333];
+	NSData *dataFromAddress2 = [address2 getData];
+	
+	BitcoinAddress *address3 = [BitcoinAddress addressFromBytes:dataFromAddress2 fromOffset:0];
+	STAssertEquals(address2.time, address3.time, @"Address time does not match");
+	STAssertEquals(address2.services, address3.services, @"Address services does not match");
+	STAssertEqualObjects(address2.address, address3.address, @"Address address does not match");
+	STAssertEquals(address2.port, address3.port, @"Address port does not match");
 }
 
 @end
