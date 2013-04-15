@@ -7,6 +7,7 @@
 //
 
 #import "BitcoinVarInt.h"
+#import "NSData+Integer.h"
 
 @implementation BitcoinVarInt
 

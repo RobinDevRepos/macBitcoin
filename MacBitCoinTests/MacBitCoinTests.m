@@ -8,6 +8,7 @@
 
 #import "MacBitCoinTests.h"
 
+#import "NSData+Integer.h"
 #import "BitcoinVarInt.h"
 
 @implementation MacBitCoinTests
@@ -24,6 +25,45 @@
     // Tear-down code here.
     
     [super tearDown];
+}
+
+- (void)testNSData16Bit
+{
+	uint16_t value1 = 65535;
+	NSData *data1 = [NSData dataWithInt16:value1];
+	
+	const char bytes[] = { 0xff, 0xff };
+	NSData *data2 = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	uint16_t value2 = [data2 offsetToInt16:0];
+	
+	STAssertEqualObjects(data1, data2, @"16bit NSData objects do not match");
+	STAssertEquals(value1, value2, @"16bit NSData values do not match");
+}
+
+- (void)testNSData32Bit
+{
+	uint32_t value1 = 4000000000;
+	NSData *data1 = [NSData dataWithInt32:value1];
+	
+	const char bytes[] = { 0x00, 0x28, 0x6b, 0xee };
+	NSData *data2 = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	uint32_t value2 = [data2 offsetToInt32:0];
+	
+	STAssertEqualObjects(data1, data2, @"32bit NSData objects do not match");
+	STAssertEquals(value1, value2, @"32bit NSData values do not match");
+}
+
+- (void)testNSData64Bit
+{
+	uint64_t value1 = 4294967296;
+	NSData *data1 = [NSData dataWithInt64:value1];
+	
+	const char bytes[] = { 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+	NSData *data2 = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	uint64_t value2 = [data2 offsetToInt64:0];
+	
+	STAssertEqualObjects(data1, data2, @"64bit NSData objects do not match");
+	STAssertEquals(value1, value2, @"64bit NSData values do not match");
 }
 
 - (void)testVarInt8Bit

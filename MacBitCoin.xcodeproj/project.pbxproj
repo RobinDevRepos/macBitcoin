@@ -21,6 +21,7 @@
 		413C1817171A43D700EAD404 /* BitcoinVersionMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C1816171A43D700EAD404 /* BitcoinVersionMessage.m */; };
 		413C181A171B166C00EAD404 /* BitcoinVarInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C1819171B166C00EAD404 /* BitcoinVarInt.m */; };
 		413C181D171B173300EAD404 /* BitcoinAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C181C171B173300EAD404 /* BitcoinAddress.m */; };
+		413C1820171BB9A100EAD404 /* NSData+Integer.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C181F171BB9A100EAD404 /* NSData+Integer.m */; };
 		41B757021712323B005931AE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B757011712323B005931AE /* Cocoa.framework */; };
 		41B7570C1712323B005931AE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41B7570A1712323B005931AE /* InfoPlist.strings */; };
 		41B7570E1712323B005931AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B7570D1712323B005931AE /* main.m */; };
@@ -72,6 +73,8 @@
 		413C1819171B166C00EAD404 /* BitcoinVarInt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinVarInt.m; sourceTree = "<group>"; };
 		413C181B171B173300EAD404 /* BitcoinAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinAddress.h; sourceTree = "<group>"; };
 		413C181C171B173300EAD404 /* BitcoinAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinAddress.m; sourceTree = "<group>"; };
+		413C181E171BB9A100EAD404 /* NSData+Integer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Integer.h"; sourceTree = "<group>"; };
+		413C181F171BB9A100EAD404 /* NSData+Integer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Integer.m"; sourceTree = "<group>"; };
 		41B756FE1712323B005931AE /* MacBitCoin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacBitCoin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B757011712323B005931AE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		41B757041712323B005931AE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -215,6 +218,8 @@
 				413C1819171B166C00EAD404 /* BitcoinVarInt.m */,
 				413C181B171B173300EAD404 /* BitcoinAddress.h */,
 				413C181C171B173300EAD404 /* BitcoinAddress.m */,
+				413C181E171BB9A100EAD404 /* NSData+Integer.h */,
+				413C181F171BB9A100EAD404 /* NSData+Integer.m */,
 			);
 			path = MacBitCoin;
 			sourceTree = "<group>";
@@ -374,6 +379,7 @@
 				413C1817171A43D700EAD404 /* BitcoinVersionMessage.m in Sources */,
 				413C181A171B166C00EAD404 /* BitcoinVarInt.m in Sources */,
 				413C181D171B173300EAD404 /* BitcoinAddress.m in Sources */,
+				413C1820171BB9A100EAD404 /* NSData+Integer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
