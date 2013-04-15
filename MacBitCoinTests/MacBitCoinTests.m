@@ -10,6 +10,7 @@
 
 #import "NSData+Integer.h"
 #import "BitcoinVarInt.h"
+#import "BitcoinAddress.h"
 
 @implementation MacBitCoinTests
 
@@ -153,6 +154,30 @@
 	
 	NSData *dataFromVarInt = [varInt1 getData];
 	STAssertEqualObjects(dataFromVarInt, data, @"64bit getData does not match");
+}
+
+- (void)testBitcoinAddress
+{
+	uint32_t time = 1366044839;
+	uint64_t services = 1;
+	NSString *address = @"::ffff:10.0.0.1";
+	uint16_t port = 8333;
+	
+	const char bytes[] = {
+		0xA7, 0x30, 0x6C, 0x51, // Time 1366044839
+		0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 1 (NODE_NETWORK)
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x0A, 0x00, 0x00, 0x01, // IPv6: ::ffff:10.0.0.1 or IPv4: 10.0.0.1
+		0x20, 0x8D // Port 8333
+	};
+	NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	BitcoinAddress *address1 = [BitcoinAddress addressFromBytes:data fromOffset:0];
+	STAssertEquals(address1.time, time, @"Address time does not match");
+	STAssertEquals(address1.services, services, @"Address services does not match");
+	STAssertEqualObjects(address1.address, address, @"Address address does not match");
+	STAssertEquals(address1.port, port, @"Address port does not match");
+	
+	NSData *dataFromAddress = [address1 getData];
+	STAssertEqualObjects(dataFromAddress, data, @"Address data does not match");
 }
 
 @end

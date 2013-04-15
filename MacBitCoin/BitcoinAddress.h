@@ -10,11 +10,15 @@
 
 @interface BitcoinAddress : NSObject
 
-@property (nonatomic) uint32 time;
+@property (nonatomic) uint32_t time;
 @property (nonatomic) uint64_t services;
-@property NSData *address; // From CocoaAsyncSocket, is a 'struct sockaddr', so contains address and port information
+@property NSString *address;
+@property (nonatomic) uint16_t port;
 
--(id) initFromAddress:(NSData*)address;
++(id) addressFromAddress:(NSString*)address withPort:(uint16_t)port;
++(id) addressFromBytes:(NSData*)data fromOffset:(int)offset;
+
+-(id) initFromAddress:(NSString*)address withPort:(uint16_t)port;
 -(id) initFromBytes:(NSData*)data fromOffset:(int)offset;
 
 -(NSData*) getData;
