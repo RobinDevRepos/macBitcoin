@@ -26,7 +26,7 @@
 	if ((self = [super init])){
 		uint8_t *buf = (uint8_t *)[data bytes];
 		
-		uint8_t first = buf[offset];
+		uint8_t first = buf[offset++];
 		if (first < 253) {
 			// 8 bits.
 			self.value = first;
@@ -34,28 +34,28 @@
 		}
 		else if (first == 253) {
 			// 16 bits.
-			self.value = buf[offset + 1]
-				| ((uint16_t)buf[offset + 2] << 8 );
+			self.value = buf[offset++]
+				| ((uint16_t)buf[offset] << 8 );
 			self.size = 3;
 		}
 		else if (first == 254) {
 			// 32 bits.
-			self.value = buf[offset + 1]
-				| ((uint16_t)buf[offset + 2] << 8 )
-				| ((uint32_t)buf[offset + 3] << 16)
-				| ((uint32_t)buf[offset + 4] << 24);
+			self.value = buf[offset++]
+				| ((uint16_t)buf[offset++] << 8 )
+				| ((uint32_t)buf[offset++] << 16)
+				| ((uint32_t)buf[offset]   << 24);
 			self.size = 5;
 		}
 		else {
 			// 64 bits.
-			self.value = buf[offset + 1]
-				| ((uint16_t)buf[offset + 2] << 8 )
-				| ((uint32_t)buf[offset + 3] << 16)
-				| ((uint32_t)buf[offset + 4] << 24)
-				| ((uint64_t)buf[offset + 5] << 32)
-				| ((uint64_t)buf[offset + 6] << 40)
-				| ((uint64_t)buf[offset + 7] << 48)
-				| ((uint64_t)buf[offset + 8] << 56);
+			self.value = buf[offset++]
+				| ((uint16_t)buf[offset++] << 8 )
+				| ((uint32_t)buf[offset++] << 16)
+				| ((uint32_t)buf[offset++] << 24)
+				| ((uint64_t)buf[offset++] << 32)
+				| ((uint64_t)buf[offset++] << 40)
+				| ((uint64_t)buf[offset++] << 48)
+				| ((uint64_t)buf[offset]   << 56);
 			self.size = 9;
 		}
 	}
