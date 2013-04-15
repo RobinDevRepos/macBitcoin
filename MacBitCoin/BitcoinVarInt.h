@@ -18,4 +18,6 @@
 
 -(uint8_t) sizeOf:(uint64_t)value;
 
+-(NSData*) getData;
+
 @end
