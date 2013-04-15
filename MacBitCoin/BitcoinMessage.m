@@ -22,4 +22,8 @@
 	return self;
 }
 
+-(NSData*) getData {
+	return self.bytes;
+}
+
 @end
