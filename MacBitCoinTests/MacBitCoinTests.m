@@ -64,4 +64,42 @@
 	STAssertEqualObjects(dataFromVarInt, data, @"16bit getData does not match");
 }
 
+- (void)testVarInt32Bit
+{
+	uint64_t value = 4000000000;
+	uint8_t size = 5;
+	
+    BitcoinVarInt *varInt1 = [[BitcoinVarInt alloc] initFromValue:value];
+	STAssertEquals(varInt1.value, value, @"32bit value1 does not match");
+	STAssertEquals(varInt1.size, size, @"32bit size1 does not match");
+	
+	const char bytes[] = { 0xfe, 0x00, 0x28, 0x6b, 0xee };
+	NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	BitcoinVarInt *varInt2 = [[BitcoinVarInt alloc] initFromBytes:data fromOffset:0];
+	STAssertEquals(varInt2.value, value, @"32bit value2 does not match");
+	STAssertEquals(varInt2.size, size, @"32bit size2 does not match");
+	
+	NSData *dataFromVarInt = [varInt1 getData];
+	STAssertEqualObjects(dataFromVarInt, data, @"32bit getData does not match");
+}
+
+- (void)testVarInt64Bit
+{
+	uint64_t value = 4294967296;
+	uint8_t size = 9;
+	
+    BitcoinVarInt *varInt1 = [[BitcoinVarInt alloc] initFromValue:value];
+	STAssertEquals(varInt1.value, value, @"64bit value1 does not match");
+	STAssertEquals(varInt1.size, size, @"64bit size1 does not match");
+	
+	const char bytes[] = { 0xff, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+	NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	BitcoinVarInt *varInt2 = [[BitcoinVarInt alloc] initFromBytes:data fromOffset:0];
+	STAssertEquals(varInt2.value, value, @"64bit value2 does not match");
+	STAssertEquals(varInt2.size, size, @"64bit size2 does not match");
+	
+	NSData *dataFromVarInt = [varInt1 getData];
+	STAssertEqualObjects(dataFromVarInt, data, @"64bit getData does not match");
+}
+
 @end
