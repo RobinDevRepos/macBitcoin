@@ -13,6 +13,9 @@
 @property uint64_t value;
 @property uint8_t size;
 
++(id) varintFromValue:(uint64_t)value;
++(id) varintFromBytes:(NSData*)data fromOffset:(int)offset;
+
 -(id) initFromValue:(uint64_t)value;
 -(id) initFromBytes:(NSData*)data fromOffset:(int)offset;
 

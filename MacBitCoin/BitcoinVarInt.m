@@ -10,6 +10,14 @@
 
 @implementation BitcoinVarInt
 
++(id) varintFromValue:(uint64_t)value{
+	return [[BitcoinVarInt alloc] initFromValue:value];
+}
+
++(id) varintFromBytes:(NSData*)data fromOffset:(int)offset{
+	return [[BitcoinVarInt alloc] initFromBytes:data fromOffset:offset];
+}
+
 // Creates a varInt from the integer value, so we can encode it to bytes later
 -(id)initFromValue:(uint64_t)value{
 	if ((self = [super init])){
