@@ -10,7 +10,7 @@
 
 @interface BitcoinMessage : NSObject
 
-@property (readonly) int messageType;
+@property (readonly, nonatomic) int messageType;
 @property (readonly) NSData *bytes;
 @property (readonly) NSData *checksum;
 

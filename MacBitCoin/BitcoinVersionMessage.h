@@ -14,18 +14,18 @@
 
 @interface BitcoinVersionMessage : BitcoinMessage
 
-@property int32_t version;
-@property uint64_t services;
-@property int64_t timestamp;
+@property (nonatomic) int32_t version;
+@property (nonatomic) uint64_t services;
+@property (nonatomic) int64_t timestamp;
 
 @property BitcoinAddress *addr_recv;
 @property BitcoinAddress *addr_from;
 
-@property uint64_t nonce;
+@property (nonatomic) uint64_t nonce;
 
 @property NSString *user_agent;
 
-@property int32_t start_height;
-@property bool relay;
+@property (nonatomic) int32_t start_height;
+@property (nonatomic) bool relay;
 
 @end

@@ -10,8 +10,8 @@
 
 @interface BitcoinVarInt : NSObject
 
-@property uint64_t value;
-@property (readonly) uint8_t size;
+@property (nonatomic) uint64_t value;
+@property (readonly, nonatomic) uint8_t size;
 
 +(id) varintFromValue:(uint64_t)value;
 +(id) varintFromBytes:(NSData*)data fromOffset:(int)offset;
