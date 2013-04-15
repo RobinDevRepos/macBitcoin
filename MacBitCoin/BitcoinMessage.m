@@ -10,9 +10,13 @@
 
 @implementation BitcoinMessage
 
--(id)initFromBytes:(NSData *)data{
++(id) messageFromBytes:(NSData *)data fromOffset:(int)offset{
+	return [[BitcoinMessage alloc] initFromBytes:data fromOffset:offset];
+}
+
+-(id)initFromBytes:(NSData *)data fromOffset:(int)offset{
 	if ((self = [super init])){
-		_bytes = [NSData dataWithData:data];
+		_bytes = [data subdataWithRange:NSMakeRange(offset, data.length-offset)];
 	}
 	
 	return self;

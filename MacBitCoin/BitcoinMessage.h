@@ -10,10 +10,11 @@
 
 @interface BitcoinMessage : NSObject
 
-@property (readonly, nonatomic) int messageType;
+@property (nonatomic) int messageType;
 @property (readonly) NSData *bytes;
 @property (readonly) NSData *checksum;
 
--(id)initFromBytes:(NSData*)data;
++(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
+-(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
 @end
