@@ -7,6 +7,7 @@
 //
 
 #import "BitcoinAddress.h"
+#import "NSData+Integer.h"
 
 @implementation BitcoinAddress
 

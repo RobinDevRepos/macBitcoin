@@ -30,7 +30,6 @@
 }
 
 // Creates a varInt from NSData bytes (like off the network stream)
-// TODO: Turn this conversion code into general byte array conversion code
 -(id)initFromBytes:(NSData *)data fromOffset:(int)offset{
 	if ((self = [super init])){
 		uint8_t first = [data offsetToInt8:offset];
@@ -71,7 +70,6 @@
 }
 
 // Returns the NSData byte representation of a varInt, like for writing over the network
-// TODO: Turn this conversion code into general byte array conversion code
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
 	
