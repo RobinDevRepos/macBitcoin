@@ -19,8 +19,9 @@
 
 -(id)initFromBytes:(NSData *)data fromOffset:(int)offset{
 	if ((self = [super initFromBytes:data fromOffset:offset])){
-		self.messageType = 1;
+		self.messageType = BITCOIN_MESSAGE_TYPE_VERSION;
 		
+		offset += BITCOIN_HEADER_LENGTH;
 		_version = [data offsetToInt32:offset];
 		_services = [data offsetToInt64:offset+4];
 		_timestamp = [data offsetToInt64:offset+12];

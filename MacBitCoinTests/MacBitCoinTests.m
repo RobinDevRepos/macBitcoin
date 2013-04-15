@@ -230,7 +230,7 @@
 	bool relay = false;
 	
 	NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-	BitcoinVersionMessage *versionMessage1 = [BitcoinVersionMessage messageFromBytes:data fromOffset:24]; // Start past the header
+	BitcoinVersionMessage *versionMessage1 = [BitcoinVersionMessage messageFromBytes:data fromOffset:0];
 	STAssertEquals(versionMessage1.version, version, @"Version message version does not match");
 	STAssertEquals(versionMessage1.services, services, @"Version message services does not match");
 	STAssertEquals(versionMessage1.timestamp, timestamp, @"Version message timestamp does not match");
