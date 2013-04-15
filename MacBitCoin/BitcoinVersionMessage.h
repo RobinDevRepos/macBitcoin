@@ -10,7 +10,6 @@
 
 #import "BitcoinMessage.h"
 #import "BitcoinAddress.h"
-#import "BitcoinVarInt.h"
 
 @interface BitcoinVersionMessage : BitcoinMessage
 
@@ -27,5 +26,8 @@
 
 @property (nonatomic) int32_t start_height;
 @property (nonatomic) bool relay;
+
++(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
+-(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
 @end

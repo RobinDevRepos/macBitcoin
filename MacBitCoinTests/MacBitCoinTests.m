@@ -11,6 +11,7 @@
 #import "NSData+Integer.h"
 #import "BitcoinVarInt.h"
 #import "BitcoinAddress.h"
+#import "BitcoinVersionMessage.h"
 
 @implementation MacBitCoinTests
 
@@ -187,6 +188,56 @@
 	STAssertEquals(address2.services, address3.services, @"Address services does not match");
 	STAssertEqualObjects(address2.address, address3.address, @"Address address does not match");
 	STAssertEquals(address2.port, address3.port, @"Address port does not match");
+}
+
+- (void)testBitcoinVersionMessage
+{
+	// Actual message captured over the wire.
+	// Something seems fucked with the address blocks, though. Happily, we decode everything else just dandy
+	char bytes[] = {
+		// Header
+		0x0b, 0x11, 0x09, 0x07, // magic (0x0709110B -- testnet)
+		0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, // packet content ("version")
+		0x67, 0x00, 0x00, 0x00, // 103 bytes
+		0x64, 0x50, 0x59, 0x11, // checksum
+		
+		// Message
+		0x71, 0x11, 0x01, 0x00, // version (70001)
+		0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services (NODE_NETWORK)
+		0xd7, 0xf3, 0x65, 0x51, 0x00, 0x00, 0x00, 0x00, // unix timestamp (1365636055)
+		
+		0x01, 0x00, 0x00, 0x00, // time
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00,
+		
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		
+		0x74, 0x17, 0xba, 0xcd, 0x5c, 0xbb, 0xbc, 0x15, // node id
+		0x12, // 18 bytes (length of version)
+		0x2f, 0x53, 0x61, 0x74, 0x6f, 0x73, 0x68, 0x69, 0x3a, 0x30, 0x2e, 0x38, 0x2e, 0x31, 0x2e, 0x39, 0x39, 0x2f, // User agent ("/Satoshi:0.8.1.99/")
+		0x61, 0x00, 0x01, 0x00 // last block (65633)
+	};
+	
+	int32_t version = 70001;
+	uint64_t services = 1;
+	int64_t timestamp = 1365636055;
+	uint64_t nonce = 1566332777681000308;
+	NSString *user_agent = @"/Satoshi:0.8.1.99/";
+	int32_t start_height = 65633;
+	bool relay = false;
+	
+	NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	BitcoinVersionMessage *versionMessage1 = [BitcoinVersionMessage messageFromBytes:data fromOffset:24]; // Start past the header
+	STAssertEquals(versionMessage1.version, version, @"Version message version does not match");
+	STAssertEquals(versionMessage1.services, services, @"Version message services does not match");
+	STAssertEquals(versionMessage1.timestamp, timestamp, @"Version message timestamp does not match");
+	STAssertEquals(versionMessage1.nonce, nonce, @"Version message nonce does not match");
+	STAssertEqualObjects(versionMessage1.user_agent, user_agent, @"Version message user_agent does not match");
+	STAssertEquals(versionMessage1.start_height, start_height, @"Version message start_height does not match");
+	STAssertEquals(versionMessage1.relay, relay, @"Version message relay does not match");
 }
 
 @end
