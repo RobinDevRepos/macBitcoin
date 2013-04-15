@@ -13,7 +13,7 @@
 
 -(id) initFromAddress:(NSData*)address{
 	if ((self = [super init])){
-		self.address = [NSData dataWithData:address];
+		_address = [NSData dataWithData:address];
 	}
 	
 	return self;

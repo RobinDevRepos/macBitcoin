@@ -12,7 +12,7 @@
 
 -(id)initFromBytes:(NSData *)data{
 	if ((self = [super init])){
-		self.bytes = [NSData dataWithData:data];
+		_bytes = [NSData dataWithData:data];
 	}
 	
 	return self;

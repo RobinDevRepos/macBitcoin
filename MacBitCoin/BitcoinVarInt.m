@@ -21,8 +21,8 @@
 // Creates a varInt from the integer value, so we can encode it to bytes later
 -(id)initFromValue:(uint64_t)value{
 	if ((self = [super init])){
-		self.value = value;
-		self.size = [self sizeOf:value];
+		_value = value;
+		_size = [self sizeOf:value];
 	}
 	
 	return self;
@@ -37,26 +37,26 @@
 		uint8_t first = buf[offset++];
 		if (first < 253) {
 			// 8 bits.
-			self.value = first;
-			self.size = 1;
+			_value = first;
+			_size = 1;
 		}
 		else if (first == 253) {
 			// 16 bits.
-			self.value = buf[offset++]
+			_value = buf[offset++]
 				| ((uint16_t)buf[offset] << 8 );
-			self.size = 3;
+			_size = 3;
 		}
 		else if (first == 254) {
 			// 32 bits.
-			self.value = buf[offset++]
+			_value = buf[offset++]
 				| ((uint16_t)buf[offset++] << 8 )
 				| ((uint32_t)buf[offset++] << 16)
 				| ((uint32_t)buf[offset]   << 24);
-			self.size = 5;
+			_size = 5;
 		}
 		else {
 			// 64 bits.
-			self.value = buf[offset++]
+			_value = buf[offset++]
 				| ((uint16_t)buf[offset++] << 8 )
 				| ((uint32_t)buf[offset++] << 16)
 				| ((uint32_t)buf[offset++] << 24)
@@ -64,7 +64,7 @@
 				| ((uint64_t)buf[offset++] << 40)
 				| ((uint64_t)buf[offset++] << 48)
 				| ((uint64_t)buf[offset]   << 56);
-			self.size = 9;
+			_size = 9;
 		}
 	}
 	
