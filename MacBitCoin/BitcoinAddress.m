@@ -64,7 +64,6 @@
 	
 	// Read the NSString string format address into NSData
 	NSData *addressData = [self.address dataUsingEncoding:NSASCIIStringEncoding];
-	//[data appendData:[self.address dataUsingEncoding:NSASCIIStringEncoding]];
 	
 	// Convert to byte array
 	char bytes[16];
