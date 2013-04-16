@@ -11,7 +11,38 @@
 #import "BitcoinVarInt.h"
 #import "NSData+Integer.h"
 
+#import <Security/SecRandom.h>
+
 @implementation BitcoinVersionMessage
+
+// Default constructors for when you want to make a message by hand
++(id)message{
+	return [[BitcoinVersionMessage alloc] initMessage];
+}
+
+-(id)initMessage{
+	if ((self = [super init])){
+		self.messageType = BITCOIN_MESSAGE_TYPE_VERSION;
+		
+		_version = PROTOCOL_VERSION;
+		_services = 1; // TODO: Constant!
+		_timestamp = [[NSDate date] timeIntervalSince1970];
+		
+		int nonce_length = 8;
+		NSMutableData *nonceData = [NSMutableData dataWithLength:nonce_length];
+		SecRandomCopyBytes(kSecRandomDefault, nonce_length, [nonceData mutableBytes]);
+		_nonce = [nonceData offsetToInt64:0];
+		
+		_user_agent = @"/MacBitCoin:0.1/"; // TODO: Constants!
+		
+		_start_height = 0; // TODO: This is variable, so might be best to leave it to be initialized by the caller
+		_relay = true; // https://en.bitcoin.it/wiki/BIP_0037
+		
+		[self generateHeader];
+	}
+	
+	return self;
+}
 
 // Init a version message with bytes (header + payload)
 +(id) messageFromBytes:(NSData *)data fromOffset:(int)offset{

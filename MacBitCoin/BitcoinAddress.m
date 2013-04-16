@@ -24,7 +24,7 @@
 -(id) initFromAddress:(NSString*)address withPort:(uint16_t)port{
 	if ((self = [super init])){
 		_time = [[NSDate date] timeIntervalSince1970];
-		_services = 1;
+		_services = 1; // TODO: Constant!
 		_address = address;
 		_port = port;
 	}

@@ -11,7 +11,10 @@
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 #import "DispatchQueueLogFormatter.h"
-#import "NSData+CryptoHashing.h"
+
+#import "BitcoinMessage.h"
+#import "BitcoinVersionMessage.h"
+#import "BitcoinAddress.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <Security/SecRandom.h>
@@ -126,70 +129,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//	DDLogInfo(@"localHost :%@ port:%hu", [sock localHost], [sock localPort]);
 	
 	// Start reading
-	[sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:0];
+	[sock readDataWithTimeout:READ_TIMEOUT tag:0];
 	
 	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version
-	
-	int64_t timestamp = [[NSDate date] timeIntervalSince1970];
-	
+		
 	// Construct version
-	version versionMessage;
-	versionMessage.version = PROTOCOL_VERSION;
-	versionMessage.services = NODE_NETWORK;
-	versionMessage.timestamp = timestamp;
-	
-	address addr_recv;
-	addr_recv.time = 100000000;
-	addr_recv.services = NODE_NETWORK;
-	[sock.connectedHost getCString:addr_recv.ip maxLength:sizeof(addr_recv.ip) encoding:NSASCIIStringEncoding];
-	addr_recv.port = htons(sock.connectedPort);
+	BitcoinVersionMessage *versionMessage = [BitcoinVersionMessage message];
+		
+	BitcoinAddress *addr_recv = [BitcoinAddress addressFromAddress:sock.connectedHost withPort:sock.connectedPort];
 	versionMessage.addr_recv = addr_recv;
 	
-	address addr_from;
-	addr_from.time = 100000000;
-	addr_from.services = NODE_NETWORK;
-	[sock.localHost getCString:addr_from.ip maxLength:sizeof(addr_from.ip) encoding:NSASCIIStringEncoding];
-	addr_from.port = htons(sock.localPort);
+	BitcoinAddress *addr_from = [BitcoinAddress addressFromAddress:sock.localHost withPort:sock.localPort];
 	versionMessage.addr_from = addr_from;
-	
-	int nonce_length = sizeof(versionMessage.nonce);
-	NSMutableData* nonce = [NSMutableData dataWithLength:nonce_length];
-	SecRandomCopyBytes(kSecRandomDefault, nonce_length, [nonce mutableBytes]);
-	[nonce getBytes:&versionMessage.nonce length:nonce_length];
-	
-	versionMessage.user_agent = (char*) malloc(18);
-	strncpy(versionMessage.user_agent, "/Satoshi:0.8.1.99/", 18); // Command
-	versionMessage.user_agent_length = sizeof(versionMessage.user_agent);
-	//NSString *user_agent = @"/Satoshi:0.7.2/"; // TODO: Make this something unique
-	//versionMessage.user_agent_length = user_agent.length;
-	//[user_agent getCString:versionMessage.user_agent maxLength:versionMessage.user_agent_length encoding:NSASCIIStringEncoding];
-	
-	versionMessage.start_height = 0; // TODO: Starting with no blocks every time, for now
-	versionMessage.relay = FALSE; // TODO: Necessary?
-	
-	NSData *versionData = [NSData dataWithBytes:&versionMessage length:sizeof(version)];
-	
-	// Construct header
-	header versionHeader;
-	versionHeader.magic = 0x0709110B; // 0xD9B4BEF9 in non-testnet
-	strncpy(versionHeader.command, "version", COMMAND_LENGTH);
-	versionHeader.length = sizeof(versionMessage);
-	
-	NSData *hash = [[versionData sha256Hash] sha256Hash];
-	[hash getBytes:&versionHeader.checksum length:sizeof(versionHeader.checksum)]; // First 4 bytes of sha256(sha256(payload))
-	
-	DDLogInfo(@"sending version: version %d, blocks=%d, us=%s, them=%s, peer=%s", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.ip, versionMessage.addr_recv.ip, versionMessage.addr_recv.ip);
-	
+
 	// Send message
-	NSData *headerData = [NSData dataWithBytes:&versionHeader length:sizeof(header)];
-	DDLogInfo(@"header: %@", headerData);
-	DDLogInfo(@"version: %@", versionData);
+	DDLogInfo(@"sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
 	
-	NSMutableData *fullMessage = [NSMutableData data];
-	[fullMessage appendData:headerData];
-	[fullMessage appendData:versionData];
-	
-	[sock writeData:fullMessage withTimeout:-1.0 tag:0];
+	[sock writeData:[versionMessage getData] withTimeout:-1.0 tag:0];
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
@@ -206,7 +162,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
 	DDLogInfo(@"socket:%p didReadData:withTag:%ld", sock, tag);
 	
-	DDLogInfo(@"Full response:\n%@", data);
+	DDLogInfo(@"Full response: %@", data);
+	BitcoinMessage *message = [BitcoinMessage messageFromBytes:[NSData dataWithData:data] fromOffset:0];
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didReadPartialDataOfLength:(NSUInteger)partialLength withTag:(long)tag
+{
+	DDLogInfo(@"socket:%p didReadPartialDataOfLength:%ld:%ld", sock, (long)partialLength, tag);
 }
 
 /*- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
@@ -218,6 +180,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	return 0.0;
 }*/
+
+- (void)socket:(GCDAsyncSocket *)sock didWriteWithTag:(long)tag
+{
+	DDLogInfo(@"socket:%p didWriteWithTag:%ld", sock, tag);
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didWritePartialDataOfLength:(NSUInteger)partialLength withTag:(long)tag
+{
+	DDLogInfo(@"socket:%p didWritePartialDataOfLength:%ld:%ld", sock, (long)partialLength, tag);
+}
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {

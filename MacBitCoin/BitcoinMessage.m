@@ -21,6 +21,7 @@
 	if ((self = [super init])){
 		// Read and decode header
 		NSData *header = [data subdataWithRange:NSMakeRange(offset, BITCOIN_HEADER_LENGTH)];
+		NSLog(@"Header: %@", header);
 		
 		_magic = [header offsetToInt32:offset];
 		
@@ -32,6 +33,7 @@
 		
 		// Rest of message is payload
 		_payload = [data subdataWithRange:NSMakeRange(offset+BITCOIN_HEADER_LENGTH, _length)];
+		NSLog(@"Payload: %@", _payload);
 		
 		// TODO: Check checksum and throw exception
 	}
@@ -47,14 +49,21 @@
 
 -(id)initFromPayload:(NSData *)data fromOffset:(int)offset withType:(BitcoinMessageType)messageType{
 	if ((self = [super init])){
-		_magic = 0x0709110B; // TODO: This is testnet magic
 		_messageType = messageType;
-		_length = (uint32_t)data.length - offset;
-		_payload = [data subdataWithRange:NSMakeRange(offset, _length)];
-		_checksum = [[[_payload sha256Hash] sha256Hash] offsetToInt32:0];
+		_payload = [data subdataWithRange:NSMakeRange(offset, data.length-offset)];
+		
+		[self generateHeader]; // TODO: Is this safe to do?
 	}
 	
 	return self;
+}
+
+// Builds the header vars from the payload
+-(void)generateHeader{
+	// TODO: Exception if payload is empty
+	_magic = 0x0709110B; // TODO: This is testnet magic
+	_length = (uint32_t)_payload.length;
+	_checksum = [[[_payload sha256Hash] sha256Hash] offsetToInt32:0];
 }
 
 // Calculates a header and returns it
