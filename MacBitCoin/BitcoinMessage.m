@@ -32,8 +32,10 @@
 		_checksum = [header offsetToInt32:offset+20];
 		
 		// Rest of message is payload
-		_payload = [data subdataWithRange:NSMakeRange(offset+BITCOIN_HEADER_LENGTH, _length)];
-		NSLog(@"Payload: %@", _payload);
+		if (data.length == offset+BITCOIN_HEADER_LENGTH+_length){
+			_payload = [data subdataWithRange:NSMakeRange(offset+BITCOIN_HEADER_LENGTH, _length)];
+			NSLog(@"Payload: %@", _payload);
+		}
 		
 		// TODO: Check checksum and throw exception
 	}
