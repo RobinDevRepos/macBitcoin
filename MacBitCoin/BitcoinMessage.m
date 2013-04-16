@@ -23,7 +23,7 @@
 		NSData *header = [data subdataWithRange:NSMakeRange(offset, BITCOIN_HEADER_LENGTH)];
 		NSLog(@"Header: %@", header);
 		
-		_magic = [header offsetToInt32:offset];
+		_magic = [header offsetToInt32:offset]; // TODO: Validate this
 		
 		NSString *command = [[NSString alloc] initWithData:[header subdataWithRange:NSMakeRange(offset+4, BITCOIN_COMMAND_LENGTH)] encoding:NSASCIIStringEncoding];
 		// TODO: Convert this into message type AND maybe upgrade this object and parse the payload?

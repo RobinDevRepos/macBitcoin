@@ -51,11 +51,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//
 	// The best approach for your application will depend upon convenience, requirements and performance.
 	
-	//socketQueueIn = dispatch_queue_create("socketQueueIn", NULL);
+	socketQueueIn = dispatch_queue_create("socketQueueIn", NULL);
 
 	// Start listening for incoming requests
-	//listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueIn];
-	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueIn];
+	//listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
 	// Setup an array to store all accepted client connections
 	connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
@@ -72,9 +72,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 	
 	// Outgoing socket
-	//socketQueueOut = dispatch_queue_create("socketQueueOut", NULL);
-	//asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueOut];
-	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+	socketQueueOut = dispatch_queue_create("socketQueueOut", NULL);
+	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueOut];
+	//asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
 	
 	// Now we tell the ASYNCHRONOUS socket to connect.
@@ -95,7 +95,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// When the asynchronous socket connects, it will invoke the socket:didConnectToHost:port: delegate method.
 	
 	NSArray *seedHosts;
-	if (TRUE){
+	if (FALSE){
 		// TODO: Do this with a DNS lookup
 		seedHosts = [NSArray arrayWithObjects:
 			@"213.5.71.38",
@@ -196,7 +196,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	if (tag == TAG_FIXED_LENGTH_HEADER){
 		BitcoinMessage *message = [BitcoinMessage messageFromBytes:[NSData dataWithData:data] fromOffset:0];
-		[sock readDataToLength:103 withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
+		
+		DDLogInfo(@"Header read. Waiting for body: %d", message.length);
+		[sock readDataToLength:message.length withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
 	}
 	else if (tag == TAG_RESPONSE_BODY){
 		[sock readDataToLength:24 withTimeout:-1 tag:TAG_FIXED_LENGTH_HEADER];
