@@ -45,6 +45,10 @@ typedef enum{
 +(id)messageFromPayload:(NSData*)data fromOffset:(int)offset withType:(BitcoinMessageType)messageType;
 -(id)initFromPayload:(NSData*)data fromOffset:(int)offset withType:(BitcoinMessageType)messageType;
 
--(NSData*) getData;
+-(NSData*)getHeader;
+-(NSData*)getPayload;
+-(NSData*)getData;
+
+-(NSString*)getCommandName;
 
 @end

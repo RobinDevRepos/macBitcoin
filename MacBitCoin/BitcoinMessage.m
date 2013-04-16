@@ -25,12 +25,15 @@
 		_magic = [header offsetToInt32:offset];
 		
 		NSString *command = [[NSString alloc] initWithData:[header subdataWithRange:NSMakeRange(offset+4, BITCOIN_COMMAND_LENGTH)] encoding:NSASCIIStringEncoding];
+		// TODO: Convert this into message type AND maybe upgrade this object and parse the payload?
 		
 		_length = [header offsetToInt32:offset+16];
 		_checksum = [header offsetToInt32:offset+20];
 		
 		// Rest of message is payload
 		_payload = [data subdataWithRange:NSMakeRange(offset+BITCOIN_HEADER_LENGTH, _length)];
+		
+		// TODO: Check checksum and throw exception
 	}
 	
 	return self;
@@ -54,8 +57,53 @@
 	return self;
 }
 
--(NSData*) getData {
+// Calculates a header and returns it
+-(NSData*) getHeader{
+	NSMutableData *data = [NSMutableData data];
+	
+	[data appendData:[NSData dataWithInt32:self.magic]];
+	
+	uint8_t command[BITCOIN_COMMAND_LENGTH];
+	NSString *name = [self getCommandName];
+	// TODO: Throw exception if name is null
+	for (int i=0; i<name.length; i++){
+		command[i] = [name characterAtIndex:i];
+	}
+	[data appendData:[NSData dataWithBytes:command length:BITCOIN_COMMAND_LENGTH]];
+	
+	[data appendData:[NSData dataWithInt32:self.length]];
+	[data appendData:[NSData dataWithInt32:self.checksum]];
+	
+	return data;
+}
+
+// Just returns the payload
+-(NSData*) getPayload{
 	return self.payload;
+}
+
+// Returns header and then payload
+-(NSData*) getData {
+	NSMutableData *data = [NSMutableData data];
+	
+	[data appendData:[self getHeader]];
+	[data appendData:[self getPayload]];
+	
+	return data;
+}
+
+-(NSString*)getCommandName{
+	NSString *name;
+	switch (self.messageType) {
+		case BITCOIN_MESSAGE_TYPE_VERSION:
+			name = @"version";
+			break;
+			
+		default:
+			break;
+	}
+	
+	return name;
 }
 
 @end

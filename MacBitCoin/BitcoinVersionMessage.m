@@ -39,7 +39,7 @@
 	return self;
 }
 
--(NSData*) getData{
+-(NSData*) getPayload{
 	NSMutableData *data = [NSMutableData data];
 	
 	[data appendData:[NSData dataWithInt32:self.version]];

@@ -30,6 +30,6 @@
 +(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
--(NSData*) getData;
+-(NSData*) getPayload;
 
 @end
