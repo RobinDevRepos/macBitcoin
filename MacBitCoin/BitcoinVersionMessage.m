@@ -13,6 +13,7 @@
 
 @implementation BitcoinVersionMessage
 
+// Init a version message with bytes (header + payload)
 +(id) messageFromBytes:(NSData *)data fromOffset:(int)offset{
 	return [[BitcoinVersionMessage alloc] initFromBytes:data fromOffset:offset];
 }
@@ -21,6 +22,7 @@
 	if ((self = [super initFromBytes:data fromOffset:offset])){
 		self.messageType = BITCOIN_MESSAGE_TYPE_VERSION;
 		
+		// Header has been parsed by our parent BitcoinMessage, so fast-forward to the payload
 		offset += BITCOIN_HEADER_LENGTH;
 		_version = [data offsetToInt32:offset];
 		_services = [data offsetToInt64:offset+4];
@@ -39,6 +41,7 @@
 	return self;
 }
 
+// Encode our payload
 -(NSData*) getPayload{
 	NSMutableData *data = [NSMutableData data];
 	

@@ -92,6 +92,7 @@
 	return data;
 }
 
+// Returns the command name from our message type
 -(NSString*)getCommandName{
 	NSString *name;
 	switch (self.messageType) {
