@@ -8,6 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define TAG_FIXED_LENGTH_HEADER 0
+#define TAG_RESPONSE_BODY 1
+
 @class GCDAsyncSocket;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate> {

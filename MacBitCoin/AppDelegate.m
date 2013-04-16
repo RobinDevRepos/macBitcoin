@@ -51,10 +51,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//
 	// The best approach for your application will depend upon convenience, requirements and performance.
 	
-	socketQueueIn = dispatch_queue_create("socketQueueIn", NULL);
+	//socketQueueIn = dispatch_queue_create("socketQueueIn", NULL);
 
 	// Start listening for incoming requests
-	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueIn];
+	//listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueIn];
+	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
 	// Setup an array to store all accepted client connections
 	connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
@@ -71,8 +72,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 	
 	// Outgoing socket
-	socketQueueOut = dispatch_queue_create("socketQueueOut", NULL);
-	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueOut];
+	//socketQueueOut = dispatch_queue_create("socketQueueOut", NULL);
+	//asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueOut];
+	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
 	
 	// Now we tell the ASYNCHRONOUS socket to connect.
@@ -92,9 +94,36 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//
 	// When the asynchronous socket connects, it will invoke the socket:didConnectToHost:port: delegate method.
 	
-	// http://testnet.mojocoin.com/about
-	//NSString *host = @"199.26.85.40";
-	NSString *host = @"localhost";
+	NSArray *seedHosts;
+	if (TRUE){
+		// TODO: Do this with a DNS lookup
+		seedHosts = [NSArray arrayWithObjects:
+			@"213.5.71.38",
+			@"173.236.193.117",
+			@"131.188.138.23",
+			@"192.81.222.207",
+			@"54.243.45.209",
+			@"78.46.18.137",
+			@"23.21.243.183",
+			@"178.63.48.141",
+			@"24.12.138.16",
+			@"62.213.207.209",
+			@"173.230.150.38",
+			@"164.177.157.148",
+			@"94.23.47.168",
+			@"46.4.24.198",
+			@"5.9.2.145",
+			@"94.23.1.23",
+			@"91.121.137.219",
+			@"199.26.85.40",
+			@"108.61.77.74",
+			@"152.2.31.233",
+			nil];
+	}
+	else{
+		seedHosts = [NSArray arrayWithObject:@"localhost"];
+	}
+	NSString *host = [seedHosts objectAtIndex:0];
 	uint16_t port = 18333; // Real port is 8333
 		
 	DDLogInfo(@"Connecting to \"%@\" on port %hu...", host, port);
@@ -129,7 +158,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	//	DDLogInfo(@"localHost :%@ port:%hu", [sock localHost], [sock localPort]);
 	
 	// Start reading
-	[sock readDataWithTimeout:READ_TIMEOUT tag:0];
+	[sock readDataToLength:24 withTimeout:READ_TIMEOUT tag:TAG_FIXED_LENGTH_HEADER];
 	
 	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version
 		
@@ -145,7 +174,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Send message
 	DDLogInfo(@"sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
 	
-	[sock writeData:[versionMessage getData] withTimeout:-1.0 tag:0];
+	NSData *versionData = [versionMessage getData];
+	DDLogInfo(@"%@", versionData);
+	[sock writeData:versionData withTimeout:-1.0 tag:0];
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
@@ -161,9 +192,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
 	DDLogInfo(@"socket:%p didReadData:withTag:%ld", sock, tag);
-	
 	DDLogInfo(@"Full response: %@", data);
-	BitcoinMessage *message = [BitcoinMessage messageFromBytes:[NSData dataWithData:data] fromOffset:0];
+	
+	if (tag == TAG_FIXED_LENGTH_HEADER){
+		BitcoinMessage *message = [BitcoinMessage messageFromBytes:[NSData dataWithData:data] fromOffset:0];
+		[sock readDataToLength:103 withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
+	}
+	else if (tag == TAG_RESPONSE_BODY){
+		[sock readDataToLength:24 withTimeout:-1 tag:TAG_FIXED_LENGTH_HEADER];
+	}
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didReadPartialDataOfLength:(NSUInteger)partialLength withTag:(long)tag
@@ -219,7 +256,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	DDLogInfo(@"Accepted client %@:%hu", host, port);
 	
-	[newSocket readDataWithTimeout:READ_TIMEOUT tag:0];
+	[newSocket readDataToLength:24 withTimeout:READ_TIMEOUT tag:TAG_FIXED_LENGTH_HEADER];
 }
 
 @end
