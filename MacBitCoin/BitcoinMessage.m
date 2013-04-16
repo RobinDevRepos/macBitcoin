@@ -60,10 +60,13 @@
 
 // Builds the header vars from the payload
 -(void)generateHeader{
+	if (!self.payload)
+		self.payload = [self getPayload];
+	
 	// TODO: Exception if payload is empty
-	_magic = 0x0709110B; // TODO: This is testnet magic
-	_length = (uint32_t)_payload.length;
-	_checksum = [[[_payload sha256Hash] sha256Hash] offsetToInt32:0];
+	self.magic = 0x0709110B; // TODO: This is testnet magic
+	self.length = (uint32_t)self.payload.length;
+	self.checksum = [[[self.payload sha256Hash] sha256Hash] offsetToInt32:0];
 }
 
 // Calculates a header and returns it
@@ -75,8 +78,13 @@
 	uint8_t command[BITCOIN_COMMAND_LENGTH];
 	NSString *name = [self getCommandName];
 	// TODO: Throw exception if name is null
-	for (int i=0; i<name.length; i++){
-		command[i] = [name characterAtIndex:i];
+	for (int i=0; i<BITCOIN_COMMAND_LENGTH; i++){
+		if (i < name.length){
+			command[i] = [name characterAtIndex:i];
+		}
+		else{
+			command[i] = 0x00;
+		}
 	}
 	[data appendData:[NSData dataWithBytes:command length:BITCOIN_COMMAND_LENGTH]];
 	

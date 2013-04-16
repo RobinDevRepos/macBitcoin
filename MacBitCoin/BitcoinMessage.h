@@ -37,7 +37,7 @@ typedef enum{
 @property (nonatomic) BitcoinMessageType messageType;
 @property (nonatomic) uint32_t length;
 @property (nonatomic) uint32_t checksum;
-@property (readonly) NSData *payload;
+@property NSData *payload;
 
 +(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
