@@ -35,7 +35,6 @@
 	if ((self = [super init])){
 		// Read and decode header
 		NSData *header = [data subdataWithRange:NSMakeRange(offset, BITCOIN_HEADER_LENGTH)];
-		NSLog(@"Header: %@", header);
 		
 		_magic = [header offsetToInt32:offset]; // TODO: Validate this
 		
