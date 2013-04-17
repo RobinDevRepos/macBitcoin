@@ -160,10 +160,11 @@
 
 - (void)testBitcoinAddress
 {
-	uint32_t time = 1366044839;
+	//uint32_t time = 1366044839;
 	uint64_t services = 1;
-	NSString *address = @"10.0.0.1";
+	NSString *address = @"::ffff:10.0.0.1";
 	uint16_t port = 8333;
+	NSUInteger length = 26;
 	
 	char bytes[] = {
 		//0xA7, 0x30, 0x6C, 0x51, // Time 1366044839
@@ -180,9 +181,11 @@
 	
 	NSData *dataFromAddress1 = [address1 getData];
 	STAssertEqualObjects(dataFromAddress1, data, @"Address data does not match");
+	STAssertEquals([dataFromAddress1 length], length, @"Address length does not match");
 	
-	BitcoinAddress *address2 = [BitcoinAddress addressFromAddress:@"10.0.0.1" withPort:8333];
+	BitcoinAddress *address2 = [BitcoinAddress addressFromAddress:address withPort:port];
 	NSData *dataFromAddress2 = [address2 getData];
+	STAssertEquals([dataFromAddress2 length], length, @"Address length does not match");
 	
 	BitcoinAddress *address3 = [BitcoinAddress addressFromBytes:dataFromAddress2 fromOffset:0];
 	//STAssertEquals(address2.time, address3.time, @"Address time does not match");
@@ -251,6 +254,54 @@
 	STAssertEqualObjects(versionMessage1.user_agent, user_agent, @"Version message user_agent does not match");
 	STAssertEquals(versionMessage1.start_height, start_height, @"Version message start_height does not match");
 	STAssertEquals(versionMessage1.relay, relay, @"Version message relay does not match");
+	
+	NSData *versionData = [versionMessage1 getData];
+	STAssertEquals(messageHeader1.length, (uint32_t)[versionData length], @"Version header length does not match version data length");
+}
+
+-(void)testMessageHeader
+{
+	char bytes[] = {
+		// Header:
+		0x0b, 0x11, 0x09, 0x07, // magic
+		0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, // "version" command
+		0x67, 0x00, 0x00, 0x00, // 103 bytes -- OK?
+		0x67, 0xb2, 0xb2, 0x6f, // Checksum -- OK?
+		
+		// Message:
+		0x71, 0x11, 0x01, 0x00, // version (70001)
+		0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+		0xf4, 0x2b, 0x6e, 0x51, 0x00, 0x00, 0x00, 0x00, // unix timestamp (2013-04-16 21:58:28)
+		
+		// addr_recv
+		0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, // address
+		0x00, 0x00, // port
+		
+		// addr_from
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, // address
+		0x00, 0x00, // port
+		
+		0xd3, 0xa4, 0x1e, 0x39, 0xff, 0x59, 0x0d, 0xae, // Nonce
+		0x12, // User agent length (18 bytes)
+		0x2f, 0x53, 0x61, 0x74, 0x6f, 0x73, 0x68, 0x69, 0x3a, 0x30, 0x2e, 0x38, 0x2e, 0x31, 0x2e, 0x39, 0x39, 0x2f, // User agent (/Satoshi:0.8.1.99/)
+		0xf5, 0x06, 0x01, 0x00 // Block height
+		// Relay not present
+	};
+	
+	NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	BitcoinMessageHeader *messageHeader1 = [BitcoinMessageHeader headerFromBytes:data fromOffset:0];
+	BitcoinVersionMessage *versionMessage1 = [BitcoinVersionMessage messageFromBytes:data fromOffset:BITCOIN_HEADER_LENGTH];
+	
+	NSData *versionData = [versionMessage1 getData];
+	NSLog(@"%@", versionData);
+	BitcoinMessageHeader *messageHeader2 = [BitcoinMessageHeader headerFromPayload:versionData withMessageType:BITCOIN_MESSAGE_TYPE_VERSION];
+	
+	STAssertEquals(messageHeader1.magic, messageHeader2.magic, @"Header magic does not match");
+	STAssertEquals(messageHeader1.messageType, messageHeader2.messageType, @"Header messageType does not match");
+	STAssertEquals(messageHeader1.length, messageHeader2.length, @"Header length does not match");
+	STAssertEquals(messageHeader1.checksum, messageHeader2.checksum, @"Header checksum does not match");
 }
 
 @end

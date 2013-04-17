@@ -50,7 +50,8 @@
 		// If the conversion worked, convert the string format array into an NSString
 		if (conversion != NULL){
 			NSString *address = [NSString stringWithCString:ip encoding:NSASCIIStringEncoding];
-			_address = [address stringByReplacingOccurrencesOfString:@"::ffff:" withString:@""];
+			//_address = [address stringByReplacingOccurrencesOfString:@"::ffff:" withString:@""];
+			_address = address;
 		}
 		
 		// Read out port from network byte order
@@ -72,7 +73,7 @@
 	// Convert to byte array
 	char bytes[16];
 	[addressData getBytes:bytes length:sizeof(bytes)];
-	if (addressData.length == 8){
+	if (addressData.length == 7){
 		// Looks like ipv4 -- encode it into ipv6
 		// Probably a better way to do this
 		for (int i=0; i<8; i++){
