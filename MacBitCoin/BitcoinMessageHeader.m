@@ -65,7 +65,7 @@
 }
 
 -(id)initFromPayload:(NSData*)payload withMessageType:(BitcoinMessageType)type{
-	if ((self = [super init])){
+	if ((self = [self init])){
 		_length = (uint32_t)[payload length];
 		_messageType = type;
 		_checksum = [[[payload sha256Hash] sha256Hash] offsetToInt32:0];
