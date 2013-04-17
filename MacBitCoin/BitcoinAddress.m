@@ -34,12 +34,14 @@
 
 -(id) initFromBytes:(NSData*)data fromOffset:(int)offset{
 	if ((self = [super init])){
-		_time = [data offsetToInt32:offset];
-		_services = [data offsetToInt64:offset+4];
+		//_time = [data offsetToInt32:offset];
+		//offset += 4;
+		_services = [data offsetToInt64:offset];
 		
 		// Read 16 bytes out into an array
 		uint8_t bytes[16];
-		[data getBytes:bytes range:NSMakeRange(offset+12, 16)];
+		offset += 8;
+		[data getBytes:bytes range:NSMakeRange(offset, 16)];
 		
 		// Convert the byte array from network to string format
 		char ip[INET6_ADDRSTRLEN];
@@ -52,7 +54,8 @@
 		}
 		
 		// Read out port from network byte order
-		_port = htons([data offsetToInt16:offset+28]);
+		offset += 16;
+		_port = htons([data offsetToInt16:offset]);
 	}
 	
 	return self;
@@ -60,7 +63,7 @@
 
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
-	[data appendData:[NSData dataWithInt32:self.time]];
+	//[data appendData:[NSData dataWithInt32:self.time]];
 	[data appendData:[NSData dataWithInt64:self.services]];
 	
 	// Read the NSString string format address into NSData
