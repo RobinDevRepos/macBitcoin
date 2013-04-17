@@ -8,10 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "GCDAsyncSocket.h"
+#import "BitcoinPeer.h"
+
 #define TAG_FIXED_LENGTH_HEADER 0
 #define TAG_RESPONSE_BODY 1
-
-@class GCDAsyncSocket;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
 @private
@@ -23,6 +24,8 @@
 	GCDAsyncSocket *listenSocket;
 	NSMutableArray *connectedSockets;
 	dispatch_queue_t socketQueueIn;
+	
+	BitcoinPeer *peer;
 }
 
 @property (assign) IBOutlet NSWindow *window;

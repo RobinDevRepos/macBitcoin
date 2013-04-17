@@ -47,6 +47,8 @@ typedef enum{
 +(id)headerFromPayload:(NSData*)payload withMessageType:(BitcoinMessageType)type;
 -(id)initFromPayload:(NSData*)payload withMessageType:(BitcoinMessageType)type;
 
++(uint32_t) buildChecksum:(NSData*)data;
+
 -(NSData*)getData;
 
 -(NSString*)getCommandName;

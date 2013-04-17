@@ -53,8 +53,6 @@
 		
 		_length = [header offsetToInt32:offset+16];
 		_checksum = [header offsetToInt32:offset+20];
-		
-		// TODO: Check checksum and throw exception
 	}
 	
 	return self;
@@ -68,10 +66,14 @@
 	if ((self = [self init])){
 		_length = (uint32_t)[payload length];
 		_messageType = type;
-		_checksum = [[[payload sha256Hash] sha256Hash] offsetToInt32:0];
+		_checksum = [BitcoinMessageHeader buildChecksum:payload];
 	}
 	
 	return self;
+}
+
++(uint32_t) buildChecksum:(NSData*)data{
+	return [[[data sha256Hash] sha256Hash] offsetToInt32:0];
 }
 
 // Returns header data

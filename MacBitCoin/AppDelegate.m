@@ -12,9 +12,7 @@
 #import "DDTTYLogger.h"
 #import "DispatchQueueLogFormatter.h"
 
-#import "BitcoinMessageHeader.h"
-#import "BitcoinVersionMessage.h"
-#import "BitcoinAddress.h"
+#import "BitcoinPeer.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <Security/SecRandom.h>
@@ -55,7 +53,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 	// Start listening for incoming requests
 	listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueIn];
-	//listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
 	// Setup an array to store all accepted client connections
 	connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
@@ -74,7 +71,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Outgoing socket
 	socketQueueOut = dispatch_queue_create("socketQueueOut", NULL);
 	asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:socketQueueOut];
-	//asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
 	
 	// Now we tell the ASYNCHRONOUS socket to connect.
@@ -95,7 +91,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// When the asynchronous socket connects, it will invoke the socket:didConnectToHost:port: delegate method.
 	
 	NSArray *seedHosts;
-	if (FALSE){
+	if (TRUE){
 		// TODO: Do this with a DNS lookup
 		seedHosts = [NSArray arrayWithObjects:
 			@"213.5.71.38",
@@ -128,23 +124,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 	DDLogInfo(@"Connecting to \"%@\" on port %hu...", host, port);
 		
-	error = nil;
-	if (![asyncSocket connectToHost:host onPort:port withTimeout:CONNECT_TIMEOUT error:&error])
-	{
-		DDLogError(@"Error connecting: %@", error);
-	}
-		
-	// You can also specify an optional connect timeout.
-	
-	//	NSError *error = nil;
-	//	if (![asyncSocket connectToHost:host onPort:80 withTimeout:5.0 error:&error])
-	//	{
-	//		DDLogError(@"Error connecting: %@", error);
-	//	}
-	
-	// The connect method above is asynchronous.
-	// At this point, the connection has been initiated, but hasn't completed.
-	// When the connection is establish, our socket:didConnectToHost:port: delegate method will be invoked.
+	peer = [BitcoinPeer peerFromAddress:host withPort:port];
+	[peer connect:[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()]];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,29 +141,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Start reading
 	[sock readDataToLength:24 withTimeout:READ_TIMEOUT tag:TAG_FIXED_LENGTH_HEADER];
 	
-	// Send version: https://en.bitcoin.it/wiki/Protocol_specification#version
-		
-	// Construct version
-	BitcoinVersionMessage *versionMessage = [BitcoinVersionMessage message];
-		
-	BitcoinAddress *addr_recv = [BitcoinAddress addressFromAddress:sock.connectedHost withPort:sock.connectedPort];
-	versionMessage.addr_recv = addr_recv;
-	
-	BitcoinAddress *addr_from = [BitcoinAddress addressFromAddress:sock.localHost withPort:sock.localPort];
-	versionMessage.addr_from = addr_from;
-
-	// Send message
-	DDLogInfo(@"sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
-	
-	NSData *versionData = [versionMessage getData];
-	BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromPayload:versionData withMessageType:BITCOIN_MESSAGE_TYPE_VERSION];
-	NSData *headerData = [header getData];
-	
-	DDLogInfo(@"%@", headerData);
-	[sock writeData:headerData withTimeout:-1.0 tag:0];
-	
-	DDLogInfo(@"%@", versionData);
-	[sock writeData:versionData withTimeout:-1.0 tag:0];
+	[peer pushVersion];
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
@@ -201,12 +160,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	DDLogInfo(@"Full response: %@", data);
 	
 	if (tag == TAG_FIXED_LENGTH_HEADER){
-		BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromBytes:[NSData dataWithData:data] fromOffset:0];
+		uint32_t length = [peer receiveHeader:data];
 		
-		DDLogInfo(@"Header read. Waiting for body: %d", header.length);
-		[sock readDataToLength:header.length withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
+		DDLogInfo(@"Header read. Waiting for body: %d", length);
+		[sock readDataToLength:length withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
 	}
 	else if (tag == TAG_RESPONSE_BODY){
+		[peer receivePayload:data];
 		[sock readDataToLength:24 withTimeout:-1 tag:TAG_FIXED_LENGTH_HEADER];
 	}
 }
