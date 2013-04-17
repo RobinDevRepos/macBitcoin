@@ -12,7 +12,7 @@
 #import "DDTTYLogger.h"
 #import "DispatchQueueLogFormatter.h"
 
-#import "BitcoinMessage.h"
+#import "BitcoinMessageHeader.h"
 #import "BitcoinVersionMessage.h"
 #import "BitcoinAddress.h"
 
@@ -175,6 +175,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	DDLogInfo(@"sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
 	
 	NSData *versionData = [versionMessage getData];
+	BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromPayload:versionData withMessageType:BITCOIN_MESSAGE_TYPE_VERSION];
+	NSData *headerData = [header getData];
+	
+	DDLogInfo(@"%@", headerData);
+	[sock writeData:headerData withTimeout:-1.0 tag:0];
+	
 	DDLogInfo(@"%@", versionData);
 	[sock writeData:versionData withTimeout:-1.0 tag:0];
 }
@@ -195,10 +201,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	DDLogInfo(@"Full response: %@", data);
 	
 	if (tag == TAG_FIXED_LENGTH_HEADER){
-		BitcoinMessage *message = [BitcoinMessage messageFromBytes:[NSData dataWithData:data] fromOffset:0];
+		BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromBytes:[NSData dataWithData:data] fromOffset:0];
 		
-		DDLogInfo(@"Header read. Waiting for body: %d", message.length);
-		[sock readDataToLength:message.length withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
+		DDLogInfo(@"Header read. Waiting for body: %d", header.length);
+		[sock readDataToLength:header.length withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
 	}
 	else if (tag == TAG_RESPONSE_BODY){
 		[sock readDataToLength:24 withTimeout:-1 tag:TAG_FIXED_LENGTH_HEADER];

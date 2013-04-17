@@ -11,6 +11,7 @@
 #import "NSData+Integer.h"
 #import "BitcoinVarInt.h"
 #import "BitcoinAddress.h"
+#import "BitcoinMessageHeader.h"
 #import "BitcoinVersionMessage.h"
 
 @implementation MacBitCoinTests
@@ -222,16 +223,17 @@
 	};
 	
 	NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-	BitcoinVersionMessage *versionMessage1 = [BitcoinVersionMessage messageFromBytes:data fromOffset:0];
+	BitcoinMessageHeader *messageHeader1 = [BitcoinMessageHeader headerFromBytes:data fromOffset:0];
+	BitcoinVersionMessage *versionMessage1 = [BitcoinVersionMessage messageFromBytes:data fromOffset:BITCOIN_HEADER_LENGTH];
 	
 	// Test header
 	uint32_t magic = 0x0709110B;
 	uint32_t length = 103;
 	uint32_t checksum = 291065956;
-	STAssertEquals(versionMessage1.magic, magic, @"Version header magic does not match");
-	STAssertEquals(versionMessage1.messageType, 1, @"Version header messageType does not match");
-	STAssertEquals(versionMessage1.length, length, @"Version header length does not match");
-	STAssertEquals(versionMessage1.checksum, checksum, @"Version checksum magic does not match");
+	STAssertEquals(messageHeader1.magic, magic, @"Version header magic does not match");
+	STAssertEquals(messageHeader1.messageType, 1, @"Version header messageType does not match");
+	STAssertEquals(messageHeader1.length, length, @"Version header length does not match");
+	STAssertEquals(messageHeader1.checksum, checksum, @"Version checksum magic does not match");
 	
 	// Test payload
 	int32_t version = 70001;

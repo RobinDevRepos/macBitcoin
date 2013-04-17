@@ -17,7 +17,7 @@
 		4138ABA2171472580023BA3C /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAC3171472570023BA3C /* GCDAsyncSocket.m */; };
 		4138AC20171472FF0023BA3C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4138AC1F171472FF0023BA3C /* Security.framework */; };
 		4138AC231715C6290023BA3C /* NSData+CryptoHashing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AC221715C6290023BA3C /* NSData+CryptoHashing.m */; };
-		413C1814171A24E900EAD404 /* BitcoinMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C1813171A24E900EAD404 /* BitcoinMessage.m */; };
+		413C1814171A24E900EAD404 /* BitcoinMessageHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C1813171A24E900EAD404 /* BitcoinMessageHeader.m */; };
 		413C1817171A43D700EAD404 /* BitcoinVersionMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C1816171A43D700EAD404 /* BitcoinVersionMessage.m */; };
 		413C181A171B166C00EAD404 /* BitcoinVarInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C1819171B166C00EAD404 /* BitcoinVarInt.m */; };
 		413C181D171B173300EAD404 /* BitcoinAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C181C171B173300EAD404 /* BitcoinAddress.m */; };
@@ -65,8 +65,8 @@
 		4138AC1F171472FF0023BA3C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4138AC211715C6290023BA3C /* NSData+CryptoHashing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CryptoHashing.h"; sourceTree = "<group>"; };
 		4138AC221715C6290023BA3C /* NSData+CryptoHashing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CryptoHashing.m"; sourceTree = "<group>"; };
-		413C1812171A24E900EAD404 /* BitcoinMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinMessage.h; sourceTree = "<group>"; };
-		413C1813171A24E900EAD404 /* BitcoinMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinMessage.m; sourceTree = "<group>"; };
+		413C1812171A24E900EAD404 /* BitcoinMessageHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinMessageHeader.h; sourceTree = "<group>"; };
+		413C1813171A24E900EAD404 /* BitcoinMessageHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinMessageHeader.m; sourceTree = "<group>"; };
 		413C1815171A43D700EAD404 /* BitcoinVersionMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinVersionMessage.h; sourceTree = "<group>"; };
 		413C1816171A43D700EAD404 /* BitcoinVersionMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinVersionMessage.m; sourceTree = "<group>"; };
 		413C1818171B166C00EAD404 /* BitcoinVarInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinVarInt.h; sourceTree = "<group>"; };
@@ -210,8 +210,8 @@
 				41B757081712323B005931AE /* Supporting Files */,
 				4138AC211715C6290023BA3C /* NSData+CryptoHashing.h */,
 				4138AC221715C6290023BA3C /* NSData+CryptoHashing.m */,
-				413C1812171A24E900EAD404 /* BitcoinMessage.h */,
-				413C1813171A24E900EAD404 /* BitcoinMessage.m */,
+				413C1812171A24E900EAD404 /* BitcoinMessageHeader.h */,
+				413C1813171A24E900EAD404 /* BitcoinMessageHeader.m */,
 				413C1815171A43D700EAD404 /* BitcoinVersionMessage.h */,
 				413C1816171A43D700EAD404 /* BitcoinVersionMessage.m */,
 				413C1818171B166C00EAD404 /* BitcoinVarInt.h */,
@@ -375,7 +375,7 @@
 				4138AABE171472270023BA3C /* DispatchQueueLogFormatter.m in Sources */,
 				4138ABA2171472580023BA3C /* GCDAsyncSocket.m in Sources */,
 				4138AC231715C6290023BA3C /* NSData+CryptoHashing.m in Sources */,
-				413C1814171A24E900EAD404 /* BitcoinMessage.m in Sources */,
+				413C1814171A24E900EAD404 /* BitcoinMessageHeader.m in Sources */,
 				413C1817171A43D700EAD404 /* BitcoinVersionMessage.m in Sources */,
 				413C181A171B166C00EAD404 /* BitcoinVarInt.m in Sources */,
 				413C181D171B173300EAD404 /* BitcoinAddress.m in Sources */,

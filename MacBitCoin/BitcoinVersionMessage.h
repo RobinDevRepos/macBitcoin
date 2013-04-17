@@ -8,12 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BitcoinMessage.h"
 #import "BitcoinAddress.h"
 
 #define PROTOCOL_VERSION 70001
 
-@interface BitcoinVersionMessage : BitcoinMessage
+@interface BitcoinVersionMessage : NSObject
 
 @property (nonatomic) int32_t version;
 @property (nonatomic) uint64_t services;
@@ -30,11 +29,11 @@
 @property (nonatomic) bool relay;
 
 +(id)message;
--(id)initMessage;
+-(id)init;
 
 +(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
--(NSData*) getPayload;
+-(NSData*) getData;
 
 @end

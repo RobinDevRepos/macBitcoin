@@ -31,24 +31,22 @@ typedef enum{
 #define BITCOIN_HEADER_LENGTH 24
 #define BITCOIN_COMMAND_LENGTH 12
 
-@interface BitcoinMessage : NSObject
+@interface BitcoinMessageHeader : NSObject
 
 @property (nonatomic) uint32_t magic;
 @property (nonatomic) BitcoinMessageType messageType;
 @property (nonatomic) uint32_t length;
 @property (nonatomic) uint32_t checksum;
-@property NSData *payload;
 
-+(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
++(id)header;
+-(id)init;
+
++(id)headerFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
-+(id)messageFromPayload:(NSData*)data fromOffset:(int)offset withType:(BitcoinMessageType)messageType;
--(id)initFromPayload:(NSData*)data fromOffset:(int)offset withType:(BitcoinMessageType)messageType;
++(id)headerFromPayload:(NSData*)payload withMessageType:(BitcoinMessageType)type;
+-(id)initFromPayload:(NSData*)payload withMessageType:(BitcoinMessageType)type;
 
--(void)generateHeader;
-
--(NSData*)getHeader;
--(NSData*)getPayload;
 -(NSData*)getData;
 
 -(NSString*)getCommandName;

@@ -17,13 +17,11 @@
 
 // Default constructors for when you want to make a message by hand
 +(id)message{
-	return [[BitcoinVersionMessage alloc] initMessage];
+	return [[BitcoinVersionMessage alloc] init];
 }
 
--(id)initMessage{
+-(id)init{
 	if ((self = [super init])){
-		self.messageType = BITCOIN_MESSAGE_TYPE_VERSION;
-		
 		_version = PROTOCOL_VERSION;
 		_services = 1; // TODO: Constant!
 		_timestamp = [[NSDate date] timeIntervalSince1970];
@@ -37,8 +35,6 @@
 		
 		_start_height = 0; // TODO: This is variable, so might be best to leave it to be initialized by the caller
 		_relay = true; // https://en.bitcoin.it/wiki/BIP_0037
-		
-		[self generateHeader];
 	}
 	
 	return self;
@@ -50,11 +46,7 @@
 }
 
 -(id)initFromBytes:(NSData *)data fromOffset:(int)offset{
-	if ((self = [super initFromBytes:data fromOffset:offset])){
-		self.messageType = BITCOIN_MESSAGE_TYPE_VERSION;
-		
-		// Header has been parsed by our parent BitcoinMessage, so fast-forward to the payload
-		offset += BITCOIN_HEADER_LENGTH;
+	if ((self = [super init])){
 		_version = [data offsetToInt32:offset];
 		_services = [data offsetToInt64:offset+4];
 		_timestamp = [data offsetToInt64:offset+12];
@@ -73,7 +65,7 @@
 }
 
 // Encode our payload
--(NSData*) getPayload{
+-(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
 	
 	[data appendData:[NSData dataWithInt32:self.version]];
