@@ -66,37 +66,22 @@
 	NSMutableData *data = [NSMutableData data];
 	//[data appendData:[NSData dataWithInt32:self.time]];
 	[data appendData:[NSData dataWithInt64:self.services]];
-	
+		
 	// Read the NSString string format address into NSData
 	NSData *addressData = [self.address dataUsingEncoding:NSASCIIStringEncoding];
-	
+
 	// Convert to byte array
-	char bytes[16];
+	char bytes[27];
 	[addressData getBytes:bytes length:sizeof(bytes)];
-	if (addressData.length == 7){
-		// Looks like ipv4 -- encode it into ipv6
-		// Probably a better way to do this
-		for (int i=0; i<8; i++){
-			bytes[i+7] = bytes[i];
-		}
-		
-		bytes[0] = ':';
-		bytes[1] = ':';
-		bytes[2] = 'f';
-		bytes[3] = 'f';
-		bytes[4] = 'f';
-		bytes[5] = 'f';
-		bytes[6] = ':';
-	}
 	
 	// Convert byte array from string format to network format
 	unsigned char buf[sizeof(struct in6_addr)];
 	int conversion = inet_pton(AF_INET6, bytes, buf);
 	
 	// If the conversion worked, write to the NSData
-	if (conversion > 0){
+	//if (conversion > 0){
 		[data appendData:[NSData dataWithBytes:buf length:sizeof(buf)]];
-	}
+	//}
 	
 	// Convert port to network byte order before writing it to the data
 	[data appendData:[NSData dataWithInt16:ntohs(self.port)]];

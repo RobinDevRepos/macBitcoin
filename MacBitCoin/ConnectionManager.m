@@ -27,6 +27,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (self = [super init]){
 		_peers = [NSMutableArray arrayWithCapacity:10];
 		
+		_ourVersion = [BitcoinVersionMessage message];
+		_ourVersion.addr_from = [BitcoinAddress addressFromAddress:@"::ffff:0.0.0.0" withPort:0]; // TODO: Once we get an external ip, update this and push to our peers
+		
 		// Setup our sockets (GCDAsyncSocket).
 		// The socket will invoke our delegate methods using the usual delegate paradigm.
 		// However, it will invoke the delegate methods on a specified GCD delegate dispatch queue.
@@ -83,7 +86,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 						 nil];
 		}
 		else{
-			seedHosts = [NSArray arrayWithObject:@"localhost"];
+			seedHosts = [NSArray arrayWithObject:@"127.0.0.1"];
 		}
 		
 		for (NSString *host in seedHosts){
@@ -99,8 +102,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if ([self findPeer:peer]) return;
 	
 	if (![peer isConnected]){
-		GCDAsyncSocket *sock = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_socketQueueOut];
-		[peer connect:sock];
+		if (!peer.socket){
+			GCDAsyncSocket *sock = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_socketQueueOut];
+			[peer connect:sock];
+		}
+		else{
+			[peer connect];
+		}
 	}
 	
 	[peer setManager:self];
@@ -147,12 +155,21 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	DDLogInfo(@"socket:%p didConnectToHost:%@ port:%hu", sock, host, port);
 	
 	//	DDLogInfo(@"localHost :%@ port:%hu", [sock localHost], [sock localPort]);
-	
-	// Start reading
-	[sock readDataToLength:24 withTimeout:READ_TIMEOUT tag:TAG_FIXED_LENGTH_HEADER];
-	
+		
 	BitcoinPeer *peer = [self findPeerSocket:sock];
-	[peer pushVersion];
+	if (peer){
+		// Update their address now that we have a socket
+		[peer updateAddressFromSocket:sock];		
+		
+		// Start reading
+		[sock readDataToLength:24 withTimeout:READ_TIMEOUT tag:TAG_FIXED_LENGTH_HEADER];
+
+		// Push version
+		[peer pushVersion];
+	}
+	else{
+		DDLogWarn(@"socket:%p on host:%@ port:%hu is an unknown peer", sock, host, port);
+	}
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
@@ -227,6 +244,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
 	BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:port];
 	seedPeer.socket = newSocket;
+	[seedPeer updateAddressFromSocket:newSocket];
 	[self addPeer:seedPeer];
 	
 	[newSocket readDataToLength:24 withTimeout:READ_TIMEOUT tag:TAG_FIXED_LENGTH_HEADER];

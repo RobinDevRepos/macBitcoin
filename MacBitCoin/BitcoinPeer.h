@@ -11,6 +11,7 @@
 #import "GCDAsyncSocket.h"
 #import "BitcoinAddress.h"
 #import "BitcoinMessageHeader.h"
+#import "BitcoinVersionMessage.h"
 
 @interface BitcoinPeer : NSObject
 
@@ -27,6 +28,8 @@
 +(id) peerFromAddress:(NSString*)address withPort:(UInt16)port;
 -(id) initFromAddress:(NSString*)address withPort:(UInt16)port;
 
+-(void) updateAddressFromSocket:(GCDAsyncSocket*)socket;
+
 -(void) connect;
 -(void) connect:(GCDAsyncSocket*)socket;
 -(void) disconnect;
@@ -37,5 +40,7 @@
 -(BOOL) isConnected;
 
 -(void) pushVersion;
+
+-(BitcoinVersionMessage*) getOurVersion;
 
 @end

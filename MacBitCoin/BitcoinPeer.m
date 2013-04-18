@@ -9,6 +9,7 @@
 #import "BitcoinPeer.h"
 #import "BitcoinMessageHeader.h"
 #import "BitcoinVersionMessage.h"
+#import "ConnectionManager.h"
 
 #define CONNECT_TIMEOUT 1.0
 
@@ -41,6 +42,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	}
 	
 	return self;
+}
+
+-(void) updateAddressFromSocket:(GCDAsyncSocket*)socket{
+	NSString *host = [GCDAsyncSocket hostFromAddress:[socket connectedAddress]];
+	if ([socket isIPv4]){
+		self.address.address = [@"::ffff:" stringByAppendingString:host];
+	}
+	else{
+		self.address.address = host;
+	}
 }
 
 -(void) connect{
@@ -139,20 +150,27 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (![self isConnected]) return;
 	// TODO: Check if we've already done this?
 	
-	// TODO: A lot of the data that pertains to our local state needs to come from somewhere centralized
+	BitcoinVersionMessage *versionMessage = [self getOurVersion];
 	
-	BitcoinVersionMessage *versionMessage = [BitcoinVersionMessage message];
+	// Who are we talking to this time?
+	versionMessage.addr_recv = self.address;
 	
-	BitcoinAddress *addr_recv = [BitcoinAddress addressFromAddress:self.address.address withPort:self.address.port];
-	versionMessage.addr_recv = addr_recv;
-	
-	BitcoinAddress *addr_from = [BitcoinAddress addressFromAddress:self.socket.localHost withPort:self.socket.localPort];
-	versionMessage.addr_from = addr_from;
+	// Freshen timestamp
+	versionMessage.timestamp = [[NSDate date] timeIntervalSince1970];
 	
 	// Send message
 	DDLogInfo(@"Sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
 	
 	[self send:[versionMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_VERSION];
+}
+
+-(BitcoinVersionMessage*) getOurVersion{
+	ConnectionManager *manager = [self manager];
+	if (manager){
+		return [manager ourVersion];
+	}
+	
+	return [BitcoinVersionMessage message];
 }
 
 @end

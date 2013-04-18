@@ -10,6 +10,7 @@
 
 #import "GCDAsyncSocket.h"
 #import "BitcoinPeer.h"
+#import "BitcoinVersionMessage.h"
 
 #define TAG_FIXED_LENGTH_HEADER 0
 #define TAG_RESPONSE_BODY 1
@@ -17,6 +18,7 @@
 @interface ConnectionManager : NSObject
 
 @property uint16_t listenPort;
+@property BitcoinVersionMessage *ourVersion;
 
 // Peers list
 @property NSMutableArray *peers;
