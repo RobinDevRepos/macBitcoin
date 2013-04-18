@@ -14,6 +14,8 @@
 #import "BitcoinMessageHeader.h"
 #import "BitcoinVersionMessage.h"
 #import "BitcoinAddrMessage.h"
+#import "BitcoinInvMessage.h"
+#import "BitcoinInventoryVector.h"
 
 @implementation MacBitCoinTests
 
@@ -333,6 +335,25 @@
 	
 	NSData *data2 = [message1 getData];
 	STAssertEqualObjects(data1, data2, @"Encoded addr messages do not match");
+}
+
+-(void)testInvMessage
+{
+	char bytes[] = {
+		0x01, // length
+		0x01, 0x00, 0x00, 0x00, // object type
+		0xdc, 0x7a, 0x03, 0xbe, 0xcb, 0x18, 0x5a, 0x02, 0x4b, 0xe7, 0x30, 0x5f, 0xfe, 0x4e, 0x31, 0x28, 0x19, 0x50, 0x4f, 0x36, 0x67, 0xff, 0x29, 0xaf, 0x48, 0xc1, 0x43, 0x97, 0x17, 0xdd, 0x44, 0x82 // hash
+	};
+	
+	NSData *data1 = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	BitcoinInvMessage *message1 = [BitcoinInvMessage messageFromBytes:data1 fromOffset:0];
+	
+	uint64_t length = 1;
+	STAssertEquals(message1.count.value, length, @"Inventory length does not match");
+	STAssertEquals([message1.inventory count], length, @"Inventory array length does not match");
+	
+	BitcoinInventoryVector *vector1 = [message1.inventory objectAtIndex:0];
+	STAssertEquals(vector1.type, BITCOIN_INV_OBJ_TYPE_MSG_TX, @"Inventory vector object type does not match");
 }
 
 @end
