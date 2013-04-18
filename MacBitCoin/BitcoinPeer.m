@@ -11,6 +11,8 @@
 
 #import "BitcoinVersionMessage.h"
 
+#define CONNECT_TIMEOUT 1.0
+
 @implementation BitcoinPeer
 
 +(id) peerFromAddress:(NSString*)address withPort:(UInt16)port{
@@ -44,13 +46,14 @@
 	
 	
 	// Connect
-	// TODO: Timeout
 	NSError *error = nil;
-	if (![self.socket connectToHost:self.address.address onPort:self.address.port withTimeout:-1 error:&error])
+	if (![self.socket connectToHost:self.address.address onPort:self.address.port withTimeout:CONNECT_TIMEOUT error:&error])
 	{
 		NSLog(@"Error connecting: %@", error);
 		return;
 	}
+	
+	self.lastSeenTime = [[NSDate date] timeIntervalSince1970];
 }
 
 -(void) connect:(GCDAsyncSocket*)socket{
