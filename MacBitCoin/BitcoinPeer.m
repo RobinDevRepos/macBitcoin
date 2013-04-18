@@ -101,11 +101,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if ([BitcoinMessageHeader buildChecksum:data] != [self.header checksum]) return;
 	
 	if (self.header.messageType == BITCOIN_MESSAGE_TYPE_VERSION){
-		BitcoinVersionMessage *versionMessage1 = [BitcoinVersionMessage messageFromBytes:data fromOffset:0];
-		self.version = [versionMessage1 version];
-		self.address = versionMessage1.addr_from;
+		BitcoinVersionMessage *versionMessage = [BitcoinVersionMessage messageFromBytes:data fromOffset:0];
+		self.version = [versionMessage version];
+		//self.address = [versionMessage addr_from]; // TODO: Test if this is routable before we assign it
 		
 		// TODO: Decide whether we like this version or not and respond
+		DDLogInfo(@"Got version: version %d, blocks=%d, peer=%@:%d", self.version, versionMessage.start_height, self.address.address, self.address.port);
+		if (self.version == PROTOCOL_VERSION){
+			// Send verack
+			
+			// Push version
+		}
 	}
 	else{
 		return;

@@ -86,10 +86,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 			seedHosts = [NSArray arrayWithObject:@"localhost"];
 		}
 		
-		for (NSString *host in seedHosts){
+		/*for (NSString *host in seedHosts){
 			BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:18333]; // Real port is 8333
 			[self addPeer:seedPeer];
-		}
+		}*/
 	}
 	
 	return self;
