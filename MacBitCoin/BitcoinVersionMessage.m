@@ -40,7 +40,7 @@
 	return self;
 }
 
-// Init a version message with bytes (header + payload)
+// Init a version message with payload bytes
 +(id) messageFromBytes:(NSData *)data fromOffset:(int)offset{
 	return [[BitcoinVersionMessage alloc] initFromBytes:data fromOffset:offset];
 }
@@ -52,8 +52,11 @@
 		_version = [data offsetToInt32:offset];
 		_services = [data offsetToInt64:offset+4];
 		_timestamp = [data offsetToInt64:offset+12];
-		_addr_recv = [BitcoinAddress addressFromBytes:data fromOffset:offset+20];
-		_addr_from = [BitcoinAddress addressFromBytes:data fromOffset:offset+46];
+		
+		// Network addresses are not prefixed with a timestamp in the version message.
+		_addr_recv = [BitcoinAddress addressFromBytes:data fromOffset:offset+20 withTimestamp:FALSE];
+		_addr_from = [BitcoinAddress addressFromBytes:data fromOffset:offset+46 withTimestamp:FALSE];
+		
 		_nonce = [data offsetToInt64:offset+72];
 		
 		BitcoinVarInt *userAgentLength = [BitcoinVarInt varintFromBytes:data fromOffset:offset+80];
@@ -74,8 +77,9 @@
 	[data appendData:[NSData dataWithInt64:self.services]];
 	[data appendData:[NSData dataWithInt64:self.timestamp]];
 	
-	[data appendData:[self.addr_recv getData]];
-	[data appendData:[self.addr_from getData]];
+	// Network addresses are not prefixed with a timestamp in the version message.
+	[data appendData:[self.addr_recv getData:FALSE]];
+	[data appendData:[self.addr_from getData:FALSE]];
 	
 	[data appendData:[NSData dataWithInt64:self.nonce]];
 	

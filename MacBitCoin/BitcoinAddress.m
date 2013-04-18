@@ -17,10 +17,6 @@
 	return [[BitcoinAddress alloc] initFromAddress:address withPort:(uint16_t)port];
 }
 
-+(id) addressFromBytes:(NSData*)data fromOffset:(int)offset{
-	return [[BitcoinAddress alloc] initFromBytes:data fromOffset:offset];
-}
-
 -(id) initFromAddress:(NSString*)address withPort:(uint16_t)port{
 	if ((self = [super init])){
 		_time = [[NSDate date] timeIntervalSince1970];
@@ -32,10 +28,21 @@
 	return self;
 }
 
--(id) initFromBytes:(NSData*)data fromOffset:(int)offset{
++(id) addressFromBytes:(NSData*)data fromOffset:(int)offset{
+	return [[BitcoinAddress alloc] initFromBytes:data fromOffset:offset withTimestamp:TRUE];
+}
+
++(id) addressFromBytes:(NSData*)data fromOffset:(int)offset withTimestamp:(bool)useTimestamp{
+	return [[BitcoinAddress alloc] initFromBytes:data fromOffset:offset withTimestamp:useTimestamp];
+}
+
+-(id) initFromBytes:(NSData*)data fromOffset:(int)offset withTimestamp:(bool)useTimestamp{
 	if ((self = [super init])){
-		//_time = [data offsetToInt32:offset];
-		//offset += 4;
+		if (useTimestamp){
+			_time = [data offsetToInt32:offset];
+			offset += 4;
+		}
+		
 		_services = [data offsetToInt64:offset];
 		
 		// Read 16 bytes out into an array
@@ -63,8 +70,13 @@
 }
 
 -(NSData*) getData{
+	return [self getData:TRUE];
+}
+
+-(NSData*) getData:(bool)useTimestamp{
 	NSMutableData *data = [NSMutableData data];
-	//[data appendData:[NSData dataWithInt32:self.time]];
+	
+	if (useTimestamp) [data appendData:[NSData dataWithInt32:self.time]];
 	[data appendData:[NSData dataWithInt64:self.services]];
 		
 	// Read the NSString string format address into NSData

@@ -16,11 +16,14 @@
 @property (nonatomic) uint16_t port;
 
 +(id) addressFromAddress:(NSString*)address withPort:(uint16_t)port;
+-(id) initFromAddress:(NSString*)address withPort:(uint16_t)port;
+
 +(id) addressFromBytes:(NSData*)data fromOffset:(int)offset;
 
--(id) initFromAddress:(NSString*)address withPort:(uint16_t)port;
--(id) initFromBytes:(NSData*)data fromOffset:(int)offset;
++(id) addressFromBytes:(NSData*)data fromOffset:(int)offset withTimestamp:(bool)useTimestamp;
+-(id) initFromBytes:(NSData*)data fromOffset:(int)offset withTimestamp:(bool)useTimestamp;
 
 -(NSData*) getData;
+-(NSData*) getData:(bool)useTimestamp;
 
 @end
