@@ -295,7 +295,6 @@
 	BitcoinVersionMessage *versionMessage1 = [BitcoinVersionMessage messageFromBytes:data fromOffset:BITCOIN_HEADER_LENGTH];
 	
 	NSData *versionData = [versionMessage1 getData];
-	NSLog(@"%@", versionData);
 	BitcoinMessageHeader *messageHeader2 = [BitcoinMessageHeader headerFromPayload:versionData withMessageType:BITCOIN_MESSAGE_TYPE_VERSION];
 	
 	STAssertEquals(messageHeader1.magic, messageHeader2.magic, @"Header magic does not match");

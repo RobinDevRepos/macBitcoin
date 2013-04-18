@@ -9,13 +9,13 @@
 #import "ConnectionManager.h"
 #import "DDLog.h"
 
-#define READ_TIMEOUT 5.0
-
 #ifdef DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
 static const int ddLogLevel = LOG_LEVEL_WARN;
 #endif
+
+#define READ_TIMEOUT 5.0
 
 @implementation ConnectionManager
 
@@ -57,7 +57,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		// Seed our peers list
 		NSArray *seedHosts;
-		if (TRUE){
+		if (FALSE){
 			// TODO: Do this with a DNS lookup
 			seedHosts = [NSArray arrayWithObjects:
 						 @"213.5.71.38",

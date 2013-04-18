@@ -8,10 +8,17 @@
 
 #import "BitcoinPeer.h"
 #import "BitcoinMessageHeader.h"
-
 #import "BitcoinVersionMessage.h"
 
 #define CONNECT_TIMEOUT 1.0
+
+#import "DDLog.h"
+
+#ifdef DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_WARN;
+#endif
 
 @implementation BitcoinPeer
 
@@ -49,7 +56,7 @@
 	NSError *error = nil;
 	if (![self.socket connectToHost:self.address.address onPort:self.address.port withTimeout:CONNECT_TIMEOUT error:&error])
 	{
-		NSLog(@"Error connecting: %@", error);
+		DDLogInfo(@"Error connecting: %@", error);
 		return;
 	}
 	
@@ -73,10 +80,10 @@
 	BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromPayload:payload withMessageType:type];
 	NSData *headerData = [header getData];
 	
-	NSLog(@"%@", headerData);
+	DDLogInfo(@"%@", headerData);
 	[self.socket writeData:headerData withTimeout:-1.0 tag:0];
 	
-	NSLog(@"%@", payload);
+	DDLogInfo(@"%@", payload);
 	[self.socket writeData:payload withTimeout:-1.0 tag:0];
 }
 
@@ -127,7 +134,7 @@
 	versionMessage.addr_from = addr_from;
 	
 	// Send message
-	NSLog(@"sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
+	DDLogInfo(@"sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
 	
 	[self send:[versionMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_VERSION];
 }
