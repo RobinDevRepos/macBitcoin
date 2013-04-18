@@ -80,11 +80,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromPayload:payload withMessageType:type];
 	NSData *headerData = [header getData];
 	
-	DDLogInfo(@"%@", headerData);
+	DDLogInfo(@"Header %d: %@", header.length, headerData);
 	[self.socket writeData:headerData withTimeout:-1.0 tag:0];
 	
-	DDLogInfo(@"%@", payload);
-	[self.socket writeData:payload withTimeout:-1.0 tag:0];
+	if (payload){
+		DDLogInfo(@"Payload %d: %@", (uint32_t)[payload length], payload);
+		[self.socket writeData:payload withTimeout:-1.0 tag:0];
+	}
 }
 
 -(uint32_t) receiveHeader:(NSData*)data{
@@ -109,11 +111,19 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		DDLogInfo(@"Got version: version %d, blocks=%d, peer=%@:%d", self.version, versionMessage.start_height, self.address.address, self.address.port);
 		if (self.version == PROTOCOL_VERSION){
 			// Send verack
+			DDLogInfo(@"Sending verack");
+			[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_VERACK];
 			
 			// Push version
+			[self pushVersion];
 		}
 	}
+	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_VERACK){
+		DDLogInfo(@"Got verack: peer=%@:%d", self.address.address, self.address.port);
+		// TODO: This should flag the peer as "good"
+	}
 	else{
+		DDLogError(@"Received payload of unknown type %d: %@", self.header.messageType, data);
 		return;
 	}
 	
@@ -140,7 +150,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	versionMessage.addr_from = addr_from;
 	
 	// Send message
-	DDLogInfo(@"sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
+	DDLogInfo(@"Sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
 	
 	[self send:[versionMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_VERSION];
 }

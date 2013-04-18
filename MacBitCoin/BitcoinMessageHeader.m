@@ -47,6 +47,9 @@
 		if ([command isEqualToString:@"version"]){
 			_messageType = BITCOIN_MESSAGE_TYPE_VERSION;
 		}
+		else if ([command isEqualToString:@"verack"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_VERACK;
+		}
 		else{
 			// TODO: Throw exception?
 		}
@@ -73,6 +76,8 @@
 }
 
 +(uint32_t) buildChecksum:(NSData*)data{
+	if (!data) return 0;
+	
 	return [[[data sha256Hash] sha256Hash] offsetToInt32:0];
 }
 
@@ -107,6 +112,10 @@
 	switch (self.messageType) {
 		case BITCOIN_MESSAGE_TYPE_VERSION:
 			name = @"version";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_VERACK:
+			name = @"verack";
 			break;
 			
 		default:
