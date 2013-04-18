@@ -76,7 +76,7 @@
 }
 
 +(uint32_t) buildChecksum:(NSData*)data{
-	if (!data) return 0;
+	if (!data) return 0xe2e0f65d;
 	
 	return [[[data sha256Hash] sha256Hash] offsetToInt32:0];
 }

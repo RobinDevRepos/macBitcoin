@@ -22,6 +22,9 @@
 @property BitcoinMessageHeader *header;
 @property (weak) id manager;
 
+@property (nonatomic) BOOL versionPushed;
+@property (nonatomic) BOOL versionAcked;
+
 +(id) peerFromBitcoinAddress:(BitcoinAddress*)address;
 -(id) initFromBitcoinAddress:(BitcoinAddress*)address;
 

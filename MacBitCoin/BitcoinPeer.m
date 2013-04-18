@@ -104,6 +104,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (![self isConnected]) return 0;
 	
 	self.header = [BitcoinMessageHeader headerFromBytes:[NSData dataWithData:data] fromOffset:0];
+	
+	// Special-case verack
+	if (self.header.messageType == BITCOIN_MESSAGE_TYPE_VERACK){
+		DDLogInfo(@"Got verack: peer=%@:%d", self.address.address, self.address.port);
+		self.versionAcked = true;
+	}
+	
 	return self.header.length;
 }
 
@@ -116,7 +123,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (self.header.messageType == BITCOIN_MESSAGE_TYPE_VERSION){
 		BitcoinVersionMessage *versionMessage = [BitcoinVersionMessage messageFromBytes:data fromOffset:0];
 		self.version = [versionMessage version];
-		//self.address = [versionMessage addr_from]; // TODO: Test if this is routable before we assign it
+		//self.address = [versionMessage addr_from]; // TODO: Test if this is routable before we assign it, and then convert it
+		
+		// Ignore connections to ourselves
+		if (versionMessage.nonce == [[self getOurVersion] nonce]){
+			DDLogInfo(@"Ignoring connection to ourselves");
+			return;
+		}
 		
 		// TODO: Decide whether we like this version or not and respond
 		DDLogInfo(@"Got version: version %d, blocks=%d, peer=%@:%d", self.version, versionMessage.start_height, self.address.address, self.address.port);
@@ -128,10 +141,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 			// Push version
 			[self pushVersion];
 		}
-	}
-	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_VERACK){
-		DDLogInfo(@"Got verack: peer=%@:%d", self.address.address, self.address.port);
-		// TODO: This should flag the peer as "good"
 	}
 	else{
 		DDLogError(@"Received payload of unknown type %d: %@", self.header.messageType, data);
@@ -148,7 +157,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void) pushVersion{
 	if (![self isConnected]) return;
-	// TODO: Check if we've already done this?
+	if ([self versionPushed]) return;
 	
 	BitcoinVersionMessage *versionMessage = [self getOurVersion];
 	
@@ -162,6 +171,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	DDLogInfo(@"Sending version: version %d, blocks=%d, us=%@:%d, them=%@:%d, peer=%@:%d", versionMessage.version, versionMessage.start_height, versionMessage.addr_from.address, versionMessage.addr_from.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port, versionMessage.addr_recv.address, versionMessage.addr_recv.port);
 	
 	[self send:[versionMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_VERSION];
+	self.versionPushed = true;
 }
 
 -(BitcoinVersionMessage*) getOurVersion{

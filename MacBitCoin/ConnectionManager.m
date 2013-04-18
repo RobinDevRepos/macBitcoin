@@ -191,8 +191,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (tag == TAG_FIXED_LENGTH_HEADER){
 		uint32_t length = [peer receiveHeader:data];
 		
-		DDLogInfo(@"Header read. Waiting for body: %d", length);
-		[sock readDataToLength:length withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
+		if (length){
+			DDLogInfo(@"Header read. Waiting for body: %d", length);
+			[sock readDataToLength:length withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
+		}
+		else{
+			DDLogInfo(@"Header read. Length is zero. Re-waiting for header.");
+			[sock readDataToLength:24 withTimeout:-1 tag:TAG_FIXED_LENGTH_HEADER];
+		}
 	}
 	else if (tag == TAG_RESPONSE_BODY){
 		[peer receivePayload:data];
