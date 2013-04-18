@@ -50,6 +50,39 @@
 		else if ([command isEqualToString:@"verack"]){
 			_messageType = BITCOIN_MESSAGE_TYPE_VERACK;
 		}
+		else if ([command isEqualToString:@"addr"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_ADDR;
+		}
+		else if ([command isEqualToString:@"inv"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_INV;
+		}
+		else if ([command isEqualToString:@"getdata"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_GETDATA;
+		}
+		else if ([command isEqualToString:@"getblocks"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_GETBLOCKS;
+		}
+		else if ([command isEqualToString:@"getheaders"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_GETHEADERS;
+		}
+		else if ([command isEqualToString:@"tx"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_TX;
+		}
+		else if ([command isEqualToString:@"block"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_BLOCK;
+		}
+		else if ([command isEqualToString:@"headers"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_HEADERS;
+		}
+		else if ([command isEqualToString:@"getaddr"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_GETADDR;
+		}
+		else if ([command isEqualToString:@"alert"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_ALERT;
+		}
+		else if ([command isEqualToString:@"ping"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_PING;
+		}
 		else{
 			// TODO: Throw exception?
 		}
@@ -116,6 +149,50 @@
 			
 		case BITCOIN_MESSAGE_TYPE_VERACK:
 			name = @"verack";
+			break;
+		
+		case BITCOIN_MESSAGE_TYPE_ADDR:
+			name = @"addr";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_INV:
+			name = @"inv";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_GETDATA:
+			name = @"getdata";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_GETBLOCKS:
+			name = @"getblocks";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_GETHEADERS:
+			name = @"getheaders";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_TX:
+			name = @"tx";
+			break;
+
+		case BITCOIN_MESSAGE_TYPE_BLOCK:
+			name = @"block";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_HEADERS:
+			name = @"headers";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_GETADDR:
+			name = @"getaddr";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_PING:
+			name = @"ping";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_ALERT:
+			name = @"alert";
 			break;
 			
 		default:
