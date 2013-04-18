@@ -11,6 +11,7 @@
 #import "BitcoinAddress.h"
 
 #define PROTOCOL_VERSION 70001
+#define MIN_VERSION_SIZE 87
 
 @interface BitcoinVersionMessage : NSObject
 

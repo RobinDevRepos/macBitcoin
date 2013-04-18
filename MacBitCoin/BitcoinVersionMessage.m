@@ -47,6 +47,8 @@
 
 -(id)initFromBytes:(NSData *)data fromOffset:(int)offset{
 	if ((self = [super init])){
+		if ([data length] < MIN_VERSION_SIZE) return nil;
+		
 		_version = [data offsetToInt32:offset];
 		_services = [data offsetToInt64:offset+4];
 		_timestamp = [data offsetToInt64:offset+12];
