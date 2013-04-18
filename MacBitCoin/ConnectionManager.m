@@ -60,7 +60,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		// Seed our peers list
 		NSArray *seedHosts;
-		if (FALSE){
+		if (TRUE){
 			// TODO: Do this with a DNS lookup
 			seedHosts = [NSArray arrayWithObjects:
 						 @"213.5.71.38",
@@ -99,7 +99,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 }
 
 -(void) addPeer:(BitcoinPeer *)peer {
-	if ([self findPeer:peer]) return;
+	if ([self findPeer:peer]){
+		DDLogInfo(@"Ignoring existing peer: %@", peer);
+		return;
+	}
 	
 	if (![peer isConnected]){
 		if (!peer.socket){
@@ -113,6 +116,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
 	[peer setManager:self];
 	
+	DDLogInfo(@"Adding peer: %@", peer);
 	@synchronized([self peers]){
 		[[self peers] addObject:peer];
 	}

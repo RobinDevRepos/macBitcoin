@@ -9,6 +9,7 @@
 #import "BitcoinPeer.h"
 #import "BitcoinMessageHeader.h"
 #import "BitcoinVersionMessage.h"
+#import "BitcoinAddrMessage.h"
 #import "ConnectionManager.h"
 
 #define CONNECT_TIMEOUT 1.0
@@ -131,8 +132,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 			return;
 		}
 		
+		// TODO: Look for peers with this nonce in general?
+		
 		// TODO: Decide whether we like this version or not and respond
-		DDLogInfo(@"Got version: version %d, blocks=%d, peer=%@:%d", self.version, versionMessage.start_height, self.address.address, self.address.port);
+		DDLogInfo(@"Got version message: version %d, blocks=%d, peer=%@:%d", self.version, versionMessage.start_height, self.address.address, self.address.port);
 		if (self.version == PROTOCOL_VERSION){
 			// Send verack
 			DDLogInfo(@"Sending verack");
@@ -140,6 +143,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 			
 			// Push version
 			[self pushVersion];
+		}
+	}
+	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_ADDR){
+		BitcoinAddrMessage *addrMessage = [BitcoinAddrMessage messageFromBytes:data fromOffset:0];
+		DDLogInfo(@"Got addr message: %lld", addrMessage.count.value);
+
+		for (BitcoinAddress *newAddress in [addrMessage addresses]){
+			[[self manager] addPeer:[BitcoinPeer peerFromBitcoinAddress:newAddress]]; // Blindly add peers, and the connection manager will de-dupe them
 		}
 	}
 	else{
