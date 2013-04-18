@@ -61,6 +61,12 @@
 	[self connect];
 }
 
+-(void) disconnect{
+	if (![self isConnected]) return;
+	
+	[[self socket] disconnect];
+}
+
 -(void) send:(NSData*)payload withMessageType:(BitcoinMessageType)type{
 	[self connect];
 	

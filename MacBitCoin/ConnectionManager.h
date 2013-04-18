@@ -33,7 +33,8 @@
 -(id) init;
 
 -(void) addPeer:(BitcoinPeer*)peer;
--(BitcoinPeer*) findPeer:(GCDAsyncSocket*)sock;
+-(BitcoinPeer*) findPeer:(BitcoinPeer*)peer;
+-(BitcoinPeer*) findPeerSocket:(GCDAsyncSocket*)sock;
 -(void) removePeer:(BitcoinPeer*)peer;
 -(void) removePeerSocket:(GCDAsyncSocket*)sock;
 

@@ -19,6 +19,7 @@
 @property (nonatomic) int32_t version;
 @property (nonatomic) uint32_t lastSeenTime;
 @property BitcoinMessageHeader *header;
+@property (weak) id manager;
 
 +(id) peerFromBitcoinAddress:(BitcoinAddress*)address;
 -(id) initFromBitcoinAddress:(BitcoinAddress*)address;
@@ -28,6 +29,7 @@
 
 -(void) connect;
 -(void) connect:(GCDAsyncSocket*)socket;
+-(void) disconnect;
 
 -(void) send:(NSData*)payload withMessageType:(BitcoinMessageType)type;
 -(uint32_t) receiveHeader:(NSData*)data;

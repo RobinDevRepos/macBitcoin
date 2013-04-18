@@ -96,18 +96,29 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 }
 
 -(void) addPeer:(BitcoinPeer *)peer {
+	if ([self findPeer:peer]) return;
+	
 	if (![peer isConnected]){
 		GCDAsyncSocket *sock = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_socketQueueOut];
 		[peer connect:sock];
 	}
-	// TODO: Make sure we don't already exist
+	
+	[peer setManager:self];
 	
 	@synchronized([self peers]){
 		[[self peers] addObject:peer];
 	}
 }
 
--(BitcoinPeer*) findPeer:(GCDAsyncSocket*)sock{
+-(BitcoinPeer*) findPeer:(BitcoinPeer*)peer{
+	for (BitcoinPeer *existingPeer in [self peers]){
+		if ([existingPeer isEqualTo:peer]) return existingPeer;
+	}
+	
+	return nil;
+}
+
+-(BitcoinPeer*) findPeerSocket:(GCDAsyncSocket*)sock{
 	for (BitcoinPeer *peer in [self peers]){
 		if (peer.socket == sock) return peer;
 	}
@@ -123,7 +134,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 }
 
 -(void) removePeerSocket:(GCDAsyncSocket*)sock{
-	BitcoinPeer *peer = [self findPeer:sock];
+	BitcoinPeer *peer = [self findPeerSocket:sock];
 	if (peer) [self removePeer:peer];
 }
 
@@ -140,7 +151,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// Start reading
 	[sock readDataToLength:24 withTimeout:READ_TIMEOUT tag:TAG_FIXED_LENGTH_HEADER];
 	
-	BitcoinPeer *peer = [self findPeer:sock];
+	BitcoinPeer *peer = [self findPeerSocket:sock];
 	[peer pushVersion];
 }
 
@@ -159,7 +170,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	DDLogInfo(@"socket:%p didReadData:withTag:%ld", sock, tag);
 	DDLogInfo(@"Full response: %@", data);
 	
-	BitcoinPeer *peer = [self findPeer:sock];
+	BitcoinPeer *peer = [self findPeerSocket:sock];
 	if (tag == TAG_FIXED_LENGTH_HEADER){
 		uint32_t length = [peer receiveHeader:data];
 		
@@ -201,7 +212,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
 	DDLogInfo(@"socketDidDisconnect:%p withError: %@", sock, err);
 	
-	BitcoinPeer *peer = [self findPeer:sock];
+	BitcoinPeer *peer = [self findPeerSocket:sock];
 	if (peer) [self removePeer:peer];
 }
 
