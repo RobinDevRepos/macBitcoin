@@ -10,6 +10,8 @@
 #import "BitcoinMessageHeader.h"
 #import "BitcoinVersionMessage.h"
 #import "BitcoinAddrMessage.h"
+#import "BitcoinInvMessage.h"
+
 #import "ConnectionManager.h"
 
 #define CONNECT_TIMEOUT 1.0
@@ -110,6 +112,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (self.header.messageType == BITCOIN_MESSAGE_TYPE_VERACK){
 		DDLogInfo(@"Got verack: peer=%@:%d", self.address.address, self.address.port);
 		self.versionAcked = true;
+		
+		// TODO: Send 'getaddr' here?
 	}
 	
 	return self.header.length;
@@ -152,6 +156,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		for (BitcoinAddress *newAddress in [addrMessage addresses]){
 			[[self manager] addPeer:[BitcoinPeer peerFromBitcoinAddress:newAddress]]; // Blindly add peers, and the connection manager will de-dupe them
 		}
+	}
+	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_INV){
+		BitcoinInvMessage *invMessage = [BitcoinInvMessage messageFromBytes:data fromOffset:0];
+		DDLogInfo(@"Got inv message: %lld", invMessage.count.value);
+		
+		// TODO: Apparently should send 'getData' for these
 	}
 	else{
 		DDLogError(@"Received payload of unknown type %d: %@", self.header.messageType, data);
