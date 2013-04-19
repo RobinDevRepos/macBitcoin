@@ -11,6 +11,7 @@
 		4104538017209DDB0038F985 /* BitcoinInvMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4104537F17209DDB0038F985 /* BitcoinInvMessage.m */; };
 		4104538317209E7A0038F985 /* BitcoinInventoryVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 4104538217209E7A0038F985 /* BitcoinInventoryVector.m */; };
 		412BFD391721F5E9008FF441 /* BitcoinGetdataMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 412BFD381721F5E9008FF441 /* BitcoinGetdataMessage.m */; };
+		412BFD3C1721FB32008FF441 /* BitcoinGetblocksMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 412BFD3B1721FB31008FF441 /* BitcoinGetblocksMessage.m */; };
 		4138AAB8171472270023BA3C /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAA9171472270023BA3C /* DDAbstractDatabaseLogger.m */; };
 		4138AAB9171472270023BA3C /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAAB171472270023BA3C /* DDASLLogger.m */; };
 		4138AABA171472270023BA3C /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4138AAAD171472270023BA3C /* DDFileLogger.m */; };
@@ -59,6 +60,8 @@
 		4104538217209E7A0038F985 /* BitcoinInventoryVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinInventoryVector.m; sourceTree = "<group>"; };
 		412BFD371721F5E9008FF441 /* BitcoinGetdataMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinGetdataMessage.h; sourceTree = "<group>"; };
 		412BFD381721F5E9008FF441 /* BitcoinGetdataMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinGetdataMessage.m; sourceTree = "<group>"; };
+		412BFD3A1721FB31008FF441 /* BitcoinGetblocksMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinGetblocksMessage.h; sourceTree = "<group>"; };
+		412BFD3B1721FB31008FF441 /* BitcoinGetblocksMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinGetblocksMessage.m; sourceTree = "<group>"; };
 		4138AAA8171472270023BA3C /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
 		4138AAA9171472270023BA3C /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
 		4138AAAA171472270023BA3C /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
@@ -250,6 +253,8 @@
 				4104538217209E7A0038F985 /* BitcoinInventoryVector.m */,
 				412BFD371721F5E9008FF441 /* BitcoinGetdataMessage.h */,
 				412BFD381721F5E9008FF441 /* BitcoinGetdataMessage.m */,
+				412BFD3A1721FB31008FF441 /* BitcoinGetblocksMessage.h */,
+				412BFD3B1721FB31008FF441 /* BitcoinGetblocksMessage.m */,
 			);
 			path = MacBitCoin;
 			sourceTree = "<group>";
@@ -416,6 +421,7 @@
 				4104538017209DDB0038F985 /* BitcoinInvMessage.m in Sources */,
 				4104538317209E7A0038F985 /* BitcoinInventoryVector.m in Sources */,
 				412BFD391721F5E9008FF441 /* BitcoinGetdataMessage.m in Sources */,
+				412BFD3C1721FB32008FF441 /* BitcoinGetblocksMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
