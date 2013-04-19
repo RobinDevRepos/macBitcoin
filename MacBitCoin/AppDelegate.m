@@ -37,6 +37,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	[formatter setReplacementString:@"socket" forQueueLabel:GCDAsyncSocketQueueName];
 	[formatter setReplacementString:@"socket-cf" forQueueLabel:GCDAsyncSocketThreadName];
 	
+	// And we also enable colors
+	// Requires that you install: https://github.com/robbiehanson/XcodeColors
+	[[DDTTYLogger sharedInstance] setColorsEnabled:YES];
+	
 	[[DDTTYLogger sharedInstance] setLogFormatter:formatter];
 	
 	DDLogInfo(@"%@", THIS_METHOD);

@@ -140,6 +140,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void) removePeer:(BitcoinPeer*)peer{
 	
+	DDLogInfo(@"Removing peer: %@ port:%hu", peer.address.address, peer.address.port);
 	@synchronized([self peers]){
 		[[self peers] removeObject:peer];
 	}
@@ -148,11 +149,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 -(void) removePeerSocket:(GCDAsyncSocket*)sock{
 	BitcoinPeer *peer = [self findPeerSocket:sock];
 	if (peer){
-		DDLogInfo(@"Removing peer: %@ port:%hu", peer.address.address, peer.address.port);
 		[self removePeer:peer];
 	}
 	else{
-		DDLogWarn(@"Attempt to remove unknown peer");
+		DDLogWarn(@"Attempt to remove unknown");
 	}
 }
 
@@ -182,7 +182,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	}
 }
 
-- (void)socketDidSecure:(GCDAsyncSocket *)sock
+/*- (void)socketDidSecure:(GCDAsyncSocket *)sock
 {
 	DDLogInfo(@"socketDidSecure:%p", sock);
 }
@@ -190,7 +190,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
 	DDLogInfo(@"socket:%p didWriteDataWithTag:%ld", sock, tag);
-}
+}*/
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
@@ -231,7 +231,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
  return 0.0;
  }*/
 
-- (void)socket:(GCDAsyncSocket *)sock didWriteWithTag:(long)tag
+/*- (void)socket:(GCDAsyncSocket *)sock didWriteWithTag:(long)tag
 {
 	DDLogInfo(@"socket:%p didWriteWithTag:%ld", sock, tag);
 }
@@ -239,14 +239,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)socket:(GCDAsyncSocket *)sock didWritePartialDataOfLength:(NSUInteger)partialLength withTag:(long)tag
 {
 	DDLogInfo(@"socket:%p didWritePartialDataOfLength:%ld:%ld", sock, (long)partialLength, tag);
-}
+}*/
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
-	DDLogInfo(@"socketDidDisconnect:%p withError: %@", sock, err);
+	DDLogWarn(@"socketDidDisconnect:%p withError: %@", sock, err);
 	
-	BitcoinPeer *peer = [self findPeerSocket:sock];
-	if (peer) [self removePeer:peer];
+	[self removePeerSocket:sock];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
