@@ -11,6 +11,7 @@
 #import "BitcoinVersionMessage.h"
 #import "BitcoinAddrMessage.h"
 #import "BitcoinInvMessage.h"
+#import "BitcoinGetdataMessage.h"
 
 #import "ConnectionManager.h"
 
@@ -165,6 +166,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		// TODO: Apparently should send 'getData' for these, if we don't have them
 		// Or maybe only if they're BITCOIN_INV_OBJ_TYPE_MSG_BLOCK
+	}
+	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETDATA){
+		BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage messageFromBytes:data fromOffset:0];
+		DDLogInfo(@"Got getdata message: %lld", getDataMessage.count.value);
+		
+		// TODO: Store these
 	}
 	else{
 		DDLogError(@"Received payload of unknown type %d: %@", self.header.messageType, data);
