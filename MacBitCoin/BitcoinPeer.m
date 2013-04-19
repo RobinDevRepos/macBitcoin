@@ -207,4 +207,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	return [BitcoinVersionMessage message];
 }
 
+-(BOOL) isActive{
+	if (![self isConnected]) return false;
+	
+	// If ninety minutes has passed since a peer node has communicated any messages, then the client will assume that connection has closed.
+	if (self.lastSeenTime >= [[NSDate date] timeIntervalSince1970] - (60 * 90)) return true;
+	
+	return false;
+}
+
 @end

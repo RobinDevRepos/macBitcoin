@@ -46,4 +46,6 @@
 
 -(BitcoinVersionMessage*) getOurVersion;
 
+-(BOOL) isActive;
+
 @end

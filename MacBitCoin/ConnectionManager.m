@@ -125,8 +125,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	@synchronized([self peers]){
 		[[self peers] addObject:peer];
 	}
-	
-	DDLogInfo(@"New peer count: %lld", (uint64_t)[[self peers] count]);
 }
 
 -(BitcoinPeer*) findPeer:(BitcoinPeer*)peer{
@@ -152,7 +150,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		[[self peers] removeObject:peer];
 	}
 	
-	DDLogInfo(@"New peer count: %lld", (uint64_t)[[self peers] count]);
+	DDLogInfo(@"New peer count: %lld", (uint64_t)[self countOfPeers]);
 }
 
 -(void) removePeerSocket:(GCDAsyncSocket*)sock{
@@ -163,6 +161,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	else{
 		DDLogWarn(@"Attempt to remove unknown");
 	}
+}
+
+-(NSUInteger) countOfPeers{
+	NSUInteger count = 0;
+	for (BitcoinPeer *peer in [self peers]){
+		if ([peer isActive]) count++;
+	}
+	
+	return count;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,6 +192,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 		// Push version
 		[peer pushVersion];
+		
+		DDLogInfo(@"New peer count: %lld", (uint64_t)[self countOfPeers]);
 	}
 	else{
 		DDLogWarn(@"socket:%p on host:%@ port:%hu is an unknown peer", sock, host, port);

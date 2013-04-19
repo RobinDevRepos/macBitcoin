@@ -40,4 +40,6 @@
 -(void) removePeer:(BitcoinPeer*)peer;
 -(void) removePeerSocket:(GCDAsyncSocket*)sock;
 
+-(NSUInteger) countOfPeers;
+
 @end
