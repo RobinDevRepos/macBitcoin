@@ -100,7 +100,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void) addPeer:(BitcoinPeer *)peer {
 	if ([self findPeer:peer]){
-		DDLogInfo(@"Ignoring existing peer: %@", peer);
+		DDLogInfo(@"Ignoring existing peer: %@ port:%hu", peer.address.address, peer.address.port);
 		return;
 	}
 	
@@ -116,7 +116,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
 	[peer setManager:self];
 	
-	DDLogInfo(@"Adding peer: %@", peer);
+	DDLogInfo(@"Adding peer: %@ port:%hu", peer.address.address, peer.address.port);
 	@synchronized([self peers]){
 		[[self peers] addObject:peer];
 	}
@@ -147,7 +147,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void) removePeerSocket:(GCDAsyncSocket*)sock{
 	BitcoinPeer *peer = [self findPeerSocket:sock];
-	if (peer) [self removePeer:peer];
+	if (peer){
+		DDLogInfo(@"Removing peer: %@ port:%hu", peer.address.address, peer.address.port);
+		[self removePeer:peer];
+	}
+	else{
+		DDLogWarn(@"Attempt to remove unknown peer");
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
