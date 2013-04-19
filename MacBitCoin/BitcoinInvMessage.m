@@ -27,12 +27,14 @@
 		
 		_count = [BitcoinVarInt varintFromBytes:data fromOffset:offset];
 		
-		offset += [_count size];
-		_inventory = [NSMutableArray arrayWithCapacity:[_count value]];
-		for (int i=0; i<[_count value]; i++){
-			BitcoinInventoryVector *vector = [BitcoinInventoryVector inventoryVectorFromBytes:data fromOffset:offset];
-			[_inventory addObject:vector];
-			offset += 36;
+		if ([_count value] <= MAX_INV_COUNT){
+			offset += [_count size];
+			_inventory = [NSMutableArray arrayWithCapacity:[_count value]];
+			for (int i=0; i<[_count value]; i++){
+				BitcoinInventoryVector *vector = [BitcoinInventoryVector inventoryVectorFromBytes:data fromOffset:offset];
+				[_inventory addObject:vector];
+				offset += 36;
+			}
 		}
 	}
 	
@@ -42,6 +44,7 @@
 // Encode our payload
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
+	if ([_count value] > MAX_INV_COUNT) return data;
 	
 	[data appendData:[_count getData]];
 	for (BitcoinInventoryVector	*vector	in [self inventory]){
