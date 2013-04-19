@@ -12,6 +12,7 @@
 #import "BitcoinAddrMessage.h"
 #import "BitcoinInvMessage.h"
 #import "BitcoinGetdataMessage.h"
+#import "BitcoinGetblocksMessage.h"
 
 #import "ConnectionManager.h"
 
@@ -176,6 +177,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		DDLogInfo(@"Got getdata message: %lld", getDataMessage.count.value);
 		
 		// TODO: Store these
+	}
+	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETBLOCKS){
+		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
+		DDLogInfo(@"Got getblocks message: %lld", getBlocksMessage.count.value);
+		
+		// TODO: You know, send these back if we have them
 	}
 	else{
 		DDLogError(@"Received payload of unknown type %d: %@", self.header.messageType, data);
