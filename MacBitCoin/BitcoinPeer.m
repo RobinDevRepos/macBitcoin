@@ -155,13 +155,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 		for (BitcoinAddress *newAddress in [addrMessage addresses]){
 			[[self manager] addPeer:[BitcoinPeer peerFromBitcoinAddress:newAddress]]; // Blindly add peers, and the connection manager will de-dupe them
+			
+			// TODO: Relay this to a subset of nodes
 		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_INV){
 		BitcoinInvMessage *invMessage = [BitcoinInvMessage messageFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got inv message: %lld", invMessage.count.value);
 		
-		// TODO: Apparently should send 'getData' for these
+		// TODO: Apparently should send 'getData' for these, if we don't have them
+		// Or maybe only if they're BITCOIN_INV_OBJ_TYPE_MSG_BLOCK
 	}
 	else{
 		DDLogError(@"Received payload of unknown type %d: %@", self.header.messageType, data);
