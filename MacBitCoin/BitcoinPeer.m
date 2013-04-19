@@ -142,12 +142,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		// TODO: Decide whether we like this version or not and respond
 		DDLogInfo(@"Got version message: version %d, blocks=%d, peer=%@:%d", self.version, versionMessage.start_height, self.address.address, self.address.port);
 		if (self.version == PROTOCOL_VERSION){
+			// Push version
+			[self pushVersion];
+						
 			// Send verack
 			DDLogInfo(@"Sending verack");
 			[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_VERACK];
-			
-			// Push version
-			[self pushVersion];
+
 		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_ADDR){
