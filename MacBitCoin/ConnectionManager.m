@@ -124,6 +124,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	@synchronized([self peers]){
 		[[self peers] addObject:peer];
 	}
+	
+	DDLogInfo(@"New peer count: %lld", (uint64_t)[[self peers] count]);
 }
 
 -(BitcoinPeer*) findPeer:(BitcoinPeer*)peer{
@@ -148,6 +150,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	@synchronized([self peers]){
 		[[self peers] removeObject:peer];
 	}
+	
+	DDLogInfo(@"New peer count: %lld", (uint64_t)[[self peers] count]);
 }
 
 -(void) removePeerSocket:(GCDAsyncSocket*)sock{
