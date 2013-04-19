@@ -96,7 +96,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		}
 		
 		// TODO: Schedule task to prune our list when we haven't heard from them in 90 minutes
-		// TODO: Schedult task to send pings in 30 minutes, if we haven't sent anything else
+		// TODO: Schedule task to send pings in 30 minutes, if we haven't sent anything else
+		// TODO: Serialize peer list to disk and load it on startup, using the seed list if we don't have any or all our saved peers are unreachable
 	}
 	
 	return self;
