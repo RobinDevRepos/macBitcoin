@@ -29,6 +29,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		_ourVersion = [BitcoinVersionMessage message];
 		_ourVersion.addr_from = [BitcoinAddress addressFromAddress:@"::ffff:0.0.0.0" withPort:0]; // TODO: Once we get an external ip, update this and push to our peers
+		// TODO: Store ourselves as peer, so we can track peer-related data on ourselves?
 		
 		// Setup our sockets (GCDAsyncSocket).
 		// The socket will invoke our delegate methods using the usual delegate paradigm.
@@ -93,6 +94,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 			BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:18333]; // Real port is 8333
 			[self addPeer:seedPeer];
 		}
+		
+		// TODO: Schedule task to prune our list when we haven't heard from them in 90 minutes
+		// TODO: Schedult task to send pings in 30 minutes, if we haven't sent anything else
 	}
 	
 	return self;
