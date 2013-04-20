@@ -8,6 +8,7 @@
 
 #import "BitcoinMessageHeader.h"
 
+#import "Definitions.h"
 #import "NSData+Integer.h"
 #import "NSData+CryptoHashing.h"
 

@@ -25,11 +25,16 @@
 @property BitcoinVarInt *txn_count;
 @property NSMutableArray *transactions;
 
+@property NSData *hash;
+
 +(id)block;
+-(id)init;
 
 +(id)blockFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
 -(NSData*) getData;
+
+-(NSData*) getHash;
 
 @end

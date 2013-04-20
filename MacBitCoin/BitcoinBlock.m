@@ -8,7 +8,9 @@
 
 #import "BitcoinBlock.h"
 
+#import "Definitions.h"
 #import "NSData+Integer.h"
+#import "NSData+CryptoHashing.h"
 #import "BitcoinVarInt.h"
 
 @implementation BitcoinBlock
@@ -18,13 +20,24 @@
 	return [[BitcoinBlock alloc] init];
 }
 
+-(id)init{
+	if (self = [super init]){
+		_version = 1;
+		_bits = 0x1d07fff8;
+		_timestamp = [[NSDate date] timeIntervalSince1970];
+		_prev_block = [[NSMutableData dataWithCapacity:32] sha256Hash]; // Zero hash
+	}
+	
+	return self;
+}
+
 // Init a version message with payload bytes
 +(id) blockFromBytes:(NSData *)data fromOffset:(int)offset{
 	return [[BitcoinBlock alloc] initFromBytes:data fromOffset:offset];
 }
 
 -(id)initFromBytes:(NSData *)data fromOffset:(int)offset{
-	if ((self = [super init])){
+	if (self = [super init]){
 		
 		_version = [data offsetToInt32:offset];
 		
@@ -77,6 +90,15 @@
 	}
 	
 	return data;
+}
+
+// Build a hash, unless we've built one already. Return it
+-(NSData*) getHash{
+	if (!self.hash){
+		// TODO
+	}
+	
+	return self.hash;
 }
 
 @end
