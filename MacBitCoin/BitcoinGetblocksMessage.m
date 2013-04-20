@@ -50,7 +50,7 @@
 	
 	[data appendData:[NSData dataWithInt32:self.version]];
 	
-	[data appendData:[_count getData]];
+	[data appendData:[self.count getData]];
 	for (NSData	*hash in [self hashes]){
 		[data appendData:hash];
 	}

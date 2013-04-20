@@ -47,7 +47,7 @@
 	NSMutableData *data = [NSMutableData data];
 	if ([_count value] > MAX_INV_COUNT) return data;
 	
-	[data appendData:[_count getData]];
+	[data appendData:[self.count getData]];
 	for (BitcoinInventoryVector	*vector	in [self inventory]){
 		[data appendData:[vector getData]];
 	}

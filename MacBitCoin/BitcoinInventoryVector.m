@@ -30,8 +30,8 @@
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
 	
-	[data appendData:[NSData dataWithInt32:[self type]]];
-	[data appendData:_hash];
+	[data appendData:[NSData dataWithInt32:self.type]];
+	[data appendData:self.hash];
 	
 	return data;
 }
