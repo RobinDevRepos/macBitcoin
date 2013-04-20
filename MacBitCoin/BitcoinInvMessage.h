@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define MAX_INV_COUNT 50000
-
+#import "Definitions.h"
 #import "BitcoinVarInt.h"
 
 @interface BitcoinInvMessage : NSObject

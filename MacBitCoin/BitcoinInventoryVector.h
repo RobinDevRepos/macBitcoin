@@ -8,11 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum{
-	BITCOIN_INV_OBJ_TYPE_ERROR = 0,
-	BITCOIN_INV_OBJ_TYPE_MSG_TX = 1,
-	BITCOIN_INV_OBJ_TYPE_MSG_BLOCK = 2,
-}BitcoinInvObjectType;
+#import "Definitions.h"
 
 @interface BitcoinInventoryVector : NSObject
 

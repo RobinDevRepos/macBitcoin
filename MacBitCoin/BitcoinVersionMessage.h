@@ -9,9 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "BitcoinAddress.h"
-
-#define PROTOCOL_VERSION 70001
-#define MIN_VERSION_SIZE 87
+#import "Definitions.h"
 
 @interface BitcoinVersionMessage : NSObject
 

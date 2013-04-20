@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Myles Grant. All rights reserved.
 //
 
+#import "Definitions.h"
 #import "BitcoinPeer.h"
 #import "BitcoinMessageHeader.h"
 #import "BitcoinVersionMessage.h"
@@ -15,8 +16,6 @@
 #import "BitcoinGetblocksMessage.h"
 
 #import "ConnectionManager.h"
-
-#define CONNECT_TIMEOUT 1.0
 
 #import "DDLog.h"
 

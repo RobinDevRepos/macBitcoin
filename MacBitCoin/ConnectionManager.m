@@ -15,7 +15,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_WARN;
 #endif
 
-#define READ_TIMEOUT 5.0
+#import "Definitions.h"
 
 @implementation ConnectionManager
 
@@ -61,7 +61,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		// Seed our peers list
 		NSArray *seedHosts;
-		if (TRUE){
+		if (FALSE){
 			// TODO: Do this with a DNS lookup
 			seedHosts = [NSArray arrayWithObjects:
 						 @"213.5.71.38",
@@ -89,11 +89,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		else{
 			seedHosts = [NSArray arrayWithObject:@"127.0.0.1"];
 		}
-		
+		/*
 		for (NSString *host in seedHosts){
 			BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:18333]; // Real port is 8333
 			[self addPeer:seedPeer];
-		}
+		}*/
 		
 		// TODO: Schedule task to prune our list when we haven't heard from them in 90 minutes
 		// TODO: Schedule task to send pings in 30 minutes, if we haven't sent anything else
