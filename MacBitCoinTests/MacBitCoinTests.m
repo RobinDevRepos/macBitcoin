@@ -9,6 +9,8 @@
 #import "MacBitCoinTests.h"
 
 #import "NSData+Integer.h"
+
+#import "Definitions.h"
 #import "BitcoinVarInt.h"
 #import "BitcoinAddress.h"
 #import "BitcoinMessageHeader.h"

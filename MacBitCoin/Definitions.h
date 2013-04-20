@@ -9,6 +9,24 @@
 #ifndef MacBitCoin_Definitions_h
 #define MacBitCoin_Definitions_h
 
+#define ENABLE_TESTNET true
+
+#ifdef ENABLE_TESTNET
+
+#define LISTEN_PORT 18333
+#define CONNECT_PORT 18333
+#define RPC_PORT 18332
+#define BITCOIN_HEADER_MAGIC 118034699 // 0x0B110907
+
+#else
+
+#define LISTEN_PORT 8333
+#define CONNECT_PORT 8333
+#define RPC_PORT 8332
+#define BITCOIN_HEADER_MAGIC 4190024921 // 0xF9BEB4D9
+
+#endif
+
 typedef enum{
 	BITCOIN_MESSAGE_TYPE_VERSION = 1,
 	BITCOIN_MESSAGE_TYPE_VERACK = 2,

@@ -20,7 +20,7 @@
 
 -(id)init{
 	if ((self = [super init])){
-		self.magic = 0x0709110B;
+		self.magic = BITCOIN_HEADER_MAGIC;
 	}
 	
 	return self;

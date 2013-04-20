@@ -46,7 +46,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		// Start listening for incoming requests
 		_listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_socketQueueIn];
 		
-		_listenPort = 18333; // Real port is 8333
+		_listenPort = LISTEN_PORT;
 		DDLogInfo(@"Starting to listen on port %hu...", _listenPort);
 		
 		NSError *error = nil;
@@ -91,7 +91,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		}
 		/*
 		for (NSString *host in seedHosts){
-			BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:18333]; // Real port is 8333
+			BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
 			[self addPeer:seedPeer];
 		}*/
 		
