@@ -19,6 +19,7 @@
 #import "BitcoinInvMessage.h"
 #import "BitcoinInventoryVector.h"
 #import "BitcoinGetblocksMessage.h"
+#import "BitcoinBlock.h"
 
 @implementation MacBitCoinTests
 
@@ -377,6 +378,32 @@
 	STAssertEquals(message1.version, version, @"Getblocks version does not match");
 	STAssertEquals(message1.count.value, count, @"Getblocks hash length does not match");
 	STAssertEquals([message1.hashes count], count, @"Getblocks hash array length does not match");
+}
+
+-(void)testGenesisBlock
+{
+	BitcoinBlock *genesisBlock = [BitcoinBlock block];
+	genesisBlock.timestamp = 1296688602;
+	genesisBlock.bits = 0x1d00ffff;
+	genesisBlock.nonce = 414098458;
+	
+	NSData *hash = [genesisBlock getHash];
+	NSLog(@"Genesis hash: %@", hash);
+}
+
+// https://en.bitcoin.it/wiki/Block_hashing_algorithm
+-(void)testExampleBlock
+{
+	BitcoinBlock *exampleBlock = [BitcoinBlock block];
+	[exampleBlock setPrevBlock:@"81cd02ab7e569e8bcd9317e2fe99f2de44d49ab2b8851ba4a308000000000000"];
+	[exampleBlock setMerkleRoot:@"e320b6c2fffc8d750423db8b1eb942ae710e951ed797f7affc8892b0f1fc122b"];
+	exampleBlock.timestamp = 0xc7f5d74d;
+	exampleBlock.bits = 0xf2b9441a;
+	exampleBlock.nonce = 0x42a14695;
+	
+	NSData *hash = [exampleBlock getHash];
+	NSLog(@"Example hash: %@", hash);
+
 }
 
 @end

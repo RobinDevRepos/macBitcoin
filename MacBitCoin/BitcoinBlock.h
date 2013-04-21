@@ -33,8 +33,16 @@
 +(id)blockFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
++(id)blockFromHeaderBytes:(NSData*)data fromOffset:(int)offset;
+-(id)initFromHeaderBytes:(NSData*)data fromOffset:(int)offset;
+
+-(void)setPrevBlock:(NSString*)prev_block;
+-(void)setMerkleRoot:(NSString*)merkle_root;
+
 -(NSData*) getData;
+-(NSData*) getHeaderData;
 
 -(NSData*) getHash;
+-(NSData*) getMerkleRoot;
 
 @end
