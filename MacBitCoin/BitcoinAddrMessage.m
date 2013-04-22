@@ -17,6 +17,15 @@
 	return [[BitcoinAddrMessage alloc] init];
 }
 
+-(id)init{
+	if (self = [super init]){
+		_count = [BitcoinVarInt varintFromValue:0];
+		_addresses = [NSMutableArray arrayWithCapacity:0];
+	}
+	
+	return self;
+}
+
 // Init a version message with payload bytes
 +(id) messageFromBytes:(NSData *)data fromOffset:(int)offset{
 	return [[BitcoinAddrMessage alloc] initFromBytes:data fromOffset:offset];
@@ -37,6 +46,11 @@
 	}
 	
 	return self;
+}
+
+-(void)pushAddress:(BitcoinAddress*)address{
+	[self.addresses addObject:address];
+	self.count = [BitcoinVarInt varintFromValue:[self.addresses count]];
 }
 
 // Encode our payload

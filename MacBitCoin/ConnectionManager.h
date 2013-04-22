@@ -39,6 +39,7 @@
 -(void) removePeer:(BitcoinPeer*)peer;
 -(void) removePeerSocket:(GCDAsyncSocket*)sock;
 
+-(NSArray*) getActivePeers;
 -(NSUInteger) countOfPeers;
 
 @end

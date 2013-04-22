@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "BitcoinVarInt.h"
+#import "BitcoinAddress.h"
 
 @interface BitcoinAddrMessage : NSObject
 
@@ -16,9 +17,12 @@
 @property NSMutableArray *addresses;
 
 +(id)message;
+-(id)init;
 
 +(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
+
+-(void)pushAddress:(BitcoinAddress*)address;
 
 -(NSData*) getData;
 

@@ -166,13 +166,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	}
 }
 
--(NSUInteger) countOfPeers{
-	NSUInteger count = 0;
+-(NSArray*) getActivePeers{
+	NSMutableArray *activePeers = [NSMutableArray arrayWithCapacity:[self.peers count]];
 	for (BitcoinPeer *peer in [self peers]){
-		if ([peer isActive]) count++;
+		if ([peer isActive]) [activePeers addObject:peer];
 	}
-	
-	return count;
+	return activePeers;
+}
+
+-(NSUInteger) countOfPeers{
+	return [[self getActivePeers] count];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

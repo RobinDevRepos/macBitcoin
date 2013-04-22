@@ -110,7 +110,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
 	self.header = [BitcoinMessageHeader headerFromBytes:[NSData dataWithData:data] fromOffset:0];
 	
-	// Special-case verack
+	// Some message types do not have payloads
 	if (self.header.messageType == BITCOIN_MESSAGE_TYPE_VERACK){
 		DDLogInfo(@"Got verack: peer=%@:%d", self.address.address, self.address.port);
 		self.versionAcked = true;
@@ -122,6 +122,18 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		[getBlocksMessage pushHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"];
 		DDLogInfo(@"Sending getblocks");
 		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
+	}
+	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
+		DDLogInfo(@"Got getaddr");
+		
+		BitcoinAddrMessage *addrMessage = [BitcoinAddrMessage message];
+		NSArray *peers = [self.manager getActivePeers];
+		for (BitcoinPeer *peer in peers){
+			[addrMessage pushAddress:[peer address]];
+		}
+		
+		DDLogInfo(@"Sending addr");
+		[self send:[addrMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_ADDR];
 	}
 	
 	return self.header.length;
