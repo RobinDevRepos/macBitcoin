@@ -26,6 +26,8 @@
 		_bits = 0x1d07fff8;
 		_timestamp = [[NSDate date] timeIntervalSince1970];
 		_prev_block = [NSMutableData dataWithCapacity:32];
+		_txn_count = [BitcoinVarInt varintFromValue:0];
+		_transactions = [NSMutableArray arrayWithCapacity:0];
 	}
 	
 	return self;
@@ -95,6 +97,9 @@
 		
 		offset += 4;
 		_nonce = [data offsetToInt32:offset];
+		
+		offset += 4;
+		_txn_count = [BitcoinVarInt varintFromBytes:data fromOffset:offset]; // This should always be zero
 	}
 	
 	return self;
@@ -143,6 +148,8 @@
 	[data appendData:[NSData dataWithInt32:self.timestamp]];
 	[data appendData:[NSData dataWithInt32:self.bits]];
 	[data appendData:[NSData dataWithInt32:self.nonce]];
+	
+	[data appendData:[self.txn_count getData]];
 	
 	return data;
 }
