@@ -15,6 +15,7 @@
 #import "BitcoinGetdataMessage.h"
 #import "BitcoinGetblocksMessage.h"
 #import "BitcoinBlock.h"
+#import "BitcoinHeadersMessage.h"
 
 #import "ConnectionManager.h"
 
@@ -194,7 +195,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage messageFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got getdata message: %lld", getDataMessage.count.value);
 		
-		// TODO: Store these
+		// TODO: Send these blocks back if we have it, or 'notfound' if we don't
+	}
+	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_BLOCK){
+		BitcoinBlock *block = [BitcoinBlock blockFromBytes:data fromOffset:0];
+		DDLogInfo(@"Got block message: %lld", block.merkle_root);
+		
+		// TODO: Store this
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETBLOCKS){
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
@@ -206,7 +213,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		BitcoinGetblocksMessage *getHeadersMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got getheaders message: %lld", getHeadersMessage.count.value);
 		
-		// TODO: You know, send these back if we have them
+		// TODO: Send BitcoinHeadersMessage back for the ones we have
+		BitcoinHeadersMessage *headersMessage = [BitcoinHeadersMessage message];
+		DDLogInfo(@"Sending getheaders");
+		[self send:[headersMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
+		
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_BLOCK){
 		BitcoinBlock *blockMessage = [BitcoinBlock blockFromBytes:data fromOffset:0];
