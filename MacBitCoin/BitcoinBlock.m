@@ -25,6 +25,7 @@
 		_version = 1;
 		_bits = 0x1d07fff8;
 		_timestamp = [[NSDate date] timeIntervalSince1970];
+		_prev_block = [NSMutableData dataWithCapacity:32];
 	}
 	
 	return self;

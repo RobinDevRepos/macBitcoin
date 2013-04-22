@@ -96,11 +96,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromPayload:payload withMessageType:type];
 	NSData *headerData = [header getData];
 	
-	DDLogInfo(@"Header %d: %@", header.length, headerData);
+	DDLogInfo(@"Sending header %d: %@", header.length, headerData);
 	[self.socket writeData:headerData withTimeout:-1.0 tag:0];
 	
 	if (payload){
-		DDLogInfo(@"Payload %d: %@", (uint32_t)[payload length], payload);
+		DDLogInfo(@"Sending payload %d: %@", (uint32_t)[payload length], payload);
 		[self.socket writeData:payload withTimeout:-1.0 tag:0];
 	}
 }
@@ -116,6 +116,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		self.versionAcked = true;
 		
 		// TODO: Send 'getaddr' here?
+		
+		// Ask for blocks. TODO: Base this on our current state
+		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
+		[getBlocksMessage pushHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"];
+		DDLogInfo(@"Sending getblocks");
+		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
 	}
 	
 	return self.header.length;

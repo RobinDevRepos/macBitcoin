@@ -8,6 +8,7 @@
 
 #import "BitcoinGetblocksMessage.h"
 
+#import "Definitions.h"
 #import "NSData+Integer.h"
 #import "BitcoinVarInt.h"
 
@@ -16,6 +17,17 @@
 // Default constructors for when you want to make a message by hand
 +(id)message{
 	return [[BitcoinGetblocksMessage alloc] init];
+}
+
+-(id)init{
+	if ((self = [super init])){
+		_version = PROTOCOL_VERSION;
+		_count = [BitcoinVarInt varintFromValue:0];
+		_hashes = [NSMutableArray arrayWithCapacity:1];
+		_hash_stop = [NSMutableData dataWithCapacity:32];
+	}
+	
+	return self;
 }
 
 // Init a version message with payload bytes
@@ -42,6 +54,11 @@
 	}
 	
 	return self;
+}
+
+-(void)pushHash:(NSString*)hash{
+	[self.hashes addObject:[hash dataUsingEncoding:NSASCIIStringEncoding]];
+	self.count = [BitcoinVarInt varintFromValue:[self.hashes count]];
 }
 
 // Encode our payload

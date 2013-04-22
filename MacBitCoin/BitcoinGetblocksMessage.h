@@ -18,9 +18,12 @@
 @property NSData *hash_stop;
 
 +(id)message;
+-(id)init;
 
 +(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
+
+-(void)pushHash:(NSString*)hash;
 
 -(NSData*) getData;
 
