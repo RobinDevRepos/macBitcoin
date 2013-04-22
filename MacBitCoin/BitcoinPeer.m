@@ -202,6 +202,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		// TODO: You know, send these back if we have them
 	}
+	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETHEADERS){
+		BitcoinGetblocksMessage *getHeadersMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
+		DDLogInfo(@"Got getheaders message: %lld", getHeadersMessage.count.value);
+		
+		// TODO: You know, send these back if we have them
+	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_BLOCK){
 		BitcoinBlock *blockMessage = [BitcoinBlock blockFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got new block: %@", [blockMessage getHash]);
