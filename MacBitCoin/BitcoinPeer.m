@@ -199,7 +199,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_BLOCK){
 		BitcoinBlock *block = [BitcoinBlock blockFromBytes:data fromOffset:0];
-		DDLogInfo(@"Got block message: %lld", block.merkle_root);
+		DDLogInfo(@"Got block message: %@", block.merkle_root);
 		
 		// TODO: Store this
 	}

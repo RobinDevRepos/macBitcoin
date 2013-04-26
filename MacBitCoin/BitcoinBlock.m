@@ -12,6 +12,7 @@
 #import "NSData+Integer.h"
 #import "NSData+CryptoHashing.h"
 #import "BitcoinVarInt.h"
+#import "BitcoinTransaction.h"
 
 @implementation BitcoinBlock
 
@@ -64,9 +65,9 @@
 		offset += [_txn_count size];
 		_transactions = [NSMutableArray arrayWithCapacity:[_txn_count value]];
 		for (int i=0; i<[_txn_count value]; i++){
-			// TODO: These are "tx" commands, not just bytes
-			[_transactions addObject:[data subdataWithRange:NSMakeRange(offset, 32)]];
-			offset += 32;
+			BitcoinTransaction *tx = [BitcoinTransaction transactionFromBytes:data fromOffset:offset];
+			[_transactions addObject:tx];
+			offset += [tx getLength];
 		}
 	}
 	
@@ -129,8 +130,8 @@
 	[data appendData:[NSData dataWithInt32:self.nonce]];
 	
 	[data appendData:[self.txn_count getData]];
-	for (NSData	*tx in [self transactions]){
-		[data appendData:tx]; // TODO: These are "tx" commands, not just bytes
+	for (BitcoinTransaction	*tx in [self transactions]){
+		[data appendData:[tx getData]];
 	}
 	
 	return data;
@@ -173,9 +174,9 @@
 		NSMutableArray *tree = [NSMutableArray arrayWithCapacity:self.txn_count.value];
 		
         // Start by adding all the hashes of the transactions as leaves of the tree.
-        for (NSData	*tx in [self transactions]){
-            // TODO: These are transactions, not just bytes.
+        for (BitcoinTransaction	*tx in [self transactions]){
 			// Add their hashes to the tree
+			[tree addObject:[tx getHash]];
         }
 		
         uint64_t levelOffset = 0; // Offset in the list where the currently processed level starts.
