@@ -111,7 +111,7 @@
 			self.length += [[txIn script_length] size];
 			self.length += [[txIn script_length] value];
 			
-			self.length += 4; // serquence
+			self.length += 4; // sequence
 		}
 		
 		self.length += [self.tx_out_count size];
