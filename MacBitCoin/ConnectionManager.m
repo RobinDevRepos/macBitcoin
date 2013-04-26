@@ -227,7 +227,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		if (length){
 			DDLogInfo(@"Header read. Waiting for body: %d", length);
-			[sock readDataToLength:length withTimeout:-1 tag:TAG_RESPONSE_BODY]; // TODO
+			[sock readDataToLength:length withTimeout:-1 tag:TAG_RESPONSE_BODY];
 		}
 		else{
 			DDLogInfo(@"Header read. Length is zero. Re-waiting for header.");
