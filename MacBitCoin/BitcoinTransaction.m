@@ -69,6 +69,20 @@
 	return self;
 }
 
+-(void)addTxIn:(BitcoinTxIn*)txIn{
+	[self.tx_in addObject:txIn];
+	self.tx_in_count = [BitcoinVarInt varintFromValue:[self.tx_in count]];
+	
+	self.length = 0;
+}
+
+-(void)addTxOut:(BitcoinTxOut*)txOut{
+	[self.tx_out addObject:txOut];
+	self.tx_out_count = [BitcoinVarInt varintFromValue:[self.tx_out count]];
+	
+	self.length = 0;
+}
+
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
 	

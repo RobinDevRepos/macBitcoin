@@ -387,8 +387,21 @@
 	genesisBlock.bits = 0x1d00ffff;
 	genesisBlock.nonce = 414098458;
 	
+	BitcoinTransaction *tx = [BitcoinTransaction transaction];
+	
+	BitcoinTxIn *txIn = [BitcoinTxIn txIn];
+	[tx addTxIn:txIn];
+	
+	BitcoinTxOut *txOut = [BitcoinTxOut txOut];
+	txOut.value = 50 * 100000000;
+	[tx addTxOut:txOut];
+	
+	[genesisBlock addTransaction:tx];
+	
 	NSData *hash = [genesisBlock getHash];
 	NSLog(@"Genesis hash: %@", hash);
+	
+	// 000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943
 }
 
 // https://en.bitcoin.it/wiki/Block_hashing_algorithm
@@ -404,6 +417,7 @@
 	NSData *hash = [exampleBlock getHash];
 	NSLog(@"Example hash: %@", hash);
 
+	// 1dbd981fe6985776b644b173a4d0385ddc1aa2a829688d1e0000000000000000
 }
 
 @end

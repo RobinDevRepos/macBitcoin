@@ -12,7 +12,6 @@
 #import "NSData+Integer.h"
 #import "NSData+CryptoHashing.h"
 #import "BitcoinVarInt.h"
-#import "BitcoinTransaction.h"
 
 @implementation BitcoinBlock
 
@@ -114,6 +113,13 @@
 // Used for testing, mostly
 -(void)setMerkleRoot:(NSString*)merkle_root{
 	self.merkle_root = [merkle_root dataUsingEncoding:NSASCIIStringEncoding];
+}
+
+-(void)addTransaction:(BitcoinTransaction*)tx{
+	[self.transactions addObject:tx];
+	self.txn_count = [BitcoinVarInt varintFromValue:[self.transactions count]];
+	self.hash = nil;
+	self.merkle_root = nil;
 }
 
 // Encode our payload

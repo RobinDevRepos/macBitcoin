@@ -10,6 +10,9 @@
 
 #import "BitcoinVarInt.h"
 
+@class BitcoinTxIn;
+@class BitcoinTxOut;
+
 @interface BitcoinTransaction : NSObject
 
 @property uint32_t version;
@@ -27,6 +30,9 @@
 
 +(id)transactionFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
+
+-(void)addTxIn:(BitcoinTxIn*)txIn;
+-(void)addTxOut:(BitcoinTxOut*)txOut;
 
 -(NSData*) getData;
 

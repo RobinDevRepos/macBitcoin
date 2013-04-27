@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "BitcoinVarInt.h"
+#import "BitcoinTransaction.h"
 
 //
 // A representation of a Bitcoin block. Doubles as the message serialization/deserialization handler
@@ -38,6 +39,8 @@
 
 -(void)setPrevBlock:(NSString*)prev_block;
 -(void)setMerkleRoot:(NSString*)merkle_root;
+
+-(void)addTransaction:(BitcoinTransaction*)tx;
 
 -(NSData*) getData;
 -(NSData*) getHeaderData;
