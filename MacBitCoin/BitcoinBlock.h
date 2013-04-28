@@ -31,6 +31,9 @@
 +(id)block;
 -(id)init;
 
++(id)genesisBlock;
+-(id)initGenesisBlock;
+
 +(id)blockFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 

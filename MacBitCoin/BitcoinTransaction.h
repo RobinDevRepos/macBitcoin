@@ -69,6 +69,8 @@
 +(id)txInFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
+-(void)scriptFromBytes:(NSData*)data;
+
 -(NSData*) getData;
 
 @end

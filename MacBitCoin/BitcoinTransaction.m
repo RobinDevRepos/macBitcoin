@@ -222,6 +222,11 @@
 	return self;
 }
 
+-(void)scriptFromBytes:(NSData *)data{
+	self.computational_script = data;
+	self.script_length = [BitcoinVarInt varintFromValue:[data length]];
+}
+
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
 	

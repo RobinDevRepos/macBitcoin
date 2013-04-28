@@ -382,21 +382,7 @@
 
 -(void)testGenesisBlock
 {
-	BitcoinBlock *genesisBlock = [BitcoinBlock block];
-	genesisBlock.timestamp = 1296688602;
-	genesisBlock.bits = 0xffff001d;
-	genesisBlock.nonce = 414098458;
-	
-	BitcoinTransaction *tx = [BitcoinTransaction transaction];
-	
-	BitcoinTxIn *txIn = [BitcoinTxIn txIn];
-	[tx addTxIn:txIn];
-	
-	BitcoinTxOut *txOut = [BitcoinTxOut txOut];
-	txOut.value = 50 * 100000000;
-	[tx addTxOut:txOut];
-	
-	[genesisBlock addTransaction:tx];
+	BitcoinBlock *genesisBlock = [BitcoinBlock genesisBlock];
 	
 	NSData *hash = [genesisBlock getHash];
 	NSLog(@"Genesis hash: %@", hash);

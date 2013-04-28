@@ -34,6 +34,32 @@
 	return self;
 }
 
++(id)genesisBlock{
+	return [[BitcoinBlock alloc] initGenesisBlock];
+}
+
+-(id)initGenesisBlock{
+	// TODO: Switch to normal network block
+	if (self = [self init]){
+		_timestamp = 1296688602;
+		_bits = 0xffff001d;
+		_nonce = 414098458;
+		
+		BitcoinTransaction *tx = [BitcoinTransaction transaction];
+		
+		BitcoinTxIn *txIn = [BitcoinTxIn txIn];
+		[tx addTxIn:txIn];
+		
+		BitcoinTxOut *txOut = [BitcoinTxOut txOut];
+		txOut.value = 50 * 100000000;
+		[tx addTxOut:txOut];
+		
+		[self addTransaction:tx];
+	}
+	
+	return self;
+}
+
 // Init a block with payload bytes
 +(id) blockFromBytes:(NSData *)data fromOffset:(int)offset{
 	return [[BitcoinBlock alloc] initFromBytes:data fromOffset:offset];
