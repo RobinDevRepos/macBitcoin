@@ -9,11 +9,7 @@
 #import "ConnectionManager.h"
 #import "DDLog.h"
 
-#ifdef DEBUG
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-#else
-static const int ddLogLevel = LOG_LEVEL_WARN;
-#endif
+static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #import "Definitions.h"
 
@@ -185,7 +181,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
-	DDLogInfo(@"socket:%p didConnectToHost:%@ port:%hu", sock, host, port);
+	DDLogVerbose(@"socket:%p didConnectToHost:%@ port:%hu", sock, host, port);
 	
 	//	DDLogInfo(@"localHost :%@ port:%hu", [sock localHost], [sock localPort]);
 		
@@ -209,17 +205,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 /*- (void)socketDidSecure:(GCDAsyncSocket *)sock
 {
-	DDLogInfo(@"socketDidSecure:%p", sock);
+	DDLogVerbose(@"socketDidSecure:%p", sock);
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
-	DDLogInfo(@"socket:%p didWriteDataWithTag:%ld", sock, tag);
+	DDLogVerbose(@"socket:%p didWriteDataWithTag:%ld", sock, tag);
 }*/
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
-	DDLogInfo(@"socket:%p didReadData:withTag:%ld", sock, tag);
+	DDLogVerbose(@"socket:%p didReadData:withTag:%ld", sock, tag);
 	DDLogInfo(@"Full response: %@", data);
 	
 	BitcoinPeer *peer = [self findPeerSocket:sock];
@@ -243,7 +239,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)socket:(GCDAsyncSocket *)sock didReadPartialDataOfLength:(NSUInteger)partialLength withTag:(long)tag
 {
-	DDLogInfo(@"socket:%p didReadPartialDataOfLength:%ld:%ld", sock, (long)partialLength, tag);
+	DDLogVerbose(@"socket:%p didReadPartialDataOfLength:%ld:%ld", sock, (long)partialLength, tag);
 }
 
 /*- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
@@ -275,7 +271,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
 {
-	DDLogInfo(@"didAcceptNewSocket:%p", sock);
+	DDLogVerbose(@"didAcceptNewSocket:%p", sock);
 	
 	NSString *host = [newSocket connectedHost];
 	UInt16 port = [newSocket connectedPort];

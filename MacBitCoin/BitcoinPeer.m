@@ -21,11 +21,7 @@
 
 #import "DDLog.h"
 
-#ifdef DEBUG
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-#else
-static const int ddLogLevel = LOG_LEVEL_WARN;
-#endif
+static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation BitcoinPeer
 
@@ -97,11 +93,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromPayload:payload withMessageType:type];
 	NSData *headerData = [header getData];
 	
-	DDLogInfo(@"Sending header %d: %@", header.length, headerData);
+	DDLogInfo(@"Sending header %d bytes:\n%@", header.length, headerData);
 	[self.socket writeData:headerData withTimeout:-1.0 tag:0];
 	
 	if (payload){
-		DDLogInfo(@"Sending payload %d: %@", (uint32_t)[payload length], payload);
+		DDLogInfo(@"Sending payload %d bytes:\n%@", (uint32_t)[payload length], payload);
 		[self.socket writeData:payload withTimeout:-1.0 tag:0];
 	}
 }
@@ -197,12 +193,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		// TODO: Send these blocks back if we have it, or 'notfound' if we don't
 	}
-	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_BLOCK){
-		BitcoinBlock *block = [BitcoinBlock blockFromBytes:data fromOffset:0];
-		DDLogInfo(@"Got block message: %@", block.merkle_root);
-		
-		// TODO: Store this
-	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETBLOCKS){
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got getblocks message: %lld", getBlocksMessage.count.value);
@@ -227,7 +217,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_HEADERS){
 		BitcoinHeadersMessage *headersMessage = [BitcoinHeadersMessage messageFromBytes:data fromOffset:0];
-		DDLogInfo(@"Got headers: %ld", [headersMessage countHeaders]);
+		DDLogInfo(@"Got block headers: %ld", [headersMessage countHeaders]);
 		
 		// TODO: OMG this is, like, the whole point. Do things!
 	}
