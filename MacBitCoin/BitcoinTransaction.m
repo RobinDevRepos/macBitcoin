@@ -154,7 +154,7 @@
 -(id)init{
 	if ((self = [super init])){
 		_hash = [NSMutableData dataWithCapacity:32];
-		_index = 0;
+		_index = UINT32_MAX;
 	}
 	
 	return self;
