@@ -12,6 +12,7 @@
 #import "BitcoinVersionMessage.h"
 #import "BitcoinAddrMessage.h"
 #import "BitcoinInvMessage.h"
+#import "BitcoinInventoryVector.h"
 #import "BitcoinGetdataMessage.h"
 #import "BitcoinGetblocksMessage.h"
 #import "BitcoinBlock.h"
@@ -116,9 +117,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// Ask for headers. TODO: Base this on our current state
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
-		[getBlocksMessage pushStringHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"]; // Testnet genesis
-		DDLogInfo(@"Sending getheaders");
-		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
+		//[getBlocksMessage pushStringHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"]; // Testnet genesis
+		[getBlocksMessage pushDataHash:[NSMutableData dataWithLength:32]];
+		
+		//DDLogInfo(@"Sending getheaders");
+		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
+		
+		DDLogInfo(@"Sending getblocks");
+		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
 		DDLogInfo(@"Got getaddr");
@@ -131,6 +137,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		DDLogInfo(@"Sending addr");
 		[self send:[addrMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_ADDR];
+	}
+	else{
+		DDLogInfo(@"Header read of type: %@", [self.header getCommandName]);
 	}
 	
 	return self.header.length;
@@ -184,20 +193,37 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		BitcoinInvMessage *invMessage = [BitcoinInvMessage messageFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got inv message: %lld", invMessage.count.value);
 		
-		// TODO: Apparently should send 'getData' for these, if we don't have them
-		// Or maybe only if they're BITCOIN_INV_OBJ_TYPE_MSG_BLOCK
+		// Send 'getData' for these, if we don't have them
+		// But, only if they're BITCOIN_INV_OBJ_TYPE_MSG_BLOCK
+		NSMutableArray *toFetch = [NSMutableArray arrayWithCapacity:invMessage.count.value];
+		for (BitcoinInventoryVector *invVector in [invMessage inventory]){
+			if (invVector.type != BITCOIN_INV_OBJ_TYPE_MSG_BLOCK) continue;
+			
+			if (![self.manager hasBlockHash:[invVector hash]]){
+				[toFetch addObject:invVector];
+			}
+		}
+		
+		if ([toFetch count] > 0){
+			BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage message];
+			getDataMessage.inventory = toFetch; // TODO: There should be one method that takes an array and sets count
+			getDataMessage.count = [BitcoinVarInt varintFromValue:[toFetch count]];
+			DDLogInfo(@"Sending getdata");
+			[self send:[getDataMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETDATA];
+		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETDATA){
 		BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage messageFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got getdata message: %lld", getDataMessage.count.value);
 		
-		// TODO: Send these blocks back if we have it, or 'notfound' if we don't
+		// TODO: Send these blocks back if we have them and 'notfound' for the ones we don't
+		// Do we send tx or block or both depending on the type?
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETBLOCKS){
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got getblocks message: %lld", getBlocksMessage.count.value);
 		
-		// TODO: You know, send these back if we have them
+		// TODO: Return an inv containing the list of blocks starting right after the last known hash in the block locator object, up to hash_stop or 500 blocks, whichever comes first
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETHEADERS){
 		BitcoinGetblocksMessage *getHeadersMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
@@ -205,21 +231,27 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// TODO: Send BitcoinHeadersMessage back for the ones we have
 		BitcoinHeadersMessage *headersMessage = [BitcoinHeadersMessage message];
-		DDLogInfo(@"Sending getheaders");
-		[self send:[headersMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
+		DDLogInfo(@"Sending headers");
+		[self send:[headersMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_HEADERS];
 		
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_BLOCK){
-		BitcoinBlock *blockMessage = [BitcoinBlock blockFromBytes:data fromOffset:0];
-		DDLogInfo(@"Got new block: %@", [blockMessage getHash]);
+		BitcoinBlock *block = [BitcoinBlock blockFromBytes:data fromOffset:0];
+		DDLogInfo(@"Got new block: %@", [block getHash]);
 		
-		// TODO: OMG this is, like, the whole point. Do things!
+		// If we have it, ignore it. If we don't, add it and relay it
+		if ([self.manager hasBlockHash:[block getHash]]) return;
+		
+		[self.manager addBlock:block];
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_HEADERS){
 		BitcoinHeadersMessage *headersMessage = [BitcoinHeadersMessage messageFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got block headers: %ld", [headersMessage countHeaders]);
 		
-		// TODO: OMG this is, like, the whole point. Do things!
+		// Add the ones we don't have
+		for (BitcoinBlock *header in [headersMessage headers]){
+			[self.manager addBlock:header];
+		}
 	}
 	else{
 		DDLogError(@"Received payload of unknown type %d: %@", self.header.messageType, data);

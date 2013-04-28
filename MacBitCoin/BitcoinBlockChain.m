@@ -33,13 +33,19 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return self;
 }
 
+-(BOOL)hasBlockHash:(NSData*)hash{
+	if (hash == [self.chainHead getHash]) return TRUE;
+	if ([self.orphanBlocks objectForKey:hash]) return TRUE;
+	if ([self.blocks objectForKey:hash]) return TRUE;
+	
+	return FALSE;
+}
+
 -(void)addBlock:(BitcoinBlock*)block{
 	NSData *hash = [block getHash];
 	
 	// Check if we already have it
-	if (hash == [self.chainHead getHash]) return;
-	if ([self.orphanBlocks objectForKey:hash]) return;
-	if ([self.blocks objectForKey:hash]) return;
+	if ([self hasBlockHash:hash]) return;
 	
 	// Do we have the previous?
 	BitcoinBlock *prevBlock = [self.blocks objectForKey:[block prev_block]];
@@ -79,6 +85,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			DDLogError(@"Received out-of-order block: %@", hash);
 		}
 	}
+}
+
+-(BitcoinBlock*) getBlockByHash:(NSData*)hash{
+	// TODO: Should we be returning orphans too? Probably!
+	return [self.blocks objectForKey:hash];
 }
 
 @end

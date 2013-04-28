@@ -23,6 +23,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (self = [super init]){
 		_peers = [NSMutableArray arrayWithCapacity:10];
 		
+		_blockChain = [BitcoinBlockChain blockChain];
+		
 		_ourVersion = [BitcoinVersionMessage message];
 		_ourVersion.addr_from = [BitcoinAddress addressFromAddress:@"::ffff:0.0.0.0" withPort:0];
 		// TODO: Once we get an external ip, update this and push to our peers (http://whatismyip.akamai.com/)
@@ -173,6 +175,19 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(NSUInteger) countOfPeers{
 	return [[self getActivePeers] count];
+}
+
+// Block chain methods just pass responsibility onto the chain
+-(BOOL) hasBlockHash:(NSData*)hash{
+	return [self.blockChain hasBlockHash:hash];
+}
+
+-(void) addBlock:(BitcoinBlock*)block{
+	[self.blockChain addBlock:block];
+}
+
+-(BitcoinBlock*) getBlockByHash:(NSData*)hash{
+	return [self.blockChain getBlockByHash:hash];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

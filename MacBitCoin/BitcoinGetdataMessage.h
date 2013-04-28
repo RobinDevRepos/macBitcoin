@@ -10,6 +10,7 @@
 
 #import "Definitions.h"
 #import "BitcoinVarInt.h"
+#import "BitcoinInventoryVector.h"
 
 @interface BitcoinGetdataMessage : NSObject
 
@@ -17,9 +18,12 @@
 @property NSMutableArray *inventory;
 
 +(id)message;
+-(id)init;
 
 +(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
+
+-(void)pushVector:(BitcoinInventoryVector*)inv_vector;
 
 -(NSData*) getData;
 

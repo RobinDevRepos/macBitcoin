@@ -13,6 +13,8 @@
 #import "Definitions.h"
 #import "BitcoinPeer.h"
 #import "BitcoinVersionMessage.h"
+#import "BitcoinBlock.h"
+#import "BitcoinBlockChain.h"
 
 @interface ConnectionManager : NSObject
 
@@ -30,6 +32,9 @@
 @property GCDAsyncSocket *listenSocket;
 @property dispatch_queue_t socketQueueIn;
 
+// Block Chain
+@property BitcoinBlockChain *blockChain;
+
 +(id) connectionManager;
 -(id) init;
 
@@ -41,5 +46,9 @@
 
 -(NSArray*) getActivePeers;
 -(NSUInteger) countOfPeers;
+
+-(BOOL) hasBlockHash:(NSData*)hash;
+-(void) addBlock:(BitcoinBlock*)block;
+-(BitcoinBlock*) getBlockByHash:(NSData*)hash;
 
 @end

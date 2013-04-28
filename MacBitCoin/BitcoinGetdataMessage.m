@@ -18,6 +18,15 @@
 	return [[BitcoinGetdataMessage alloc] init];
 }
 
+-(id)init{
+	if (self = [super init]){
+		_count = [BitcoinVarInt varintFromValue:0];
+		_inventory = [NSMutableArray arrayWithCapacity:0];
+	}
+	
+	return self;
+}
+
 // Init a version message with payload bytes
 +(id) messageFromBytes:(NSData *)data fromOffset:(int)offset{
 	return [[BitcoinGetdataMessage alloc] initFromBytes:data fromOffset:offset];
@@ -40,6 +49,11 @@
 	}
 	
 	return self;
+}
+
+-(void)pushVector:(BitcoinInventoryVector*)inv_vector{
+	[self.inventory addObject:inv_vector];
+	self.count = [BitcoinVarInt varintFromValue:[self.inventory count]];
 }
 
 // Encode our payload
