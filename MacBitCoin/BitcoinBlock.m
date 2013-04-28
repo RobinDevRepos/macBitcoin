@@ -108,12 +108,13 @@
 // Used for testing, mostly
 -(void)setPrevBlock:(NSString*)prev_block{
 	self.prev_block = [prev_block stringToHexData];
-
+	self.hash = nil;
 }
 
 // Used for testing, mostly
 -(void)setMerkleRoot:(NSString*)merkle_root{
 	self.merkle_root = [merkle_root stringToHexData];
+	self.hash = nil;
 }
 
 -(void)addTransaction:(BitcoinTransaction*)tx{
