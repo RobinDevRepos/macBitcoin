@@ -24,7 +24,7 @@
 		_version = PROTOCOL_VERSION;
 		_count = [BitcoinVarInt varintFromValue:0];
 		_hashes = [NSMutableArray arrayWithCapacity:1];
-		_hash_stop = [NSMutableData dataWithCapacity:32];
+		_hash_stop = [NSMutableData dataWithLength:32];
 	}
 	
 	return self;

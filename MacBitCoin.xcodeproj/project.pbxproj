@@ -32,6 +32,8 @@
 		413C1820171BB9A100EAD404 /* NSData+Integer.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C181F171BB9A100EAD404 /* NSData+Integer.m */; };
 		4147F4F6172C9A5B001F5D23 /* NSString+StringToHexData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4147F4F5172C9A5B001F5D23 /* NSString+StringToHexData.m */; };
 		4147F4FC172C9AED001F5D23 /* NSData+DataToHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4147F4FB172C9AED001F5D23 /* NSData+DataToHexString.m */; };
+		4147F4FF172CCD58001F5D23 /* BitcoinBlockChain.m in Sources */ = {isa = PBXBuildFile; fileRef = 4147F4FE172CCD57001F5D23 /* BitcoinBlockChain.m */; };
+		4147F502172CF0B2001F5D23 /* NSData+ReverseBytes.m in Sources */ = {isa = PBXBuildFile; fileRef = 4147F501172CF0B2001F5D23 /* NSData+ReverseBytes.m */; };
 		418DFCD3171F52BA0025F3A0 /* BitcoinPeer.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DFCD2171F52BA0025F3A0 /* BitcoinPeer.m */; };
 		418DFCD6171F69D10025F3A0 /* ConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DFCD5171F69D10025F3A0 /* ConnectionManager.m */; };
 		41B757021712323B005931AE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B757011712323B005931AE /* Cocoa.framework */; };
@@ -108,6 +110,10 @@
 		4147F4F5172C9A5B001F5D23 /* NSString+StringToHexData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+StringToHexData.m"; sourceTree = "<group>"; };
 		4147F4FA172C9AED001F5D23 /* NSData+DataToHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+DataToHexString.h"; sourceTree = "<group>"; };
 		4147F4FB172C9AED001F5D23 /* NSData+DataToHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+DataToHexString.m"; sourceTree = "<group>"; };
+		4147F4FD172CCD57001F5D23 /* BitcoinBlockChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinBlockChain.h; sourceTree = "<group>"; };
+		4147F4FE172CCD57001F5D23 /* BitcoinBlockChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinBlockChain.m; sourceTree = "<group>"; };
+		4147F500172CF0B2001F5D23 /* NSData+ReverseBytes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ReverseBytes.h"; sourceTree = "<group>"; };
+		4147F501172CF0B2001F5D23 /* NSData+ReverseBytes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ReverseBytes.m"; sourceTree = "<group>"; };
 		418DFCD1171F52BA0025F3A0 /* BitcoinPeer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinPeer.h; sourceTree = "<group>"; };
 		418DFCD2171F52BA0025F3A0 /* BitcoinPeer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinPeer.m; sourceTree = "<group>"; };
 		418DFCD4171F69D10025F3A0 /* ConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionManager.h; sourceTree = "<group>"; };
@@ -249,6 +255,8 @@
 				4104537C17208B9B0038F985 /* BitcoinAddrMessage.m */,
 				412BFD3E17225124008FF441 /* BitcoinBlock.h */,
 				412BFD3F17225124008FF441 /* BitcoinBlock.m */,
+				4147F4FD172CCD57001F5D23 /* BitcoinBlockChain.h */,
+				4147F4FE172CCD57001F5D23 /* BitcoinBlockChain.m */,
 				412BFD3A1721FB31008FF441 /* BitcoinGetblocksMessage.h */,
 				412BFD3B1721FB31008FF441 /* BitcoinGetblocksMessage.m */,
 				412BFD371721F5E9008FF441 /* BitcoinGetdataMessage.h */,
@@ -282,6 +290,8 @@
 				4147F4F4172C9A5B001F5D23 /* NSString+StringToHexData.h */,
 				4147F4F5172C9A5B001F5D23 /* NSString+StringToHexData.m */,
 				41B757081712323B005931AE /* Supporting Files */,
+				4147F500172CF0B2001F5D23 /* NSData+ReverseBytes.h */,
+				4147F501172CF0B2001F5D23 /* NSData+ReverseBytes.m */,
 			);
 			path = MacBitCoin;
 			sourceTree = "<group>";
@@ -454,6 +464,8 @@
 				412BFD601728374E008FF441 /* BitcoinTransaction.m in Sources */,
 				4147F4F6172C9A5B001F5D23 /* NSString+StringToHexData.m in Sources */,
 				4147F4FC172C9AED001F5D23 /* NSData+DataToHexString.m in Sources */,
+				4147F4FF172CCD58001F5D23 /* BitcoinBlockChain.m in Sources */,
+				4147F502172CF0B2001F5D23 /* NSData+ReverseBytes.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,7 +26,7 @@
 		_version = 1;
 		_bits = 0x1d07fff8;
 		_timestamp = [[NSDate date] timeIntervalSince1970];
-		_prev_block = [NSMutableData dataWithCapacity:32];
+		_prev_block = [NSMutableData dataWithLength:32];
 		_txn_count = [BitcoinVarInt varintFromValue:0];
 		_transactions = [NSMutableArray arrayWithCapacity:0];
 	}
@@ -42,7 +42,7 @@
 	// TODO: Switch to normal network block
 	if (self = [self init]){
 		_timestamp = 1296688602;
-		_bits = 0xffff001d;
+		_bits = 0x1D00FFFF;
 		_nonce = 414098458;
 		
 		BitcoinTransaction *tx = [BitcoinTransaction transaction];
