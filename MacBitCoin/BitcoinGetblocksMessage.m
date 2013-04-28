@@ -56,8 +56,13 @@
 	return self;
 }
 
--(void)pushHash:(NSString*)hash{
+-(void)pushStringHash:(NSString*)hash{
 	[self.hashes addObject:[hash dataUsingEncoding:NSASCIIStringEncoding]];
+	self.count = [BitcoinVarInt varintFromValue:[self.hashes count]];
+}
+
+-(void)pushDataHash:(NSData*)hash{
+	[self.hashes addObject:hash];
 	self.count = [BitcoinVarInt varintFromValue:[self.hashes count]];
 }
 

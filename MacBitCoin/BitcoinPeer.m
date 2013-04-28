@@ -116,7 +116,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// Ask for headers. TODO: Base this on our current state
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
-		[getBlocksMessage pushHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"]; // Testnet genesis
+		[getBlocksMessage pushStringHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"]; // Testnet genesis
 		DDLogInfo(@"Sending getheaders");
 		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
 	}

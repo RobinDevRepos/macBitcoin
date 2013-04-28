@@ -23,7 +23,8 @@
 +(id)messageFromBytes:(NSData*)data fromOffset:(int)offset;
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
--(void)pushHash:(NSString*)hash;
+-(void)pushStringHash:(NSString*)hash;
+-(void)pushDataHash:(NSData*)hash;
 
 -(NSData*) getData;
 
