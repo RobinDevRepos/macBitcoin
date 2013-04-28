@@ -287,11 +287,11 @@
 				4147F4FB172C9AED001F5D23 /* NSData+DataToHexString.m */,
 				413C181E171BB9A100EAD404 /* NSData+Integer.h */,
 				413C181F171BB9A100EAD404 /* NSData+Integer.m */,
+				4147F500172CF0B2001F5D23 /* NSData+ReverseBytes.h */,
+				4147F501172CF0B2001F5D23 /* NSData+ReverseBytes.m */,
 				4147F4F4172C9A5B001F5D23 /* NSString+StringToHexData.h */,
 				4147F4F5172C9A5B001F5D23 /* NSString+StringToHexData.m */,
 				41B757081712323B005931AE /* Supporting Files */,
-				4147F500172CF0B2001F5D23 /* NSData+ReverseBytes.h */,
-				4147F501172CF0B2001F5D23 /* NSData+ReverseBytes.m */,
 			);
 			path = MacBitCoin;
 			sourceTree = "<group>";
