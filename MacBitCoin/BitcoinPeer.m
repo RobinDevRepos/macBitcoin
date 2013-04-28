@@ -117,8 +117,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// Ask for headers. TODO: Base this on our current state
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
-		//[getBlocksMessage pushStringHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"]; // Testnet genesis
-		[getBlocksMessage pushDataHash:[NSMutableData dataWithLength:32]];
+		[getBlocksMessage pushStringHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"]; // Testnet genesis
 		
 		//DDLogInfo(@"Sending getheaders");
 		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
@@ -239,7 +238,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		BitcoinBlock *block = [BitcoinBlock blockFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got new block: %@", [block getHash]);
 		
-		// If we have it, ignore it. If we don't, add it and relay it
+		// If we have it, ignore it. If we don't, add it and relay it if found valid
 		if ([self.manager hasBlockHash:[block getHash]]) return;
 		
 		[self.manager addBlock:block];
