@@ -485,6 +485,42 @@
 {
 	BitcoinBlock *genesisBlock = [BitcoinBlock genesisBlock];
 	
+	BitcoinTransaction *transaction = [[genesisBlock transactions] objectAtIndex:0];
+	
+	uint32_t version = 1;
+	STAssertEquals(transaction.version, version, @"Genesis block transaction version does not match");
+	
+	uint64_t txInCount = 1;
+	STAssertEquals(transaction.tx_in_count.value, txInCount, @"Genesis block transaction tx in length does not match");
+	STAssertEquals([transaction.tx_in count], txInCount, @"Genesis block transaction tx in array length does not match");
+	
+	BitcoinTxIn *txIn = [transaction.tx_in objectAtIndex:0];
+	
+	uint64_t scriptLength = 77;
+	STAssertEquals(txIn.script_length.value, scriptLength, @"Genesis block transaction tx in 1 script length does not match");
+	STAssertEquals([txIn.computational_script length], scriptLength, @"Genesis block transaction tx in 1 script length does not match");
+	
+	uint32_t sequence = UINT32_MAX;
+	STAssertEquals(txIn.sequence, sequence, @"Genesis block transaction tx in 1 sequence does not match");
+	
+	uint64_t txOutCount = 1;
+	STAssertEquals(transaction.tx_out_count.value, txOutCount, @"Genesis block transaction tx out length does not match");
+	STAssertEquals([transaction.tx_out count], txOutCount, @"Genesis block transaction tx out array length does not match");
+	
+	BitcoinTxOut *txOut = [transaction.tx_out objectAtIndex:0];
+	
+	scriptLength = 66;
+	STAssertEquals(txOut.pk_script_length.value, scriptLength, @"Genesis block transaction tx out 1 script length does not match");
+	STAssertEquals([txOut.pk_script length], scriptLength, @"Genesis block transaction tx out 1 script length does not match");
+	
+	uint64_t value = 50 * COIN;
+	STAssertEquals(txOut.value, value, @"Genesis block transaction tx out 1 value does not match");
+	
+	uint32_t lock_time = 0;
+	STAssertEquals(transaction.lock_time, lock_time, @"Genesis block transaction lock_time does not match");
+	
+	NSLog(@"TX hash: %@", [transaction getHash]);
+	
 	NSData *expectedMerkleRoot = [[@"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b" stringToHexData] reverseBytes];
 	STAssertEqualObjects([genesisBlock getMerkleRoot], expectedMerkleRoot, @"Genesis block merkle root does not match");
 	

@@ -13,6 +13,7 @@
 #import "NSData+CryptoHashing.h"
 #import "BitcoinVarInt.h"
 #import "NSString+StringToHexData.h"
+#import "NSData+ReverseBytes.h"
 
 @implementation BitcoinBlock
 
@@ -48,10 +49,19 @@
 		BitcoinTransaction *tx = [BitcoinTransaction transaction];
 		
 		BitcoinTxIn *txIn = [BitcoinTxIn txIn];
+		NSData *script = [[@"04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73" stringToHexData] reverseBytes];
+		[txIn scriptFromBytes:script];
 		[tx addTxIn:txIn];
 		
 		BitcoinTxOut *txOut = [BitcoinTxOut txOut];
 		txOut.value = 50 * COIN;
+		
+		NSMutableData *pkScript = [NSMutableData dataWithCapacity:32];
+		[pkScript appendData:[[@"04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f" stringToHexData] reverseBytes]];
+		char op_checksig[] = { 0xac };
+		[pkScript appendBytes:op_checksig length:1];
+		NSLog(@"pk script: %@", pkScript);
+		[txOut scriptFromBytes:pkScript];
 		[tx addTxOut:txOut];
 		
 		[self addTransaction:tx];
@@ -213,7 +223,7 @@
 		
         uint64_t levelOffset = 0; // Offset in the list where the currently processed level starts.
         // Step through each level, stopping when we reach the root (levelSize == 1).
-        for (uint64_t levelSize = self.txn_count.value; levelSize > 1; levelSize = ((levelSize + 1) / 2)){
+        for (uint64_t levelSize = [tree count]; levelSize > 1; levelSize = (levelSize + 1) / 2){
             // For each pair of nodes on that level:
             for (int left = 0; left < levelSize; left += 2) {
                 // The right hand node can be the same as the left hand, in the case where we don't have enough
@@ -232,8 +242,8 @@
             levelOffset += levelSize;
         }
 		
-		// And now we hash the last object of the tree for our merkle root
-		self.merkle_root = [[tree lastObject] sha256Hash];
+		// And now the last hash is the merkle root
+		self.merkle_root = [tree lastObject];
 	}
 	
 	return self.merkle_root;
