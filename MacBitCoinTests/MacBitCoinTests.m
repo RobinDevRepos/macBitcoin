@@ -386,15 +386,14 @@
 -(void)testGenesisBlock
 {
 	BitcoinBlock *genesisBlock = [BitcoinBlock genesisBlock];
-	//[genesisBlock setMerkleRoot:@"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"];
-	//genesisBlock.merkle_root = [genesisBlock.merkle_root reverseBytes];
+	
+	NSData *expectedMerkleRoot = [[@"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b" stringToHexData] reverseBytes];
+	STAssertEqualObjects([genesisBlock getMerkleRoot], expectedMerkleRoot, @"Genesis block merkle root does not match");
 	
 	NSData *hash = [genesisBlock getHash];
-	//NSLog(@"Genesis hash: %@", hash);
 	
 	NSString *genesisHash = @"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943";
 	NSData *data1 = [[genesisHash stringToHexData] reverseBytes];
-	//NSLog(@"Expected hash: %@", data1);
 	STAssertEqualObjects(hash, data1, @"Genesis block hash does not match");
 }
 
