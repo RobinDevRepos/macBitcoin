@@ -12,6 +12,7 @@
 #import "NSData+Integer.h"
 #import "NSData+CryptoHashing.h"
 #import "BitcoinVarInt.h"
+#import "NSString+StringToHexData.h"
 
 @implementation BitcoinBlock
 
@@ -98,8 +99,7 @@
 		offset += 4;
 		_nonce = [data offsetToInt32:offset];
 		
-		offset += 4;
-		_txn_count = [BitcoinVarInt varintFromBytes:data fromOffset:offset]; // This should always be zero
+		_txn_count = [BitcoinVarInt varintFromValue:0];
 	}
 	
 	return self;
@@ -107,12 +107,13 @@
 
 // Used for testing, mostly
 -(void)setPrevBlock:(NSString*)prev_block{
-	self.prev_block = [prev_block dataUsingEncoding:NSASCIIStringEncoding];
+	self.prev_block = [prev_block stringToHexData];
+
 }
 
 // Used for testing, mostly
 -(void)setMerkleRoot:(NSString*)merkle_root{
-	self.merkle_root = [merkle_root dataUsingEncoding:NSASCIIStringEncoding];
+	self.merkle_root = [merkle_root stringToHexData];
 }
 
 -(void)addTransaction:(BitcoinTransaction*)tx{
@@ -155,8 +156,6 @@
 	[data appendData:[NSData dataWithInt32:self.timestamp]];
 	[data appendData:[NSData dataWithInt32:self.bits]];
 	[data appendData:[NSData dataWithInt32:self.nonce]];
-	
-	[data appendData:[self.txn_count getData]];
 	
 	return data;
 }

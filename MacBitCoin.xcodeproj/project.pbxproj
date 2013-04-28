@@ -30,6 +30,8 @@
 		413C181A171B166C00EAD404 /* BitcoinVarInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C1819171B166C00EAD404 /* BitcoinVarInt.m */; };
 		413C181D171B173300EAD404 /* BitcoinAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C181C171B173300EAD404 /* BitcoinAddress.m */; };
 		413C1820171BB9A100EAD404 /* NSData+Integer.m in Sources */ = {isa = PBXBuildFile; fileRef = 413C181F171BB9A100EAD404 /* NSData+Integer.m */; };
+		4147F4F6172C9A5B001F5D23 /* NSString+StringToHexData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4147F4F5172C9A5B001F5D23 /* NSString+StringToHexData.m */; };
+		4147F4FC172C9AED001F5D23 /* NSData+DataToHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4147F4FB172C9AED001F5D23 /* NSData+DataToHexString.m */; };
 		418DFCD3171F52BA0025F3A0 /* BitcoinPeer.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DFCD2171F52BA0025F3A0 /* BitcoinPeer.m */; };
 		418DFCD6171F69D10025F3A0 /* ConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DFCD5171F69D10025F3A0 /* ConnectionManager.m */; };
 		41B757021712323B005931AE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41B757011712323B005931AE /* Cocoa.framework */; };
@@ -102,6 +104,10 @@
 		413C181C171B173300EAD404 /* BitcoinAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinAddress.m; sourceTree = "<group>"; };
 		413C181E171BB9A100EAD404 /* NSData+Integer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Integer.h"; sourceTree = "<group>"; };
 		413C181F171BB9A100EAD404 /* NSData+Integer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Integer.m"; sourceTree = "<group>"; };
+		4147F4F4172C9A5B001F5D23 /* NSString+StringToHexData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+StringToHexData.h"; sourceTree = "<group>"; };
+		4147F4F5172C9A5B001F5D23 /* NSString+StringToHexData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+StringToHexData.m"; sourceTree = "<group>"; };
+		4147F4FA172C9AED001F5D23 /* NSData+DataToHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+DataToHexString.h"; sourceTree = "<group>"; };
+		4147F4FB172C9AED001F5D23 /* NSData+DataToHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+DataToHexString.m"; sourceTree = "<group>"; };
 		418DFCD1171F52BA0025F3A0 /* BitcoinPeer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcoinPeer.h; sourceTree = "<group>"; };
 		418DFCD2171F52BA0025F3A0 /* BitcoinPeer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcoinPeer.m; sourceTree = "<group>"; };
 		418DFCD4171F69D10025F3A0 /* ConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionManager.h; sourceTree = "<group>"; };
@@ -272,6 +278,10 @@
 				412BFD42172503F8008FF441 /* BitcoinHeadersMessage.m */,
 				412BFD5E1728374D008FF441 /* BitcoinTransaction.h */,
 				412BFD5F1728374E008FF441 /* BitcoinTransaction.m */,
+				4147F4F4172C9A5B001F5D23 /* NSString+StringToHexData.h */,
+				4147F4F5172C9A5B001F5D23 /* NSString+StringToHexData.m */,
+				4147F4FA172C9AED001F5D23 /* NSData+DataToHexString.h */,
+				4147F4FB172C9AED001F5D23 /* NSData+DataToHexString.m */,
 			);
 			path = MacBitCoin;
 			sourceTree = "<group>";
@@ -442,6 +452,8 @@
 				412BFD4017225125008FF441 /* BitcoinBlock.m in Sources */,
 				412BFD43172503F8008FF441 /* BitcoinHeadersMessage.m in Sources */,
 				412BFD601728374E008FF441 /* BitcoinTransaction.m in Sources */,
+				4147F4F6172C9A5B001F5D23 /* NSString+StringToHexData.m in Sources */,
+				4147F4FC172C9AED001F5D23 /* NSData+DataToHexString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

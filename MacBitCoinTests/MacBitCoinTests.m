@@ -384,7 +384,7 @@
 {
 	BitcoinBlock *genesisBlock = [BitcoinBlock block];
 	genesisBlock.timestamp = 1296688602;
-	genesisBlock.bits = 0x1d00ffff;
+	genesisBlock.bits = 0xffff001d;
 	genesisBlock.nonce = 414098458;
 	
 	BitcoinTransaction *tx = [BitcoinTransaction transaction];
@@ -410,14 +410,18 @@
 	BitcoinBlock *exampleBlock = [BitcoinBlock block];
 	[exampleBlock setPrevBlock:@"81cd02ab7e569e8bcd9317e2fe99f2de44d49ab2b8851ba4a308000000000000"];
 	[exampleBlock setMerkleRoot:@"e320b6c2fffc8d750423db8b1eb942ae710e951ed797f7affc8892b0f1fc122b"];
-	exampleBlock.timestamp = 0xc7f5d74d;
-	exampleBlock.bits = 0xf2b9441a;
-	exampleBlock.nonce = 0x42a14695;
+	exampleBlock.timestamp = 0x4dd7f5c7;
+	exampleBlock.bits = 0x1a44b9f2;
+	exampleBlock.nonce = 0x9546a142;
 	
 	NSData *hash = [exampleBlock getHash];
-	NSLog(@"Example hash: %@", hash);
-
-	// 1dbd981fe6985776b644b173a4d0385ddc1aa2a829688d1e0000000000000000
+	
+	char bytes[] = {
+		0x1d, 0xbd, 0x98, 0x1f, 0xe6, 0x98, 0x57, 0x76, 0xb6, 0x44, 0xb1, 0x73, 0xa4, 0xd0, 0x38, 0x5d,
+		0xdc, 0x1a, 0xa2, 0xa8, 0x29, 0x68, 0x8d, 0x1e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	};
+	NSData *data1 = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+	STAssertEqualObjects(hash, data1, @"Example block hash does not match");
 }
 
 @end
