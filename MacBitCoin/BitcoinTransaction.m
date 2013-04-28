@@ -50,8 +50,9 @@
 		offset += [_tx_in_count size];
 		_tx_in = [NSMutableArray arrayWithCapacity:[_tx_in_count value]];
 		for (int i=0; i<[_tx_in_count value]; i++){
-			[_tx_in addObject:[BitcoinTxIn txInFromBytes:data fromOffset:offset]];
-			offset += 41;
+			BitcoinTxIn *txIn = [BitcoinTxIn txInFromBytes:data fromOffset:offset];
+			[_tx_in addObject:txIn];
+			offset += 36 + [txIn.script_length size] + [txIn.script_length value] + 4;
 		}
 		
 		_tx_out_count = [BitcoinVarInt varintFromBytes:data fromOffset:offset];
@@ -59,8 +60,9 @@
 		offset += [_tx_out_count size];
 		_tx_out = [NSMutableArray arrayWithCapacity:[_tx_out_count value]];
 		for (int i=0; i<[_tx_out_count value]; i++){
-			[_tx_out addObject:[BitcoinTxOut txOutFromBytes:data fromOffset:offset]];
-			offset += 8;
+			BitcoinTxOut *txOut = [BitcoinTxOut txOutFromBytes:data fromOffset:offset];
+			[_tx_out addObject:txOut];
+			offset += 8 + [txOut.pk_script_length size] + [txOut.pk_script_length value];
 		}
 		
 		_lock_time = [data offsetToInt32:offset];
@@ -216,6 +218,9 @@
 		_script_length = [BitcoinVarInt varintFromBytes:data fromOffset:offset];
 		
 		offset += [_script_length size];
+		_computational_script = [data subdataWithRange:NSMakeRange(offset, _script_length.value)];
+		
+		offset += [_script_length value];
 		_sequence = [data offsetToInt32:offset];
 	}
 	
@@ -232,6 +237,7 @@
 	
 	[data appendData:[self.previous_output getData]];
 	[data appendData:[self.script_length getData]];
+	[data appendData:self.computational_script];
 	[data appendData:[NSData dataWithInt32:self.sequence]];
 	
 	return data;

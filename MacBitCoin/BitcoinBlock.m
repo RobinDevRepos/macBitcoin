@@ -51,7 +51,7 @@
 		[tx addTxIn:txIn];
 		
 		BitcoinTxOut *txOut = [BitcoinTxOut txOut];
-		txOut.value = 50 * 100000000;
+		txOut.value = 50 * COIN;
 		[tx addTxOut:txOut];
 		
 		[self addTransaction:tx];
