@@ -28,7 +28,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		_peers = [NSMutableArray arrayWithCapacity:10];
 		
 		_ourVersion = [BitcoinVersionMessage message];
-		_ourVersion.addr_from = [BitcoinAddress addressFromAddress:@"::ffff:0.0.0.0" withPort:0]; // TODO: Once we get an external ip, update this and push to our peers
+		_ourVersion.addr_from = [BitcoinAddress addressFromAddress:@"::ffff:0.0.0.0" withPort:0];
+		// TODO: Once we get an external ip, update this and push to our peers (http://whatismyip.akamai.com/)
 		// TODO: Store ourselves as peer, so we can track peer-related data on ourselves?
 		
 		// Setup our sockets (GCDAsyncSocket).
