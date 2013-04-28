@@ -62,7 +62,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		// Seed our peers list
 		NSArray *seedHosts;
-		if (FALSE){
+		if (TRUE){
 			// TODO: Do this with a DNS lookup
 			seedHosts = [NSArray arrayWithObjects:
 						 @"213.5.71.38",

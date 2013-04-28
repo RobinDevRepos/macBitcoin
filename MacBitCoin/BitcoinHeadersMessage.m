@@ -53,6 +53,10 @@
 	self.count = [BitcoinVarInt varintFromValue:[self.headers count]];
 }
 
+-(NSUInteger)countHeaders{
+	return [self.count value];
+}
+
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
 	

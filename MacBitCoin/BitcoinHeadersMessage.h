@@ -23,6 +23,7 @@
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
 -(void)pushHeader:(BitcoinBlock*)block;
+-(NSUInteger)countHeaders;
 
 -(NSData*) getData;
 
