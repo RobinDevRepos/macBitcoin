@@ -40,7 +40,7 @@
 		offset += [_count size];
 		_headers = [NSMutableArray arrayWithCapacity:[_count value]];
 		for (int i=0; i<[_count value]; i++){
-			[_headers addObject:[BitcoinBlock blockFromBytes:data fromOffset:offset]];
+			[_headers addObject:[BitcoinBlock blockFromHeaderBytes:data fromOffset:offset]];
 			offset += 81;
 		}
 	}
