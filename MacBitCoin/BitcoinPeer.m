@@ -115,17 +115,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// TODO: Send 'getaddr' here?
 		
-		if (self.blockHeight > 0){
-			// Ask for headers.
-			BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
-			[getBlocksMessage pushDataHash:[[self.manager getChainHead] getHash]]; // TODO: This needs to be a list from head back to genesis: https://en.bitcoin.it/wiki/Protocol_specification#getblocks
-			
-			//DDLogInfo(@"Sending getheaders");
-			//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
-			
-			DDLogInfo(@"Sending getblocks");
-			[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
-		}
+		// Ask for blocks. We'll only want to do this on one peer, though
+		[self askForBlocks];
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
 		DDLogInfo(@"Got getaddr");
@@ -197,6 +188,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// Send 'getData' for these, if we don't have them
 		// But, only if they're BITCOIN_INV_OBJ_TYPE_MSG_BLOCK
+		// TODO: Handle other types
 		NSMutableArray *toFetch = [NSMutableArray arrayWithCapacity:invMessage.count.value];
 		for (BitcoinInventoryVector *invVector in [invMessage inventory]){
 			if (invVector.type != BITCOIN_INV_OBJ_TYPE_MSG_BLOCK) continue;
@@ -206,11 +198,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			}
 		}
 		
+		NSUInteger blocksToFetch = [toFetch count];
 		if ([toFetch count] > 0){
+			self.blocksToDownload += blocksToFetch;
+			
 			BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage message];
-			getDataMessage.inventory = toFetch; // TODO: There should be one method that takes an array and sets count
-			getDataMessage.count = [BitcoinVarInt varintFromValue:[toFetch count]];
-			DDLogInfo(@"Sending getdata in response to inv for %ld blocks", [toFetch count]);
+			getDataMessage.inventory = toFetch; // TODO: There should be one method on BitcoinGetdataMessage that takes an array and sets count
+			getDataMessage.count = [BitcoinVarInt varintFromValue:blocksToFetch];
+			DDLogInfo(@"Sending getdata in response to inv for %ld blocks", blocksToFetch);
 			[self send:[getDataMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETDATA];
 		}
 	}
@@ -241,10 +236,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		BitcoinBlock *block = [BitcoinBlock blockFromBytes:data fromOffset:0];
 		DDLogInfo(@"Got block: %@", [block getHash]);
 		
+		// TODO: Always decrement this? Is it possible to receive this unasked from a peer? Does that really matter?
+		self.blocksToDownload--;
+		
 		// If we have it, ignore it. If we don't, add it and relay it if found valid
 		if ([self.manager hasBlockHash:[block getHash]]) return;
 		
 		[self.manager addBlock:block];
+		
+		// Ask for more?
+		if (self.blocksToDownload == 0){
+			[self askForBlocks];
+		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_HEADERS){
 		BitcoinHeadersMessage *headersMessage = [BitcoinHeadersMessage messageFromBytes:data fromOffset:0];
@@ -303,6 +306,20 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (self.lastSeenTime >= [[NSDate date] timeIntervalSince1970] - (60 * 90)) return true;
 	
 	return false;
+}
+
+-(void) askForBlocks{
+	if (self.blockHeight > 0){
+		// Ask for headers.
+		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
+		[getBlocksMessage pushDataHash:[[self.manager getChainHead] getHash]]; // TODO: This needs to be a list from head back to genesis: https://en.bitcoin.it/wiki/Protocol_specification#getblocks
+		
+		//DDLogInfo(@"Sending getheaders");
+		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
+		
+		DDLogInfo(@"Sending getblocks");
+		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
+	}
 }
 
 @end

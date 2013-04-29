@@ -26,6 +26,8 @@
 @property (nonatomic) BOOL versionPushed;
 @property (nonatomic) BOOL versionAcked;
 
+@property (nonatomic) NSUInteger blocksToDownload;
+
 +(id) peerFromBitcoinAddress:(BitcoinAddress*)address;
 -(id) initFromBitcoinAddress:(BitcoinAddress*)address;
 
@@ -48,5 +50,7 @@
 -(BitcoinVersionMessage*) getOurVersion;
 
 -(BOOL) isActive;
+
+-(void) askForBlocks;
 
 @end
