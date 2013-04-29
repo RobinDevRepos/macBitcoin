@@ -86,7 +86,7 @@
 }
 
 -(NSData*) getData{
-	NSMutableData *data = [NSMutableData data];
+	NSMutableData *data = [NSMutableData dataWithCapacity:[self getLength]];
 	
 	[data appendData:[NSData dataWithInt32:self.version]];
 	
@@ -102,7 +102,7 @@
 
 	[data appendData:[NSData dataWithInt32:self.lock_time]];
 	
-	return data;
+	return [NSData dataWithData:data];
 }
 
 // Build a hash, unless we've built one already. Return it
@@ -179,12 +179,12 @@
 }
 
 -(NSData*) getData{
-	NSMutableData *data = [NSMutableData data];
+	NSMutableData *data = [NSMutableData dataWithCapacity:36];
 	
 	[data appendData:self.hash];
 	[data appendData:[NSData dataWithInt32:self.index]];
 	
-	return data;
+	return [NSData dataWithData:data];
 }
 
 @end
@@ -233,14 +233,14 @@
 }
 
 -(NSData*) getData{
-	NSMutableData *data = [NSMutableData data];
+	NSMutableData *data = [NSMutableData dataWithCapacity:10];
 	
 	[data appendData:[self.previous_output getData]];
 	[data appendData:[self.script_length getData]];
 	[data appendData:self.computational_script];
 	[data appendData:[NSData dataWithInt32:self.sequence]];
 	
-	return data;
+	return [NSData dataWithData:data];
 }
 
 @end
@@ -284,13 +284,13 @@
 }
 
 -(NSData*) getData{
-	NSMutableData *data = [NSMutableData data];
+	NSMutableData *data = [NSMutableData dataWithCapacity:10];
 	
 	[data appendData:[NSData dataWithInt64:self.value]];
 	[data appendData:[self.pk_script_length getData]];
 	[data appendData:self.pk_script];
 	
-	return data;
+	return [NSData dataWithData:data];
 }
 
 @end
