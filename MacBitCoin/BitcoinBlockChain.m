@@ -9,6 +9,8 @@
 #import "BitcoinBlockChain.h"
 #import "DDLog.h"
 
+#import "ConnectionManager.h"
+
 static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation BitcoinBlockChain
@@ -61,6 +63,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			[self.blocks setObject:block forKey:hash];
 			self.chainHead = block;
 			DDLogInfo(@"Added new block to the end of the chain: %@", hash);
+			[self.manager incrementBlockHeight];
 			
 			// Now try and connect orphans
 			int orphansConnected;
@@ -73,6 +76,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 						self.chainHead = block;
 						[self.orphanBlocks removeObjectForKey:orphanHash];
 						DDLogInfo(@"Moved orphan to the end of the chain: %@", orphanHash);
+						[self.manager incrementBlockHeight];
 						
 						orphansConnected++;
 					}

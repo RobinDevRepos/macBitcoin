@@ -115,15 +115,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// TODO: Send 'getaddr' here?
 		
-		// Ask for headers.
-		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
-		[getBlocksMessage pushDataHash:[[self.manager getChainHead] getHash]];
-		
-		//DDLogInfo(@"Sending getheaders");
-		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
-		
-		DDLogInfo(@"Sending getblocks");
-		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
+		if (self.blockHeight > 0){
+			// Ask for headers.
+			BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
+			[getBlocksMessage pushDataHash:[[self.manager getChainHead] getHash]]; // TODO: This needs to be a list from head back to genesis: https://en.bitcoin.it/wiki/Protocol_specification#getblocks
+			
+			//DDLogInfo(@"Sending getheaders");
+			//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
+			
+			DDLogInfo(@"Sending getblocks");
+			[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
+		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
 		DDLogInfo(@"Got getaddr");
@@ -153,6 +155,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (self.header.messageType == BITCOIN_MESSAGE_TYPE_VERSION){
 		BitcoinVersionMessage *versionMessage = [BitcoinVersionMessage messageFromBytes:data fromOffset:0];
 		self.version = [versionMessage version];
+		self.blockHeight = [versionMessage start_height];
 		//self.address = [versionMessage addr_from]; // TODO: Test if this is routable before we assign it, and then convert it
 		
 		// Ignore connections to ourselves

@@ -15,6 +15,7 @@
 @property BitcoinBlock *chainHead;
 @property NSMutableDictionary *orphanBlocks;
 @property NSMutableDictionary *blocks;
+@property (weak) id manager;
 
 +(id)blockChain;
 -(id)init;

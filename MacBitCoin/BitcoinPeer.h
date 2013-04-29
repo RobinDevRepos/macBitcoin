@@ -18,6 +18,7 @@
 @property BitcoinAddress *address;
 @property GCDAsyncSocket *socket;
 @property (nonatomic) int32_t version;
+@property (nonatomic) uint32_t blockHeight;
 @property (nonatomic) uint32_t lastSeenTime;
 @property BitcoinMessageHeader *header;
 @property (weak) id manager;

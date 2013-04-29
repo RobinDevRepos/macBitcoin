@@ -24,11 +24,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		_peers = [NSMutableArray arrayWithCapacity:10];
 		
 		_blockChain = [BitcoinBlockChain blockChain];
+		[_blockChain setManager:self];
 		
 		_ourVersion = [BitcoinVersionMessage message];
-		_ourVersion.addr_from = [BitcoinAddress addressFromAddress:@"::ffff:0.0.0.0" withPort:0];
+		_ourVersion.addr_from = [BitcoinAddress addressFromAddress:@"::ffff:0.0.0.0" withPort:0];		
 		// TODO: Once we get an external ip, update this and push to our peers (http://whatismyip.akamai.com/)
 		// TODO: Store ourselves as peer, so we can track peer-related data on ourselves?
+		_ourVersion.start_height = [_blockChain.blocks count]-1;
 		
 		// Setup our sockets (GCDAsyncSocket).
 		// The socket will invoke our delegate methods using the usual delegate paradigm.
@@ -192,6 +194,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(BitcoinBlock*) getChainHead{
 	return [self.blockChain chainHead];
+}
+
+-(void) incrementBlockHeight{
+	[self.ourVersion setStart_height:[self getBlockHeight]+1];
+}
+
+-(uint32_t) getBlockHeight{
+	return [self.ourVersion start_height];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
