@@ -60,8 +60,6 @@ typedef enum{
 
 #define MAX_INV_COUNT 50000
 
-#define COIN 100000000
-
 typedef enum{
 	BITCOIN_INV_OBJ_TYPE_ERROR = 0,
 	BITCOIN_INV_OBJ_TYPE_MSG_TX = 1,

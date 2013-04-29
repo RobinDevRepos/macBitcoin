@@ -56,7 +56,7 @@
 		[tx addTxIn:txIn];
 		
 		BitcoinTxOut *txOut = [BitcoinTxOut txOut];
-		txOut.value = 50 * COIN;
+		txOut.value = 5000000000;
 		
 		// TODO: This should be a script object
 		NSMutableData *pkScript = [NSMutableData dataWithCapacity:32];
@@ -165,7 +165,7 @@
 
 // Encode our payload
 -(NSData*) getData{
-	NSMutableData *data = [NSMutableData data];
+	NSMutableData *data = [NSMutableData dataWithCapacity:80];
 	
 	[data appendData:[NSData dataWithInt32:self.version]];
 	
@@ -181,12 +181,12 @@
 		[data appendData:[tx getData]];
 	}
 	
-	return data;
+	return [NSData dataWithData:data];
 }
 
 // Encode our payload as a block *HEADER*
 -(NSData*) getHeaderData{
-	NSMutableData *data = [NSMutableData data];
+	NSMutableData *data = [NSMutableData dataWithCapacity:80];
 	
 	[data appendData:[NSData dataWithInt32:self.version]];
 	
@@ -197,7 +197,7 @@
 	[data appendData:[NSData dataWithInt32:self.bits]];
 	[data appendData:[NSData dataWithInt32:self.nonce]];
 	
-	return data;
+	return [NSData dataWithData:data];
 }
 
 // Build a hash, unless we've built one already. Return it

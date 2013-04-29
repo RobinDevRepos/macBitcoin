@@ -472,7 +472,7 @@
 	STAssertEquals(txOut.pk_script_length.value, scriptLength, @"Transaction tx out 1 script length does not match");
 	STAssertEquals([txOut.pk_script length], scriptLength, @"Transaction tx out 1 script length does not match");
 	
-	uint64_t value = 0.05 * COIN;
+	uint64_t value = 5000000;
 	STAssertEquals(txOut.value, value, @"Transaction tx out 1 value does not match");
 	
 	txOut = [transaction.tx_out objectAtIndex:1];
@@ -481,7 +481,7 @@
 	STAssertEquals(txOut.pk_script_length.value, scriptLength, @"Transaction tx out 2 script length does not match");
 	STAssertEquals([txOut.pk_script length], scriptLength, @"Transaction tx out 2 script length does not match");
 	
-	value = 33.54 * COIN;
+	value = 3354000000;
 	STAssertEquals(txOut.value, value, @"Transaction tx out 2 value does not match");
 
 	uint32_t lock_time = 0;
@@ -523,14 +523,13 @@
 	STAssertEquals(txOut.pk_script_length.value, scriptLength, @"Genesis block transaction tx out 1 script length does not match");
 	STAssertEquals([txOut.pk_script length], scriptLength, @"Genesis block transaction tx out 1 script length does not match");
 	
-	uint64_t value = 50 * COIN;
+	uint64_t value = 5000000000;
 	STAssertEquals(txOut.value, value, @"Genesis block transaction tx out 1 value does not match");
 	
 	uint32_t lock_time = 0;
 	STAssertEquals(transaction.lock_time, lock_time, @"Genesis block transaction lock_time does not match");
 	
-	NSLog(@"Block data: %@", [genesisBlock getData]);
-	NSLog(@"TX hash: %@", [transaction getHash]);
+	NSLog(@"genesis block data: %@", [genesisBlock getData]);
 	
 	NSData *expectedMerkleRoot = [[@"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b" stringToHexData] reverseBytes];
 	STAssertEqualObjects([genesisBlock getMerkleRoot], expectedMerkleRoot, @"Genesis block merkle root does not match");
@@ -540,6 +539,56 @@
 	NSString *genesisHash = @"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943";
 	NSData *data1 = [[genesisHash stringToHexData] reverseBytes];
 	STAssertEqualObjects(hash, data1, @"Genesis block hash does not match");
+}
+
+-(void)testGenesisBlockReencoding
+{
+	BitcoinBlock *genesisBlock = [BitcoinBlock blockFromBytes:[[BitcoinBlock genesisBlock] getData] fromOffset:0];
+	
+	BitcoinTransaction *transaction = [[genesisBlock transactions] objectAtIndex:0];
+	
+	uint32_t version = 1;
+	STAssertEquals(transaction.version, version, @"Re-encoded genesis block transaction version does not match");
+	
+	uint64_t txInCount = 1;
+	STAssertEquals(transaction.tx_in_count.value, txInCount, @"Re-encoded genesis block transaction tx in length does not match");
+	STAssertEquals([transaction.tx_in count], txInCount, @"Re-encoded genesis block transaction tx in array length does not match");
+	
+	BitcoinTxIn *txIn = [transaction.tx_in objectAtIndex:0];
+	
+	uint64_t scriptLength = 77;
+	STAssertEquals(txIn.script_length.value, scriptLength, @"Re-encoded genesis block transaction tx in 1 script length does not match");
+	STAssertEquals([txIn.computational_script length], scriptLength, @"Re-encoded genesis block transaction tx in 1 script length does not match");
+	
+	uint32_t sequence = UINT32_MAX;
+	STAssertEquals(txIn.sequence, sequence, @"Re-encoded genesis block transaction tx in 1 sequence does not match");
+	
+	uint64_t txOutCount = 1;
+	STAssertEquals(transaction.tx_out_count.value, txOutCount, @"Re-encoded genesis block transaction tx out length does not match");
+	STAssertEquals([transaction.tx_out count], txOutCount, @"Re-encoded genesis block transaction tx out array length does not match");
+	
+	BitcoinTxOut *txOut = [transaction.tx_out objectAtIndex:0];
+	
+	scriptLength = 67;
+	STAssertEquals(txOut.pk_script_length.value, scriptLength, @"Re-encoded genesis block transaction tx out 1 script length does not match");
+	STAssertEquals([txOut.pk_script length], scriptLength, @"Re-encoded genesis block transaction tx out 1 script length does not match");
+	
+	uint64_t value = 5000000000;
+	STAssertEquals(txOut.value, value, @"Re-encoded genesis block transaction tx out 1 value does not match");
+	
+	uint32_t lock_time = 0;
+	STAssertEquals(transaction.lock_time, lock_time, @"Re-encoded genesis block transaction lock_time does not match");
+	
+	NSLog(@"Re-encoded genesis block data: %@", [genesisBlock getData]);
+	
+	NSData *expectedMerkleRoot = [[@"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b" stringToHexData] reverseBytes];
+	STAssertEqualObjects([genesisBlock getMerkleRoot], expectedMerkleRoot, @"Re-encoded genesis block merkle root does not match");
+	
+	NSData *hash = [genesisBlock getHash];
+	
+	NSString *genesisHash = @"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943";
+	NSData *data1 = [[genesisHash stringToHexData] reverseBytes];
+	STAssertEqualObjects(hash, data1, @"Re-encoded genesis block hash does not match");
 }
 
 // https://en.bitcoin.it/wiki/Block_hashing_algorithm
