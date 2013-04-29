@@ -91,6 +91,16 @@
 	
 	STAssertEqualObjects(data1, data2, @"64bit NSData objects do not match");
 	STAssertEquals(value1, value2, @"64bit NSData values do not match");
+	
+	value1 = 5000000000;
+	data1 = [NSData dataWithInt64:value1];
+	
+	const char bytes2[] = { 0x00, 0xf2, 0x05, 0x2a, 0x01, 0x00, 0x00, 0x00 };
+	data2 = [NSData dataWithBytes:bytes2 length:sizeof(bytes2)];
+	value2 = [data2 offsetToInt64:0];
+	
+	STAssertEqualObjects(data1, data2, @"64bit NSData objects do not match");
+	STAssertEquals(value1, value2, @"64bit NSData values do not match");
 }
 
 - (void)testVarInt8Bit
