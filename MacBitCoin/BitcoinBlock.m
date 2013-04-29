@@ -42,6 +42,8 @@
 -(id)initGenesisBlock{
 	// TODO: Switch to normal network block
 	if (self = [self init]){
+		
+		// https://en.bitcoin.it/wiki/Genesis_block
 		_timestamp = 1296688602;
 		_bits = 0x1D00FFFF;
 		_nonce = 414098458;
@@ -56,11 +58,12 @@
 		BitcoinTxOut *txOut = [BitcoinTxOut txOut];
 		txOut.value = 50 * COIN;
 		
+		// TODO: This should be a script object
 		NSMutableData *pkScript = [NSMutableData dataWithCapacity:32];
-		[pkScript appendData:[[@"04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f" stringToHexData] reverseBytes]];
+		[pkScript appendData:[@"41" stringToHexData]]; // Length of script
+		[pkScript appendData:[@"04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f" stringToHexData]];
 		char op_checksig[] = { 0xac };
 		[pkScript appendBytes:op_checksig length:1];
-		//NSLog(@"pk script: %@", pkScript);
 		[txOut scriptFromBytes:pkScript];
 		[tx addTxOut:txOut];
 		
