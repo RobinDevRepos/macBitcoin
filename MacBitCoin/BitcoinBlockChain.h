@@ -19,7 +19,7 @@
 +(id)blockChain;
 -(id)init;
 
--(BOOL) hasBlockHash:(NSData*)hash;
+-(BOOL)hasBlockHash:(NSData*)hash;
 -(void)addBlock:(BitcoinBlock*)block;
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash;
 

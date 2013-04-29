@@ -115,9 +115,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// TODO: Send 'getaddr' here?
 		
-		// Ask for headers. TODO: Base this on our current state
+		// Ask for headers.
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
-		[getBlocksMessage pushStringHash:@"000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"]; // Testnet genesis
+		[getBlocksMessage pushDataHash:[[self.manager getChainHead] getHash]];
 		
 		//DDLogInfo(@"Sending getheaders");
 		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
@@ -207,7 +207,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage message];
 			getDataMessage.inventory = toFetch; // TODO: There should be one method that takes an array and sets count
 			getDataMessage.count = [BitcoinVarInt varintFromValue:[toFetch count]];
-			DDLogInfo(@"Sending getdata");
+			DDLogInfo(@"Sending getdata in response to inv for %ld blocks", [toFetch count]);
 			[self send:[getDataMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETDATA];
 		}
 	}
@@ -236,7 +236,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_BLOCK){
 		BitcoinBlock *block = [BitcoinBlock blockFromBytes:data fromOffset:0];
-		DDLogInfo(@"Got new block: %@", [block getHash]);
+		DDLogInfo(@"Got block: %@", [block getHash]);
 		
 		// If we have it, ignore it. If we don't, add it and relay it if found valid
 		if ([self.manager hasBlockHash:[block getHash]]) return;

@@ -50,5 +50,6 @@
 -(BOOL) hasBlockHash:(NSData*)hash;
 -(void) addBlock:(BitcoinBlock*)block;
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash;
+-(BitcoinBlock*) getChainHead;
 
 @end
