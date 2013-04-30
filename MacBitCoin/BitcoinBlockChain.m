@@ -55,14 +55,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		// We don't know the previous block, so it's probably a block we received while downloading the chain
 		// Store it for later processing once we have more blocks
 		[self.orphanBlocks setObject:block forKey:hash];
-		DDLogWarn(@"Added orphan block: %@", hash);
+		DDLogWarn(@"Added orphan block: %@, length: %ld", hash, (unsigned long)[self.orphanBlocks count]);
 	}
 	else{
 		if ([self.chainHead getHash] == [prevBlock getHash]){
 			// The previous block was the head, so this is just the chain continuing on like normal
 			[self.blocks setObject:block forKey:hash];
 			self.chainHead = block;
-			DDLogInfo(@"Added new block to the end of the chain: %@", hash);
+			DDLogInfo(@"Added new block to the end of the chain: %@, length: %ld", hash, (unsigned long)[self.blocks count]);
 			[self.manager incrementBlockHeight];
 			
 			// Now try and connect orphans

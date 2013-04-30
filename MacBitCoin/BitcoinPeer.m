@@ -257,6 +257,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		for (BitcoinBlock *header in [headersMessage headers]){
 			[self.manager addBlock:header];
 		}
+		
+		// Ask for more?
+		if (self.blocksToDownload == 0){
+			[self askForBlocks];
+		}
 	}
 	else{
 		DDLogError(@"Received payload of unknown type %d: %@", self.header.messageType, data);
@@ -309,16 +314,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 -(void) askForBlocks{
-	if (self.blockHeight > 0){
+	if (self.blockHeight > [self.manager getBlockHeight]){
 		// Ask for headers.
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
 		[getBlocksMessage pushDataHash:[[self.manager getChainHead] getHash]]; // TODO: This needs to be a list from head back to genesis: https://en.bitcoin.it/wiki/Protocol_specification#getblocks
 		
-		//DDLogInfo(@"Sending getheaders");
-		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
+		DDLogInfo(@"Sending getheaders");
+		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
 		
-		DDLogInfo(@"Sending getblocks");
-		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
+		//DDLogInfo(@"Sending getblocks");
+		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
 	}
 }
 
