@@ -115,7 +115,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// TODO: Send 'getaddr' here?
 		
-		// Ask for blocks. We'll only want to do this on one peer, though
+		// Ask for blocks. TODO: We'll only want to do this on one peer, though
 		[self askForBlocks];
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
