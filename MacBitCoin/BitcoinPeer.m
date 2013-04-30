@@ -242,6 +242,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		// If we have it, ignore it. If we don't, add it and relay it if found valid
 		if ([self.manager hasBlockHash:[block getHash]]) return;
 		
+		// TODO: Validate this: https://en.bitcoin.it/wiki/Protocol_specification#block
 		[self.manager addBlock:block];
 		
 		// Ask for more?
@@ -255,7 +256,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// Add the ones we don't have
 		for (BitcoinBlock *header in [headersMessage headers]){
-			[self.manager addBlock:header];
+			[self.manager addBlockHeader:header];
 		}
 		
 		// Ask for more?

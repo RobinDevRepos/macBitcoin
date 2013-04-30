@@ -22,6 +22,7 @@
 
 -(BOOL)hasBlockHash:(NSData*)hash;
 -(void)addBlock:(BitcoinBlock*)block;
+-(void)addBlockHeader:(BitcoinBlock*)block;
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash;
 
 @end

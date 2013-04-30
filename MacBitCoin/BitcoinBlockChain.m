@@ -91,6 +91,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 }
 
+// This adds a block in the same way, except skips some of the block checks that don't apply to headers
+-(void)addBlockHeader:(BitcoinBlock *)block{
+	[self addBlock:block];
+}
+
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash{
 	// TODO: Should we be returning orphans too? Probably!
 	return [self.blocks objectForKey:hash];
