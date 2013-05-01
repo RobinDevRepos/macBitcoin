@@ -17,17 +17,26 @@
 
 @interface BitcoinBlock : NSObject
 
+// Properties on all blocks and headers, according to the protocol
 @property uint32_t version;
 @property NSData *prev_block;
 @property NSData *merkle_root;
 @property uint32_t timestamp;
 @property uint32_t bits; // The calculated difficulty target being used for this block
 @property uint32_t nonce;
+
+// These properties are only on blocks, not headers
 @property BitcoinVarInt *txn_count;
 @property NSMutableArray *transactions;
 
+// Properties that we store on blocks for convenience but do not serialize
+@property (nonatomic) NSUInteger blockHeight;
+
+// Constructed property from serialized properties
 @property NSData *hash;
 
+
+// Methods
 +(id)block;
 -(id)init;
 

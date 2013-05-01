@@ -51,8 +51,6 @@
 -(void) addBlock:(BitcoinBlock*)block;
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash;
 -(BitcoinBlock*) getChainHead;
-
--(void) incrementBlockHeight;
 -(uint32_t) getBlockHeight;
 
 @end

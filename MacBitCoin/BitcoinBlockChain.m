@@ -60,11 +60,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	else{
 		if ([self.chainHead getHash] == [prevBlock getHash]){
 			// The previous block was the head, so this is just the chain continuing on like normal
+			[block setBlockHeight:[self.chainHead blockHeight]+1];
 			[self.blocks setObject:block forKey:hash];
 			self.chainHead = block;
-			DDLogInfo(@"Added new block to the end of the chain: %@, length: %ld", hash, (unsigned long)[self.blocks count]);
-			[self.manager incrementBlockHeight];
-			
+			DDLogInfo(@"Added new block to the end of the chain: %@, length: %ld", hash, (unsigned long)[self.blocks count]);			
 			// Now try and connect orphans
 			int orphansConnected;
 			do {
@@ -72,11 +71,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 				for (NSData *orphanHash in self.orphanBlocks){
 					BitcoinBlock *orphan = [self.orphanBlocks objectForKey:orphanHash];
 					if ([self.chainHead getHash] == [orphan prev_block]){
+						[block setBlockHeight:[self.chainHead blockHeight]+1];
 						[self.blocks setObject:block forKey:hash];
 						self.chainHead = block;
 						[self.orphanBlocks removeObjectForKey:orphanHash];
 						DDLogInfo(@"Moved orphan to the end of the chain: %@", orphanHash);
-						[self.manager incrementBlockHeight];
 						
 						orphansConnected++;
 					}

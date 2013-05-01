@@ -196,10 +196,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return [self.blockChain chainHead];
 }
 
--(void) incrementBlockHeight{
-	[self.ourVersion setStart_height:[self getBlockHeight]+1];
-}
-
 -(uint32_t) getBlockHeight{
 	return [self.ourVersion start_height];
 }
