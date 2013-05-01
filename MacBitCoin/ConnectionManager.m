@@ -60,50 +60,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		// Outgoing socket queue
 		_socketQueueOut = dispatch_queue_create("socketQueueOut", NULL);
 		
-		// Seed our peers list
-		NSArray *seedHosts;
-		if (FALSE){
-			// TODO: Do this with a DNS lookup
-			seedHosts = [NSArray arrayWithObjects:
-						 @"213.5.71.38",
-						 @"173.236.193.117",
-						 @"131.188.138.23",
-						 @"192.81.222.207",
-						 @"54.243.45.209",
-						 @"78.46.18.137",
-						 @"23.21.243.183",
-						 @"178.63.48.141",
-						 @"24.12.138.16",
-						 @"62.213.207.209",
-						 @"173.230.150.38",
-						 @"164.177.157.148",
-						 @"94.23.47.168",
-						 @"46.4.24.198",
-						 @"5.9.2.145",
-						 @"94.23.1.23",
-						 @"91.121.137.219",
-						 @"199.26.85.40",
-						 @"108.61.77.74",
-						 @"152.2.31.233",
-						 nil];
-		}
-		else{
-			seedHosts = [NSArray arrayWithObject:@"127.0.0.1"];
-		}
-		/*
-		for (NSString *host in seedHosts){
-			BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
-			[self addPeer:seedPeer];
-		}*/
-		
-		NSString *host = [seedHosts objectAtIndex:0];
-		BitcoinPeer *peer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
-		[peer setIsDownloadPeer:TRUE];
-		[self addPeer:peer];
-		
-		// TODO: Schedule task to prune our list when we haven't heard from them in 90 minutes
-		// TODO: Schedule task to send pings in 30 minutes, if we haven't sent anything else
-		// TODO: Serialize peer list to disk and load it on startup, using the seed list if we don't have any or all our saved peers are unreachable
+		[self connectToPeers];
 	}
 	
 	return self;
@@ -179,6 +136,53 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(NSUInteger) countOfPeers{
 	return [[self getActivePeers] count];
+}
+
+-(void) connectToPeers{
+	// Seed our peers list
+	NSArray *seedHosts;
+	if (FALSE){
+		// TODO: Do this with a DNS lookup
+		seedHosts = [NSArray arrayWithObjects:
+					 @"213.5.71.38",
+					 @"173.236.193.117",
+					 @"131.188.138.23",
+					 @"192.81.222.207",
+					 @"54.243.45.209",
+					 @"78.46.18.137",
+					 @"23.21.243.183",
+					 @"178.63.48.141",
+					 @"24.12.138.16",
+					 @"62.213.207.209",
+					 @"173.230.150.38",
+					 @"164.177.157.148",
+					 @"94.23.47.168",
+					 @"46.4.24.198",
+					 @"5.9.2.145",
+					 @"94.23.1.23",
+					 @"91.121.137.219",
+					 @"199.26.85.40",
+					 @"108.61.77.74",
+					 @"152.2.31.233",
+					 nil];
+	}
+	else{
+		seedHosts = [NSArray arrayWithObject:@"127.0.0.1"];
+	}
+	/*
+	 for (NSString *host in seedHosts){
+	 BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
+	 [self addPeer:seedPeer];
+	 }*/
+	
+	NSString *host = [seedHosts objectAtIndex:0];
+	BitcoinPeer *peer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
+	[peer setIsDownloadPeer:TRUE];
+	[self addPeer:peer];
+	
+	// TODO: Schedule task to prune our list when we haven't heard from them in 90 minutes
+	// TODO: Schedule task to send pings in 30 minutes, if we haven't sent anything else
+	// TODO: Serialize peer list to disk and load it on startup, using the seed list if we don't have any or all our saved peers are unreachable
 }
 
 // Block chain methods just pass responsibility onto the chain

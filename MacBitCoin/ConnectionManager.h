@@ -46,6 +46,7 @@
 
 -(NSArray*) getActivePeers;
 -(NSUInteger) countOfPeers;
+-(void) connectToPeers;
 
 -(BOOL) hasBlockHash:(NSData*)hash;
 -(void) addBlock:(BitcoinBlock*)block;
