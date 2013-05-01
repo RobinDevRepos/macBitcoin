@@ -186,6 +186,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	[self.blockChain addBlock:block];
 }
 
+-(void) addBlockHeader:(BitcoinBlock*)block{
+	[self.blockChain addBlockHeader:block];
+}
+
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash{
 	return [self.blockChain getBlockByHash:hash];
 }
