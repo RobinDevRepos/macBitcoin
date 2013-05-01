@@ -62,7 +62,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// Seed our peers list
 		NSArray *seedHosts;
-		if (TRUE){
+		if (FALSE){
 			// TODO: Do this with a DNS lookup
 			seedHosts = [NSArray arrayWithObjects:
 						 @"213.5.71.38",
@@ -97,7 +97,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		}*/
 		
 		NSString *host = [seedHosts objectAtIndex:0];
-		[self addPeer:[BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT]];
+		BitcoinPeer *peer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
+		[peer setIsDownloadPeer:TRUE];
+		[self addPeer:peer];
 		
 		// TODO: Schedule task to prune our list when we haven't heard from them in 90 minutes
 		// TODO: Schedule task to send pings in 30 minutes, if we haven't sent anything else

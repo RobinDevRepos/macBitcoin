@@ -26,6 +26,7 @@
 @property (nonatomic) BOOL versionPushed;
 @property (nonatomic) BOOL versionAcked;
 
+@property (nonatomic) BOOL isDownloadPeer;
 @property (nonatomic) NSUInteger blocksToDownload;
 
 +(id) peerFromBitcoinAddress:(BitcoinAddress*)address;

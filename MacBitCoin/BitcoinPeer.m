@@ -42,6 +42,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 -(id) initFromBitcoinAddress:(BitcoinAddress*)address{
 	if ((self = [super init])){
 		_address = address;
+		_isDownloadPeer = FALSE;
 	}
 	
 	return self;
@@ -115,7 +116,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// TODO: Send 'getaddr' here?
 		
-		// Ask for blocks. TODO: We'll only want to do this on one peer, though
+		// Ask for blocks. Will only work if we are the download peer
 		[self askForBlocks];
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
@@ -315,7 +316,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 -(void) askForBlocks{
+	if (![self isDownloadPeer]) return;
+	
 	if (self.blockHeight > [self.manager getBlockHeight]){
+		DDLogInfo(@"Asking for headers");
 		// Ask for headers.
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
 		
@@ -337,6 +341,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		//DDLogInfo(@"Sending getblocks");
 		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
+	}
+	else{
+		// TODO: We are a/the download peer, but there was nothing to request. We should tell the manager.
 	}
 }
 
