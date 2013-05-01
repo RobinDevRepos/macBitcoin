@@ -318,6 +318,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (self.blockHeight > [self.manager getBlockHeight]){
 		// Ask for headers.
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
+		
+		// Push last 10 indices first
+		// https://en.bitcoin.it/wiki/Protocol_specification#getblocks
+		/*size_t step = 1, start = 0;
+		for (int i = top_depth; i > 0; i -= step, ++start)
+		{
+			if (start >= 10)
+				step *= 2;
+			indices.push_back(i);
+		}
+		indices.push_back(0);*/
+		
 		[getBlocksMessage pushDataHash:[[self.manager getChainHead] getHash]]; // TODO: This needs to be a list from head back to genesis: https://en.bitcoin.it/wiki/Protocol_specification#getblocks
 		
 		DDLogInfo(@"Sending getheaders");
