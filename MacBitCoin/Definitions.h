@@ -9,6 +9,9 @@
 #ifndef MacBitCoin_Definitions_h
 #define MacBitCoin_Definitions_h
 
+#define MAX_ACTIVE_PEERS 1
+#define MIN_ACTIVE_PEERS 0
+
 #define ENABLE_TESTNET true
 
 #ifdef ENABLE_TESTNET
