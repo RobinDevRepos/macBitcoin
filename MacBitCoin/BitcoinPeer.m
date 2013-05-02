@@ -176,6 +176,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 				[self.manager addDownloadPeer:self];
 			}
 		}
+		else{
+			DDLogInfo(@"Version %d is too low. Ignoring peer.", self.version);
+		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_ADDR){
 		BitcoinAddrMessage *addrMessage = [BitcoinAddrMessage messageFromBytes:data fromOffset:0];
