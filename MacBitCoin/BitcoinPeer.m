@@ -116,7 +116,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// TODO: Send 'getaddr' here?
 		
-		// Ask for blocks. Will only work if we are the download peer
+		// Ask for blocks. Will only work if we are a download peer
 		[self askForBlocks];
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
@@ -171,6 +171,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			DDLogInfo(@"Sending verack");
 			[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_VERACK];
 
+			// If they have blocks, add them as a download peer
+			if ([versionMessage start_height] > 0){
+				[self.manager addDownloadPeer:self];
+			}
 		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_ADDR){
@@ -246,9 +250,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		// TODO: Validate this: https://en.bitcoin.it/wiki/Protocol_specification#block
 		[self.manager addBlock:block];
 		
-		// Ask for more?
+		// Ask for more, maybe from another, better, more handsome peer
 		if (self.blocksToDownload == 0){
-			[self askForBlocks];
+			self.isDownloadPeer = false;
+			[self.manager startDownloadPeer];
 		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_HEADERS){
@@ -260,9 +265,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			[self.manager addBlockHeader:header];
 		}
 		
-		// Ask for more?
+		// Ask for more, maybe from another, better, more handsome peer
 		if (self.blocksToDownload == 0){
-			[self askForBlocks];
+			self.isDownloadPeer = false;
+			[self.manager startDownloadPeer];
 		}
 	}
 	else{

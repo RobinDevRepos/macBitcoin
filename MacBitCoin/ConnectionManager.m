@@ -153,6 +153,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(void) connectToPeers{
 	// Seed our peers list
+	// TODO: This should come from a DNS lookup
 	NSArray *seedHosts = [NSArray arrayWithObjects:
 		@"127.0.0.1",
 		@"213.5.71.38",
@@ -188,6 +189,58 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// TODO: Schedule task to prune our list when we haven't heard from them in 90 minutes
 	// TODO: Schedule task to send pings in 30 minutes, if we haven't sent anything else
 	// TODO: Serialize peer list to disk and load it on startup, using the seed list if we don't have any or all our saved peers are unreachable
+}
+
+// Download peer management
+-(void) addDownloadPeer:(BitcoinPeer*)peer{
+	// TODO: This stops if we have a peer, but can we support multiples?
+	BitcoinPeer *downloadPeer = [self getDownloadPeer];
+	if (downloadPeer && [downloadPeer blockHeight] < [peer blockHeight]) return;
+	
+	DDLogInfo(@"Adding download peer: %@", peer.address.address);
+	@synchronized([self downloadPeers]){
+		[[self downloadPeers] addObject:peer];
+		
+		// Start downloading, but only if there's no existing peer. When this peer finishes, we'll pick a (potentially) better peer
+		if (!downloadPeer){
+			peer.isDownloadPeer = TRUE;
+			[peer askForBlocks];
+		}
+	}
+}
+
+-(BitcoinPeer*) getDownloadPeer{
+	if ([[self downloadPeers] count] == 0) return nil;
+	
+	return [[self downloadPeers] objectAtIndex:0];
+}
+
+-(void) removeDownloadPeer:(BitcoinPeer*)peer{
+	DDLogInfo(@"Removing download peer: %@ ", peer.address.address);
+	peer.isDownloadPeer = false;
+	
+	@synchronized([self downloadPeers]){
+		peer.isDownloadPeer = false;
+		[[self downloadPeers] removeObject:peer];
+	}
+}
+
+-(void) startDownloadPeer{
+	BitcoinPeer *bestDownloadPeer = nil;
+	@synchronized([self downloadPeers]){
+		for (BitcoinPeer *peer in [self downloadPeers]){
+			// TODO: Other factors like ping time?
+			if (bestDownloadPeer == nil || ([bestDownloadPeer blockHeight] < [peer blockHeight])){
+				bestDownloadPeer = peer;
+			}
+		}
+	}
+	
+	if (bestDownloadPeer){
+		DDLogInfo(@"Setting new download peer: %@", bestDownloadPeer.address.address);
+		bestDownloadPeer.isDownloadPeer = TRUE;
+		[bestDownloadPeer askForBlocks];
+	}
 }
 
 // Block chain methods just pass responsibility onto the chain

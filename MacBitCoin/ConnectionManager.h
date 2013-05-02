@@ -23,6 +23,7 @@
 
 // Peers list
 @property NSMutableArray *peers;
+@property NSMutableArray *downloadPeers;
 
 // Outgoing
 @property GCDAsyncSocket *asyncSocket;
@@ -38,6 +39,7 @@
 +(id) connectionManager;
 -(id) init;
 
+// Peer management
 -(void) addPeer:(BitcoinPeer*)peer;
 -(BitcoinPeer*) findPeer:(BitcoinPeer*)peer;
 -(BitcoinPeer*) findPeerSocket:(GCDAsyncSocket*)sock;
@@ -48,6 +50,13 @@
 -(NSUInteger) countOfPeers;
 -(void) connectToPeers;
 
+// Download peer management
+-(void) addDownloadPeer:(BitcoinPeer*)peer;
+-(BitcoinPeer*) getDownloadPeer;
+-(void) removeDownloadPeer:(BitcoinPeer*)peer;
+-(void) startDownloadPeer;
+
+// Block chain management
 -(BOOL) hasBlockHash:(NSData*)hash;
 -(void) addBlock:(BitcoinBlock*)block;
 -(void) addBlockHeader:(BitcoinBlock*)block;
