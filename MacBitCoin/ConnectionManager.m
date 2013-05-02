@@ -91,16 +91,20 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 -(BitcoinPeer*) findPeer:(BitcoinPeer*)peer{
-	for (BitcoinPeer *existingPeer in [self peers]){
-		if ([existingPeer isEqualTo:peer]) return existingPeer;
+	@synchronized([self peers]){
+		for (BitcoinPeer *existingPeer in [self peers]){
+			if ([existingPeer isEqualTo:peer]) return existingPeer;
+		}
 	}
 	
 	return nil;
 }
 
 -(BitcoinPeer*) findPeerSocket:(GCDAsyncSocket*)sock{
-	for (BitcoinPeer *peer in [self peers]){
-		if (peer.socket == sock) return peer;
+	@synchronized([self peers]){
+		for (BitcoinPeer *peer in [self peers]){
+			if (peer.socket == sock) return peer;
+		}
 	}
 	
 	return nil;
@@ -114,6 +118,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 	
 	DDLogInfo(@"New peer count: %lld", (uint64_t)[self countOfPeers]);
+	
+	if ([self countOfPeers] < MIN_ACTIVE_PEERS){
+		[self connectToPeers];
+		
+		// TODO: We'll need to check again after some reasonably short timeout, in case all of these fail, like if we're offline
+		// Or is there some signal we can catch for network up/down to be even smarter still?
+	}
 }
 
 -(void) removePeerSocket:(GCDAsyncSocket*)sock{
@@ -128,8 +139,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(NSArray*) getActivePeers{
 	NSMutableArray *activePeers = [NSMutableArray arrayWithCapacity:[self.peers count]];
-	for (BitcoinPeer *peer in [self peers]){
-		if ([peer isActive]) [activePeers addObject:peer];
+	@synchronized([self peers]){
+		for (BitcoinPeer *peer in [self peers]){
+			if ([peer isActive]) [activePeers addObject:peer];
+		}
 	}
 	return activePeers;
 }
@@ -166,7 +179,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	for (NSString *host in seedHosts){
 		BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
-		[seedPeer setIsDownloadPeer:TRUE];
+		//[seedPeer setIsDownloadPeer:TRUE];
 		[self addPeer:seedPeer];
 		
 		if ([self countOfPeers] >= MAX_ACTIVE_PEERS) break;

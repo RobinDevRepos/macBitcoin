@@ -9,8 +9,8 @@
 #ifndef MacBitCoin_Definitions_h
 #define MacBitCoin_Definitions_h
 
-#define MAX_ACTIVE_PEERS 1
-#define MIN_ACTIVE_PEERS 0
+#define MAX_ACTIVE_PEERS 10
+#define MIN_ACTIVE_PEERS 1
 
 #define ENABLE_TESTNET true
 
@@ -55,7 +55,7 @@ typedef enum{
 #define PROTOCOL_VERSION 70001
 #define MIN_VERSION_SIZE 87
 
-#define CONNECT_TIMEOUT 1.0
+#define CONNECT_TIMEOUT 10.0
 #define READ_TIMEOUT 5.0
 
 #define TAG_FIXED_LENGTH_HEADER 0
