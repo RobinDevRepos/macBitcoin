@@ -309,18 +309,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
 	DDLogVerbose(@"socket:%p didReadData:withTag:%ld", sock, tag);
-	DDLogInfo(@"Full response: %@", data);
+	DDLogVerbose(@"Full response: %@", data);
 	
 	BitcoinPeer *peer = [self findPeerSocket:sock];
 	if (tag == TAG_FIXED_LENGTH_HEADER){
 		uint32_t length = [peer receiveHeader:data];
 		
 		if (length){
-			DDLogInfo(@"Header read. Waiting for body: %d", length);
+			DDLogVerbose(@"Header read. Waiting for body: %d", length);
 			[sock readDataToLength:length withTimeout:-1 tag:TAG_RESPONSE_BODY];
 		}
 		else{
-			DDLogInfo(@"Header read. Length is zero. Re-waiting for header.");
+			DDLogVerbose(@"Header read. Length is zero. Re-waiting for header.");
 			[sock readDataToLength:24 withTimeout:-1 tag:TAG_FIXED_LENGTH_HEADER];
 		}
 	}

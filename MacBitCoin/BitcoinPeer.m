@@ -95,11 +95,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromPayload:payload withMessageType:type];
 	NSData *headerData = [header getData];
 	
-	DDLogInfo(@"Sending header %d bytes:\n%@", header.length, headerData);
+	DDLogVerbose(@"Sending header %d bytes:\n%@", header.length, headerData);
 	[self.socket writeData:headerData withTimeout:-1.0 tag:0];
 	
 	if (payload){
-		DDLogInfo(@"Sending payload %d bytes:\n%@", (uint32_t)[payload length], payload);
+		DDLogVerbose(@"Sending payload %d bytes:\n%@", (uint32_t)[payload length], payload);
 		[self.socket writeData:payload withTimeout:-1.0 tag:0];
 	}
 }
