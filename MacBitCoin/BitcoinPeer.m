@@ -334,7 +334,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (![self isDownloadPeer]) return;
 	
 	if (self.blockHeight > [self.manager getBlockHeight]){
-		DDLogInfo(@"Asking for headers: our blocks=%d, peer blocks=%d", [self.manager getBlockHeight], self.blockHeight);
+		DDLogInfo(@"Asking for headers: our blocks=%ld, peer blocks=%d", (unsigned long)[self.manager getBlockHeight], self.blockHeight);
 		// Ask for headers.
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
 		NSArray *hashes = [self.manager getBlockLocatorHashes];
