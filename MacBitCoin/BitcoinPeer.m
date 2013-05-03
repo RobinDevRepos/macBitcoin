@@ -219,20 +219,20 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETDATA){
 		BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage messageFromBytes:data fromOffset:0];
-		DDLogInfo(@"Got getdata message: %lld", getDataMessage.count.value);
+		DDLogWarn(@"Got getdata message: %lld", getDataMessage.count.value);
 		
 		// TODO: Send these blocks back if we have them and 'notfound' for the ones we don't
 		// Do we send tx or block or both depending on the type?
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETBLOCKS){
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
-		DDLogInfo(@"Got getblocks message: %lld", getBlocksMessage.count.value);
+		DDLogWarn(@"Got getblocks message: %lld", getBlocksMessage.count.value);
 		
 		// TODO: Return an inv containing the list of blocks starting right after the last known hash in the block locator object, up to hash_stop or 500 blocks, whichever comes first
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETHEADERS){
 		BitcoinGetblocksMessage *getHeadersMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
-		DDLogInfo(@"Got getheaders message: %lld", getHeadersMessage.count.value);
+		DDLogWarn(@"Got getheaders message: %lld", getHeadersMessage.count.value);
 		
 		// TODO: Send BitcoinHeadersMessage back for the ones we have
 		BitcoinHeadersMessage *headersMessage = [BitcoinHeadersMessage message];
