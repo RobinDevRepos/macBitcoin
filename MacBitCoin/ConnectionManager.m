@@ -67,6 +67,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return self;
 }
 
+-(BitcoinVersionMessage*)ourVersion{
+	_ourVersion.start_height = [self.blockChain getBlockHeight];
+	return _ourVersion;
+}
+
 -(void) addPeer:(BitcoinPeer *)peer {
 	if ([self findPeer:peer]){
 		DDLogInfo(@"Ignoring existing peer: %@ port:%hu", peer.address.address, peer.address.port);

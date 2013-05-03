@@ -19,7 +19,7 @@
 @interface ConnectionManager : NSObject
 
 @property uint16_t listenPort;
-@property BitcoinVersionMessage *ourVersion;
+@property (nonatomic) BitcoinVersionMessage *ourVersion;
 
 // Peers list
 @property NSMutableArray *peers;
@@ -38,6 +38,8 @@
 
 +(id) connectionManager;
 -(id) init;
+
+-(BitcoinVersionMessage*)ourVersion;
 
 // Peer management
 -(void) addPeer:(BitcoinPeer*)peer;
