@@ -88,12 +88,8 @@
 	
 	// Convert byte array from string format to network format
 	unsigned char buf[sizeof(struct in6_addr)];
-	int conversion = inet_pton(AF_INET6, bytes, buf);
-	
-	// If the conversion worked, write to the NSData
-	//if (conversion > 0){
-		[data appendData:[NSData dataWithBytes:buf length:sizeof(buf)]];
-	//}
+	inet_pton(AF_INET6, bytes, buf);
+	[data appendData:[NSData dataWithBytes:buf length:sizeof(buf)]];
 	
 	// Convert port to network byte order before writing it to the data
 	[data appendData:[NSData dataWithInt16:ntohs(self.port)]];

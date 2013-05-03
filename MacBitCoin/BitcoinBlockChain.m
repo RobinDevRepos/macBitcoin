@@ -64,6 +64,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			[self.blocks setObject:block forKey:hash];
 			self.chainHead = block;
 			DDLogInfo(@"Added new block to the end of the chain: %@, length: %ld", hash, (unsigned long)[self.blocks count]);			
+			
 			// Now try and connect orphans
 			int orphansConnected;
 			do {
@@ -98,6 +99,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash{
 	// TODO: Should we be returning orphans too? Probably!
 	return [self.blocks objectForKey:hash];
+}
+
+-(NSUInteger) getBlockHeight{
+	return [self.chainHead blockHeight];
 }
 
 @end

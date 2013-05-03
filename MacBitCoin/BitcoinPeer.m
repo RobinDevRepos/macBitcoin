@@ -172,7 +172,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_VERACK];
 
 			// If they have blocks, add them as a download peer
-			if ([versionMessage start_height] > 0){
+			if (self.blockHeight > 0){
 				[self.manager addDownloadPeer:self];
 			}
 		}
@@ -334,24 +334,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (![self isDownloadPeer]) return;
 	
 	if (self.blockHeight > [self.manager getBlockHeight]){
-		DDLogInfo(@"Asking for headers");
+		DDLogInfo(@"Asking for headers: our blocks=%d, peer blocks=%d", [self.manager getBlockHeight], self.blockHeight);
 		// Ask for headers.
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
-		
-		// Push last 10 indices first
-		// https://en.bitcoin.it/wiki/Protocol_specification#getblocks
-		/*size_t step = 1, start = 0;
-		for (int i = top_depth; i > 0; i -= step, ++start)
-		{
-			if (start >= 10)
-				step *= 2;
-			indices.push_back(i);
+		NSArray *hashes = [self.manager getBlockLocatorHashes];
+		for (NSData *hash in hashes){
+			[getBlocksMessage pushDataHash:hash];
 		}
-		indices.push_back(0);*/
 		
-		[getBlocksMessage pushDataHash:[[self.manager getChainHead] getHash]]; // TODO: This needs to be a list from head back to genesis: https://en.bitcoin.it/wiki/Protocol_specification#getblocks
-		
-		DDLogInfo(@"Sending getheaders");
+		DDLogInfo(@"Sending getheaders: %ld", (unsigned long)[hashes count]);
 		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
 		
 		//DDLogInfo(@"Sending getblocks");

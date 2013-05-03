@@ -66,6 +66,7 @@
 	self.count = [BitcoinVarInt varintFromValue:[self.hashes count]];
 }
 
+
 // Encode our payload
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];

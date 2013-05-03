@@ -31,7 +31,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		_ourVersion.addr_from = [BitcoinAddress addressFromAddress:@"::ffff:0.0.0.0" withPort:0];		
 		// TODO: Once we get an external ip, update this and push to our peers (http://whatismyip.akamai.com/)
 		// TODO: Store ourselves as peer, so we can track peer-related data on ourselves?
-		_ourVersion.start_height = [_blockChain.blocks count]-1;
+		_ourVersion.start_height = [_blockChain getBlockHeight];
 		
 		// Setup our sockets (GCDAsyncSocket).
 		// The socket will invoke our delegate methods using the usual delegate paradigm.
@@ -228,6 +228,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	@synchronized([self downloadPeers]){
 		for (BitcoinPeer *peer in [self downloadPeers]){
 			// TODO: Other factors like ping time?
+			if ([peer blockHeight] == 0) continue;
+			
 			if (bestDownloadPeer == nil || ([bestDownloadPeer blockHeight] < [peer blockHeight])){
 				bestDownloadPeer = peer;
 			}
@@ -270,8 +272,30 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return [self.blockChain chainHead];
 }
 
--(uint32_t) getBlockHeight{
-	return [self.ourVersion start_height];
+-(NSUInteger) getBlockHeight{
+	return [self.blockChain getBlockHeight];
+}
+
+-(void) setBlockHeight:(NSUInteger)height{
+	self.ourVersion.start_height = height;
+}
+
+-(NSArray*) getBlockLocatorHashes{
+	NSMutableArray *hashes = [NSMutableArray arrayWithCapacity:51];
+	
+	// Walk back up to 50 blocks and push hashes
+	BitcoinBlock *block = [self getChainHead];
+	for (int i = 50; block != nil && i > 0; i--) {
+		[hashes addObject:[block getHash]];
+		block = [self getBlockByHash:[block prev_block]];
+	}
+	
+	// If we haven't added the genesis block yet, we need to add it
+	if (block != nil){
+		[hashes addObject:[[BitcoinBlock genesisBlock] getHash]];
+	}
+	
+	return [NSArray arrayWithArray:hashes];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
