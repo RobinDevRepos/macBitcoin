@@ -209,9 +209,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 -(BitcoinPeer*) getDownloadPeer{
-	if ([[self downloadPeers] count] == 0) return nil;
+	@synchronized([self downloadPeers]){
+		for (BitcoinPeer *peer in [self downloadPeers]){
+			if (peer.isDownloadPeer) return peer;
+		}
+	}
 	
-	return [[self downloadPeers] objectAtIndex:0];
+	return nil;
 }
 
 -(void) removeDownloadPeer:(BitcoinPeer*)peer{
