@@ -22,6 +22,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 -(id) init{
 	if (self = [super init]){
 		_peers = [NSMutableArray arrayWithCapacity:10];
+		_downloadPeers = [NSMutableArray arrayWithCapacity:1];
 		
 		_blockChain = [BitcoinBlockChain blockChain];
 		[_blockChain setManager:self];
@@ -193,19 +194,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 // Download peer management
 -(void) addDownloadPeer:(BitcoinPeer*)peer{
-	// TODO: This stops if we have a peer, but can we support multiples?
 	BitcoinPeer *downloadPeer = [self getDownloadPeer];
-	if (downloadPeer && [downloadPeer blockHeight] < [peer blockHeight]) return;
 	
 	DDLogInfo(@"Adding download peer: %@", peer.address.address);
 	@synchronized([self downloadPeers]){
 		[[self downloadPeers] addObject:peer];
-		
-		// Start downloading, but only if there's no existing peer. When this peer finishes, we'll pick a (potentially) better peer
-		if (!downloadPeer){
-			peer.isDownloadPeer = TRUE;
-			[peer askForBlocks];
-		}
+	}
+	
+	// Start downloading, but only if there's no existing peer. When this peer finishes, we'll pick a (potentially) better peer
+	if (!downloadPeer){
+		peer.isDownloadPeer = TRUE;
+		[peer askForBlocks];
 	}
 }
 
@@ -220,7 +219,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	peer.isDownloadPeer = false;
 	
 	@synchronized([self downloadPeers]){
-		peer.isDownloadPeer = false;
 		[[self downloadPeers] removeObject:peer];
 	}
 }
@@ -237,9 +235,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 	
 	if (bestDownloadPeer){
-		DDLogInfo(@"Setting new download peer: %@", bestDownloadPeer.address.address);
-		bestDownloadPeer.isDownloadPeer = TRUE;
-		[bestDownloadPeer askForBlocks];
+		if ([bestDownloadPeer blockHeight] > [self getBlockHeight]){
+			DDLogInfo(@"Setting new download peer: %@", bestDownloadPeer.address.address);
+			bestDownloadPeer.isDownloadPeer = TRUE;
+			[bestDownloadPeer askForBlocks];
+		}
+		else{
+			DDLogInfo(@"Do not need to download more blocks. Skipping download peer");
+		}
+	}
+	else{
+		DDLogWarn(@"Could not find new download peer");
 	}
 }
 

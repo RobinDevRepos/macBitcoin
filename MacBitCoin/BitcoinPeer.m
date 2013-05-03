@@ -258,6 +258,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			self.isDownloadPeer = false;
 			[self.manager startDownloadPeer];
 		}
+		else{
+			DDLogInfo(@"Still waiting for %ld blocks", (unsigned long)self.blocksToDownload);
+		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_HEADERS){
 		BitcoinHeadersMessage *headersMessage = [BitcoinHeadersMessage messageFromBytes:data fromOffset:0];
@@ -272,6 +275,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		if (self.blocksToDownload == 0){
 			self.isDownloadPeer = false;
 			[self.manager startDownloadPeer];
+		}
+		else{
+			DDLogInfo(@"Still waiting for %ld headers", (unsigned long)self.blocksToDownload);
 		}
 	}
 	else{
