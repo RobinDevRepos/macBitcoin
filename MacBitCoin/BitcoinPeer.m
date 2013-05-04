@@ -186,8 +186,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 		for (BitcoinAddress *newAddress in [addrMessage addresses]){
 			[[self manager] addPeer:[BitcoinPeer peerFromBitcoinAddress:newAddress]]; // Blindly add peers, and the connection manager will de-dupe them
+		}
+		
+		// Relay this to a subset of nodes
+		int count = 0;
+		NSArray *peers = [self.manager getActivePeers];
+		for (BitcoinPeer *peer in peers){
+			DDLogInfo(@"Relaying to %@:%d", [[peer address] address], [[peer address] port]);
+			[peer send:[addrMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_ADDR];
+			count++;
 			
-			// TODO: Relay this to a subset of nodes
+			if (count == 4) break;
 		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_INV){
