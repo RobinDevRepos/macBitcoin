@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Myles Grant. All rights reserved.
 //
 
+// TODO: This and BitcoinInvMessage have identical structures. Should consolidate
+
 #import <Foundation/Foundation.h>
 
 #import "Definitions.h"
