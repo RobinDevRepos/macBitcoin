@@ -12,6 +12,10 @@
 #import "NSData+Integer.h"
 #import "NSData+CryptoHashing.h"
 
+#import "DDLog.h"
+
+static const int ddLogLevel = LOG_LEVEL_INFO;
+
 @implementation BitcoinMessageHeader
 
 // Creates a header with some defaults
@@ -84,7 +88,11 @@
 		else if ([command isEqualToString:@"ping"]){
 			_messageType = BITCOIN_MESSAGE_TYPE_PING;
 		}
+		else if ([command isEqualToString:@"notfound"]){
+			_messageType = BITCOIN_MESSAGE_TYPE_NOTFOUND;
+		}
 		else{
+			DDLogError(@"Received unknown message header: %@", command);
 			// TODO: Throw exception?
 		}
 		
@@ -194,6 +202,10 @@
 			
 		case BITCOIN_MESSAGE_TYPE_ALERT:
 			name = @"alert";
+			break;
+			
+		case BITCOIN_MESSAGE_TYPE_NOTFOUND:
+			name = @"notfound";
 			break;
 			
 		default:
