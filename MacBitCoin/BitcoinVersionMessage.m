@@ -31,7 +31,7 @@
 		SecRandomCopyBytes(kSecRandomDefault, nonce_length, [nonceData mutableBytes]);
 		_nonce = [nonceData offsetToInt64:0];
 		
-		_user_agent = @"/MacBitCoin:0.1/"; // TODO: Constants!
+		_user_agent = @"/MacBitCoin:1.0/"; // TODO: Constants!
 		
 		_start_height = 0; // TODO: This is variable, so might be best to leave it to be initialized by the caller
 		_relay = true; // https://en.bitcoin.it/wiki/BIP_0037
