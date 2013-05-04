@@ -26,6 +26,7 @@
 -(id)initFromBytes:(NSData*)data fromOffset:(int)offset;
 
 -(void)pushVector:(BitcoinInventoryVector*)inv_vector;
+-(void)setVectors:(NSMutableArray*)vectors;
 
 -(NSData*) getData;
 

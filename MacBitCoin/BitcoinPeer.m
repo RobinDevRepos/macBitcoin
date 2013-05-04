@@ -220,8 +220,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			self.blocksToDownload += blocksToFetch;
 			
 			BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage message];
-			getDataMessage.inventory = toFetch; // TODO: There should be one method on BitcoinGetdataMessage that takes an array and sets count
-			getDataMessage.count = [BitcoinVarInt varintFromValue:blocksToFetch];
+			[getDataMessage setVectors:toFetch];
 			DDLogInfo(@"Sending getdata in response to inv for %ld blocks", blocksToFetch);
 			[self send:[getDataMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETDATA];
 		}
@@ -252,8 +251,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			
 			if ([notFound count]){
 				BitcoinGetdataMessage *notFoundMessage = [BitcoinGetdataMessage message];
-				notFoundMessage.inventory = notFound; // TODO: There should be one method on BitcoinGetdataMessage that takes an array and sets count
-				notFoundMessage.count = [BitcoinVarInt varintFromValue:[notFound count]];
+				[notFoundMessage setVectors:notFound];
 				DDLogInfo(@"Sending notfound in response to getdata for %ld blocks", [notFound count]);
 				[self send:[notFoundMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_NOTFOUND];
 			}

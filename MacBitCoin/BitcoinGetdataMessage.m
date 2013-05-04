@@ -56,6 +56,11 @@
 	self.count = [BitcoinVarInt varintFromValue:[self.inventory count]];
 }
 
+-(void)setVectors:(NSMutableArray*)vectors{
+	self.inventory = [vectors copy];
+	self.count = [BitcoinVarInt varintFromValue:[self.inventory count]];
+}
+
 // Encode our payload
 -(NSData*) getData{
 	NSMutableData *data = [NSMutableData data];
