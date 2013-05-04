@@ -228,10 +228,42 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETDATA){
 		BitcoinGetdataMessage *getDataMessage = [BitcoinGetdataMessage messageFromBytes:data fromOffset:0];
-		DDLogWarn(@"Got getdata message: %lld", getDataMessage.count.value);
+		DDLogInfo(@"Got getdata message: %lld", getDataMessage.count.value);
 		
-		// TODO: Send these blocks back if we have them and 'notfound' for the ones we don't
+		NSMutableArray *toSend = [NSMutableArray arrayWithCapacity:1];
+		NSMutableArray *notFound = [NSMutableArray arrayWithCapacity:1];
+		
+		// TODO: This is untested, because I've never received it, probably because I'm not yet receiving incoming connections
 		// Do we send tx or block or both depending on the type?
+		for (BitcoinInventoryVector *invVector in [getDataMessage inventory]){
+			if (invVector.type != BITCOIN_INV_OBJ_TYPE_MSG_BLOCK){
+				[notFound addObject:invVector];
+				continue;
+			}
+			
+			// Find the block, and add to notFound if we either don't have it or we only have the header
+			BitcoinBlock *block = [self.manager getBlockByHash:[invVector hash]];
+			if (block == nil || [[block transactions] count] == 0){
+				[notFound addObject:invVector];
+			}
+			else{
+				[toSend addObject:block];
+			}
+			
+			if ([notFound count]){
+				BitcoinGetdataMessage *notFoundMessage = [BitcoinGetdataMessage message];
+				notFoundMessage.inventory = notFound; // TODO: There should be one method on BitcoinGetdataMessage that takes an array and sets count
+				notFoundMessage.count = [BitcoinVarInt varintFromValue:[notFound count]];
+				DDLogInfo(@"Sending notfound in response to getdata for %ld blocks", [notFound count]);
+				[self send:[notFoundMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_NOTFOUND];
+			}
+			else{
+				for (BitcoinBlock *block in toSend){
+					DDLogInfo(@"Sending block in response to getdata for block: %@", [block getHash]);
+					[self send:[block getData] withMessageType:BITCOIN_MESSAGE_TYPE_BLOCK];
+				}
+			}
+		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETBLOCKS){
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage messageFromBytes:data fromOffset:0];
