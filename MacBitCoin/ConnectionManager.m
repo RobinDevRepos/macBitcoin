@@ -329,6 +329,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		[peer pushVersion];
 		
 		DDLogInfo(@"New peer count: %lld", (uint64_t)[self countOfPeers]);
+		
+		// TODO: Disconnect from a peer if we're now over the limit
 	}
 	else{
 		DDLogWarn(@"socket:%p on host:%@ port:%hu is an unknown peer", sock, host, port);
