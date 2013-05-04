@@ -160,7 +160,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// TODO: Decide whether we like this version or not and respond
 		DDLogInfo(@"Got version message: version %d, blocks=%d, peer=%@:%d", self.version, versionMessage.start_height, self.address.address, self.address.port);
-		if (self.version == MIN_PROTOCOL_VERSION){
+		if (self.version >= MIN_PROTOCOL_VERSION){
 			// Documentation implies verack and then version, but doing it that way increments your misbehaving score in the official client.
 			// Unclear if you should always send your version back, or only if you are accepting connections from it
 			
