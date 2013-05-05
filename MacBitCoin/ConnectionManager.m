@@ -79,6 +79,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return _ourVersion;
 }
 
+// Run every 24 hours to push our addr to peers
 -(void) broadcastAddr{
 	BitcoinAddrMessage *addrMessage = [BitcoinAddrMessage message];
 	[addrMessage pushAddress:[[self ourVersion] addr_from]];
@@ -86,6 +87,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	[self broadcastToPeers:[addrMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_ADDR];
 	
 	// Re-schedule next broadcast
+	// TODO: Different dispatch queue?
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 24 * 60 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 		[self broadcastAddr];
 	});
