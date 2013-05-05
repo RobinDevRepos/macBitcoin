@@ -137,6 +137,7 @@
 		41B757281712323B005931AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		41B7572A1712323B005931AE /* MacBitCoinTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacBitCoinTests.h; sourceTree = "<group>"; };
 		41B7572B1712323B005931AE /* MacBitCoinTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacBitCoinTests.m; sourceTree = "<group>"; };
+		41DD6D861736E18D005BD347 /* MacBitCoin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MacBitCoin.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,6 +248,7 @@
 		41B757071712323B005931AE /* MacBitCoin */ = {
 			isa = PBXGroup;
 			children = (
+				41DD6D861736E18D005BD347 /* MacBitCoin.entitlements */,
 				41B757131712323B005931AE /* AppDelegate.h */,
 				41B757141712323B005931AE /* AppDelegate.m */,
 				413C181B171B173300EAD404 /* BitcoinAddress.h */,
@@ -536,6 +538,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -569,6 +572,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -585,6 +589,8 @@
 		41B757301712323B005931AE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MacBitCoin/MacBitCoin.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MacBitCoin/MacBitCoin-Prefix.pch";
@@ -597,6 +603,8 @@
 		41B757311712323B005931AE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MacBitCoin/MacBitCoin.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MacBitCoin/MacBitCoin-Prefix.pch";
