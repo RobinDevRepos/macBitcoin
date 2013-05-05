@@ -30,6 +30,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		[self.blocks setObject:genesisBlock forKey:hash];
 		self.chainHead = genesisBlock;
+		_targetHeight = 0;
 	}
 	
 	return self;
@@ -103,6 +104,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(NSUInteger) getBlockHeight{
 	return [self.chainHead blockHeight];
+}
+
+-(BOOL) isBootstrapping{
+	return (([self getBlockHeight] < self.targetHeight) || (self.targetHeight == 0));
 }
 
 @end

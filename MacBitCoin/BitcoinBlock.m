@@ -30,6 +30,8 @@
 		_prev_block = [NSMutableData dataWithLength:32];
 		_txn_count = [BitcoinVarInt varintFromValue:0];
 		_transactions = [NSMutableArray arrayWithCapacity:0];
+		
+		_blockHeight = 0;
 	}
 	
 	return self;

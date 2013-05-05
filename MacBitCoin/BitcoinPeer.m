@@ -409,20 +409,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (![self isDownloadPeer]) return;
 	
 	if (self.blockHeight > [self.manager getBlockHeight]){
-		DDLogInfo(@"Asking for headers: our blocks=%ld, peer blocks=%ld", (unsigned long)[self.manager getBlockHeight], (unsigned long)self.blockHeight);
-		// Ask for headers.
+		DDLogInfo(@"Asking for blocks: our blocks=%ld, peer blocks=%ld", (unsigned long)[self.manager getBlockHeight], (unsigned long)self.blockHeight);
+		
+		// Get list of block locator hashes to send
 		BitcoinGetblocksMessage *getBlocksMessage = [BitcoinGetblocksMessage message];
 		NSArray *hashes = [self.manager getBlockLocatorHashes];
 		for (NSData *hash in hashes){
 			[getBlocksMessage pushDataHash:hash];
 		}
 		
-		DDLogInfo(@"Sending getheaders: %ld", (unsigned long)[hashes count]);
-		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
-		
-		// TODO: Once caught up, start sending blocks
-		//DDLogInfo(@"Sending getblocks");
-		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
+		if ([self.manager isBootstrapping]){
+			DDLogInfo(@"Sending getheaders: %ld", (unsigned long)[hashes count]);
+			[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
+		}
+		else{
+			DDLogInfo(@"Sending getblocks");
+			[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
+		}
 	}
 	else{
 		// TODO: We are a/the download peer, but there was nothing to request. We should tell the manager.

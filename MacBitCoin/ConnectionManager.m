@@ -290,6 +290,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (bestDownloadPeer){
 		if ([bestDownloadPeer blockHeight] > [self getBlockHeight]){
 			DDLogInfo(@"Setting new download peer: %@", bestDownloadPeer.address.address);
+			if ([self isBootstrapping]) [self.blockChain setTargetHeight:[bestDownloadPeer blockHeight]];
 			bestDownloadPeer.isDownloadPeer = TRUE;
 			[bestDownloadPeer askForBlocks];
 		}
@@ -329,6 +330,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(void) setBlockHeight:(NSUInteger)height{
 	self.ourVersion.start_height = height;
+}
+
+-(BOOL) isBootstrapping{
+	return [self.blockChain isBootstrapping];
 }
 
 // TODO: Just call this on the BlockChain object -- the logic does not belong here

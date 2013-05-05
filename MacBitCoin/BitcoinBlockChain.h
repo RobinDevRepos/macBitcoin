@@ -16,6 +16,7 @@
 @property NSMutableDictionary *orphanBlocks;
 @property NSMutableDictionary *blocks;
 @property (weak) id manager;
+@property NSUInteger targetHeight;
 
 +(id)blockChain;
 -(id)init;
@@ -26,5 +27,7 @@
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash;
 
 -(NSUInteger) getBlockHeight;
+
+-(BOOL) isBootstrapping;
 
 @end

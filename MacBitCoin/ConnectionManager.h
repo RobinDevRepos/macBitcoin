@@ -69,5 +69,6 @@
 -(NSUInteger) getBlockHeight;
 -(void) setBlockHeight:(NSUInteger)height;
 -(NSArray*) getBlockLocatorHashes;
+-(BOOL) isBootstrapping;
 
 @end
