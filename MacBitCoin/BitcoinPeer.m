@@ -372,11 +372,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 -(void) sendPing{
-	[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_PING];
+	NSUInteger now = [[NSDate date] timeIntervalSince1970];
+	if (now - self.lastSeenTime >= (90 * 60)){
+		[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_PING];
+	}
 	
-	// Schedule a ping in 30 minutes
+	// Schedule a ping in 30 minutes since last seen
 	// TODO: Different dispatch queue?
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 30 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+	dispatch_after(dispatch_time(self.lastSeenTime, 30 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+		DDLogInfo(@"Pinging %@:%d", self.address.address, self.address.port);
 		[self sendPing];
 	});
 }
