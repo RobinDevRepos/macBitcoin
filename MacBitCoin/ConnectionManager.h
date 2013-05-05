@@ -40,6 +40,7 @@
 -(id) init;
 
 -(BitcoinVersionMessage*)ourVersion;
+-(void) broadcastAddr;
 
 // Peer management
 -(void) addPeer:(BitcoinPeer*)peer;
@@ -51,6 +52,7 @@
 -(NSArray*) getActivePeers;
 -(NSUInteger) countOfPeers;
 -(void) connectToPeers;
+-(void) broadcastToPeers:(NSData*)payload withMessageType:(BitcoinMessageType)type;
 
 // Download peer management
 -(void) addDownloadPeer:(BitcoinPeer*)peer;

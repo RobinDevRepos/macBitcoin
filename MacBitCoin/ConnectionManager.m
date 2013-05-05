@@ -12,6 +12,7 @@
 static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #import "Definitions.h"
+#import "BitcoinAddrMessage.h"
 
 @implementation ConnectionManager
 
@@ -62,6 +63,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		_socketQueueOut = dispatch_queue_create("socketQueueOut", NULL);
 		
 		[self connectToPeers];
+		
+		// Broadcast our addr every 24 hours
+		// TODO: Different dispatch queue?
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 24 * 60 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+			[self broadcastAddr];
+		});
 	}
 	
 	return self;
@@ -70,6 +77,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 -(BitcoinVersionMessage*)ourVersion{
 	_ourVersion.start_height = [self.blockChain getBlockHeight];
 	return _ourVersion;
+}
+
+-(void) broadcastAddr{
+	BitcoinAddrMessage *addrMessage = [BitcoinAddrMessage message];
+	[addrMessage pushAddress:[[self ourVersion] addr_from]];
+	
+	[self broadcastToPeers:[addrMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_ADDR];
+	
+	// Re-schedule next broadcast
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 24 * 60 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+		[self broadcastAddr];
+	});
 }
 
 -(void) addPeer:(BitcoinPeer *)peer {
@@ -209,6 +228,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 	
 	// TODO: Serialize peer list to disk and load it on startup, using the seed list if we don't have any or all our saved peers are unreachable
+}
+
+-(void) broadcastToPeers:(NSData*)payload withMessageType:(BitcoinMessageType)type{
+	NSArray *peers = [self getActivePeers];
+	for (BitcoinPeer *peer in peers){
+		[peer send:payload withMessageType:type];
+	}
 }
 
 // Download peer management
