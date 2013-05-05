@@ -22,7 +22,7 @@
 
 #import "DDLog.h"
 
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation BitcoinPeer
 
@@ -96,11 +96,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	NSData *headerData = [header getData];
 	
 	DDLogVerbose(@"Sending header type %d, %d bytes:\n%@", type, header.length, headerData);
-	[self.socket writeData:headerData withTimeout:-1.0 tag:0];
+	[self.socket writeData:headerData withTimeout:SEND_TIMEOUT tag:0];
 	
 	if (payload){
 		DDLogVerbose(@"Sending payload %d bytes:\n%@", (uint32_t)[payload length], payload);
-		[self.socket writeData:payload withTimeout:-1.0 tag:0];
+		[self.socket writeData:payload withTimeout:SEND_TIMEOUT+SEND_TIMEOUT tag:0];
 	}
 }
 

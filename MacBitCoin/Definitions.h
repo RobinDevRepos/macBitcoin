@@ -59,6 +59,7 @@ typedef enum{
 
 #define CONNECT_TIMEOUT 10.0
 #define READ_TIMEOUT 5.0
+#define SEND_TIMEOUT 5.0
 
 #define TAG_FIXED_LENGTH_HEADER 0
 #define TAG_RESPONSE_BODY 1
