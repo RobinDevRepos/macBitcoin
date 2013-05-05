@@ -51,6 +51,7 @@
 -(BitcoinVersionMessage*) getOurVersion;
 
 -(BOOL) isActive;
+-(void) sendPing;
 
 -(void) askForBlocks;
 

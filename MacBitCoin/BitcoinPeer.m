@@ -22,7 +22,7 @@
 
 #import "DDLog.h"
 
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @implementation BitcoinPeer
 
@@ -95,7 +95,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	BitcoinMessageHeader *header = [BitcoinMessageHeader headerFromPayload:payload withMessageType:type];
 	NSData *headerData = [header getData];
 	
-	DDLogVerbose(@"Sending header %d bytes:\n%@", header.length, headerData);
+	DDLogVerbose(@"Sending header type %d, %d bytes:\n%@", type, header.length, headerData);
 	[self.socket writeData:headerData withTimeout:-1.0 tag:0];
 	
 	if (payload){
@@ -118,6 +118,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		// Ask for blocks. Will only work if we are a download peer
 		[self askForBlocks];
+		
+		[self sendPing];
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
 		DDLogInfo(@"Got getaddr");
@@ -369,6 +371,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return false;
 }
 
+-(void) sendPing{
+	[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_PING];
+	
+	// Schedule a ping in 30 minutes
+	// TODO: Different dispatch queue?
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 30 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+		[self sendPing];
+	});
+}
+
 -(void) askForBlocks{
 	if (![self isDownloadPeer]) return;
 	
@@ -384,6 +396,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		DDLogInfo(@"Sending getheaders: %ld", (unsigned long)[hashes count]);
 		[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETHEADERS];
 		
+		// TODO: Once caught up, start sending blocks
 		//DDLogInfo(@"Sending getblocks");
 		//[self send:[getBlocksMessage getData] withMessageType:BITCOIN_MESSAGE_TYPE_GETBLOCKS];
 	}
