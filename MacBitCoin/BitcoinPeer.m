@@ -128,11 +128,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		DDLogInfo(@"Got verack: peer=%@:%d", self.address.address, self.address.port);
 		self.versionAcked = true;
 		
-		// TODO: Send 'getaddr' here?
+		// Ask for addresses
+		// TODO: Do this after we fix maxconns control
+		//[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_GETADDR];
 		
 		// Ask for blocks. Will only work if we are a download peer
 		[self askForBlocks];
 		
+		// Schedule pings
 		[self sendPing];
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_GETADDR){
