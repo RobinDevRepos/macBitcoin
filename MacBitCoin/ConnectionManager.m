@@ -192,7 +192,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		if ([self countOfPeers] >= MAX_ACTIVE_PEERS) break;
 	}
 	
-	// TODO: Schedule task to prune our list when we haven't heard from them in 90 minutes
 	// TODO: Serialize peer list to disk and load it on startup, using the seed list if we don't have any or all our saved peers are unreachable
 }
 
@@ -328,6 +327,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		[peer pushVersion];
 		
 		DDLogInfo(@"New peer count: %lld", (uint64_t)[self countOfPeers]);
+		
+		// Potentially disconnect in 90m
+		// TODO: Different queue?
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 90 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+			[peer potentiallyDisconnect];
+		});
 		
 		// TODO: Disconnect from a peer if we're now over the limit
 	}

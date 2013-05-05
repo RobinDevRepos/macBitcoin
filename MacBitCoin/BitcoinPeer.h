@@ -40,6 +40,7 @@
 -(void) connect;
 -(void) connect:(GCDAsyncSocket*)socket;
 -(void) disconnect;
+-(void) potentiallyDisconnect;
 
 -(void) send:(NSData*)payload withMessageType:(BitcoinMessageType)type;
 -(uint32_t) receiveHeader:(NSData*)data;

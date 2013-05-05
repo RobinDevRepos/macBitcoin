@@ -89,6 +89,20 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	[[self socket] disconnect];
 }
 
+-(void) potentiallyDisconnect{
+	if ([[NSDate date] timeIntervalSince1970] - self.lastSeenTime >= 90 * 60){
+		DDLogWarn(@"Disconnecting peer for inactivity: %@:%d", self.address.address, self.address.port);
+		[self disconnect];
+	}
+	else{
+		// Check again in 90m
+		// TODO: Different queue?
+		dispatch_after(dispatch_time(self.lastSeenTime * NSEC_PER_SEC, 90 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+			[self potentiallyDisconnect];
+		});
+	}
+}
+
 -(void) send:(NSData*)payload withMessageType:(BitcoinMessageType)type{
 	[self connect];
 	
@@ -379,7 +393,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	// Schedule a ping in 30 minutes since last seen
 	// TODO: Different dispatch queue?
-	dispatch_after(dispatch_time(self.lastSeenTime, 30 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+	dispatch_after(dispatch_time(self.lastSeenTime * NSEC_PER_SEC, 30 * 60 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 		DDLogInfo(@"Pinging %@:%d", self.address.address, self.address.port);
 		[self sendPing];
 	});
