@@ -205,6 +205,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		}
 		
 		// Relay this to a subset of nodes
+		// TODO: Randomize this list of peers we send to
 		int count = 0;
 		NSArray *peers = [self.manager getActivePeers];
 		for (BitcoinPeer *peer in peers){
