@@ -73,12 +73,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 -(void) addPeer:(BitcoinPeer *)peer {
-	if ([self findPeer:peer]){
-		DDLogInfo(@"Ignoring existing peer: %@ port:%hu", peer.address.address, peer.address.port);
-		return;
-	}
-	
-	if (![peer isConnected]){
+	// Connect to peer if not already connected and under our max active peer list
+	if (![peer isConnected] && [self countOfPeers] < MAX_ACTIVE_PEERS){
 		if (!peer.socket){
 			GCDAsyncSocket *sock = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_socketQueueOut];
 			[peer connect:sock];
@@ -88,9 +84,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		}
 	}
 	
+	// If we already have this peer, exit early
+	if ([self findPeer:peer]){
+		return;
+	}
+	
 	[peer setManager:self];
 	
-	DDLogInfo(@"Adding peer: %@ port:%hu", peer.address.address, peer.address.port);
+	DDLogInfo(@"Adding new peer: %@ port:%hu", peer.address.address, peer.address.port);
 	@synchronized([self peers]){
 		[[self peers] addObject:peer];
 	}
@@ -125,6 +126,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	DDLogInfo(@"New peer count: %lld", (uint64_t)[self countOfPeers]);
 	
+	// Only try to connect again if we're under the minimum
+	// We'll let filling to the maximum happen organically
 	if ([self countOfPeers] < MIN_ACTIVE_PEERS){
 		[self connectToPeers];
 		
@@ -139,7 +142,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		[self removePeer:peer];
 	}
 	else{
-		DDLogWarn(@"Attempt to remove unknown");
+		DDLogWarn(@"Attempt to remove unknown peer by socket");
 	}
 }
 
@@ -158,38 +161,51 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 -(void) connectToPeers{
-	// Seed our peers list
-	// TODO: This should come from a DNS lookup
-	NSArray *seedHosts = [NSArray arrayWithObjects:
-		@"127.0.0.1",
-		@"213.5.71.38",
-		@"173.236.193.117",
-		@"131.188.138.23",
-		@"192.81.222.207",
-		@"54.243.45.209",
-		@"78.46.18.137",
-		@"23.21.243.183",
-		@"178.63.48.141",
-		@"24.12.138.16",
-		@"62.213.207.209",
-		@"173.230.150.38",
-		@"164.177.157.148",
-		@"94.23.47.168",
-		@"46.4.24.198",
-		@"5.9.2.145",
-		@"94.23.1.23",
-		@"91.121.137.219",
-		@"199.26.85.40",
-		@"108.61.77.74",
-		@"152.2.31.233",
-		nil];
+	NSMutableArray *peersToTry = [NSMutableArray arrayWithCapacity:1];
+	// Do we have inactive peers we can try?
+	// TODO: Shuffle this list
+	@synchronized([self peers]){
+		for (BitcoinPeer *peer in [self peers]){
+			if (![peer isActive]) [peersToTry addObject:peer];
+		}
+	}
 	
-	for (NSString *host in seedHosts){
-		BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
-		//[seedPeer setIsDownloadPeer:TRUE];
-		[self addPeer:seedPeer];
+	if ([peersToTry count] == 0){
+		// Seed our peers list
+		// TODO: This should come from a DNS lookup
+		NSArray *seedHosts = [NSArray arrayWithObjects:
+			@"127.0.0.1",
+			@"213.5.71.38",
+			@"173.236.193.117",
+			@"131.188.138.23",
+			@"192.81.222.207",
+			@"54.243.45.209",
+			@"78.46.18.137",
+			@"23.21.243.183",
+			@"178.63.48.141",
+			@"24.12.138.16",
+			@"62.213.207.209",
+			@"173.230.150.38",
+			@"164.177.157.148",
+			@"94.23.47.168",
+			@"46.4.24.198",
+			@"5.9.2.145",
+			@"94.23.1.23",
+			@"91.121.137.219",
+			@"199.26.85.40",
+			@"108.61.77.74",
+			@"152.2.31.233",
+			nil];
 		
-		if ([self countOfPeers] >= MAX_ACTIVE_PEERS) break;
+		for (NSString *host in seedHosts){
+			BitcoinPeer *seedPeer = [BitcoinPeer peerFromAddress:host withPort:CONNECT_PORT];
+			[peersToTry addObject:seedPeer];
+		}
+	}
+	
+	// Now try to connect to the peers we have
+	for (BitcoinPeer *peer in peersToTry){
+		[self addPeer:peer]; // Will add them if we don't have them, or connect to them if we already have them
 	}
 	
 	// TODO: Serialize peer list to disk and load it on startup, using the seed list if we don't have any or all our saved peers are unreachable
@@ -287,6 +303,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	self.ourVersion.start_height = height;
 }
 
+// TODO: Just call this on the BlockChain object -- the logic does not belong here
 -(NSArray*) getBlockLocatorHashes{
 	NSMutableArray *hashes = [NSMutableArray arrayWithCapacity:51];
 	
@@ -341,16 +358,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 }
 
-/*- (void)socketDidSecure:(GCDAsyncSocket *)sock
-{
-	DDLogVerbose(@"socketDidSecure:%p", sock);
-}
-
-- (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
-{
-	DDLogVerbose(@"socket:%p didWriteDataWithTag:%ld", sock, tag);
-}*/
-
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
 	DDLogVerbose(@"socket:%p didReadData:withTag:%ld", sock, tag);
@@ -375,11 +382,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 }
 
-- (void)socket:(GCDAsyncSocket *)sock didReadPartialDataOfLength:(NSUInteger)partialLength withTag:(long)tag
-{
-	DDLogVerbose(@"socket:%p didReadPartialDataOfLength:%ld:%ld", sock, (long)partialLength, tag);
-}
-
 /*- (NSTimeInterval)socket:(GCDAsyncSocket *)sock shouldTimeoutReadWithTag:(long)tag
  elapsed:(NSTimeInterval)elapsed
  bytesDone:(NSUInteger)length
@@ -389,16 +391,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
  
  return 0.0;
  }*/
-
-/*- (void)socket:(GCDAsyncSocket *)sock didWriteWithTag:(long)tag
-{
-	DDLogInfo(@"socket:%p didWriteWithTag:%ld", sock, tag);
-}
-
-- (void)socket:(GCDAsyncSocket *)sock didWritePartialDataOfLength:(NSUInteger)partialLength withTag:(long)tag
-{
-	DDLogInfo(@"socket:%p didWritePartialDataOfLength:%ld:%ld", sock, (long)partialLength, tag);
-}*/
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {

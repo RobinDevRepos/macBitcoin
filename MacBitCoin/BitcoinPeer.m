@@ -66,7 +66,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		return;
 	}
 	
-	
 	// Connect
 	NSError *error = nil;
 	if (![self.socket connectToHost:self.address.address onPort:self.address.port withTimeout:CONNECT_TIMEOUT error:&error])
@@ -74,6 +73,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		DDLogInfo(@"Error connecting: %@", error);
 		return;
 	}
+	
+	DDLogInfo(@"Connecting to: %@:%d", self.address.address, self.address.port);
 	
 	self.lastSeenTime = [[NSDate date] timeIntervalSince1970];
 }
@@ -129,8 +130,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		self.versionAcked = true;
 		
 		// Ask for addresses
-		// TODO: Do this after we fix maxconns control
-		//[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_GETADDR];
+		[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_GETADDR];
 		
 		// Ask for blocks. Will only work if we are a download peer
 		[self askForBlocks];
@@ -172,6 +172,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		// Ignore connections to ourselves
 		if (versionMessage.nonce == [[self getOurVersion] nonce]){
 			DDLogInfo(@"Ignoring connection to ourselves");
+			[self disconnect];
 			return;
 		}
 		
@@ -197,6 +198,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		}
 		else{
 			DDLogInfo(@"Version %d is too low. Ignoring peer.", self.version);
+			[self disconnect];
 		}
 	}
 	else if (self.header.messageType == BITCOIN_MESSAGE_TYPE_ADDR){
