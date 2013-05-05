@@ -373,7 +373,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(void) sendPing{
 	NSUInteger now = [[NSDate date] timeIntervalSince1970];
-	if (now - self.lastSeenTime >= (90 * 60)){
+	if (now - self.lastSeenTime >= (30 * 60)){
 		[self send:nil withMessageType:BITCOIN_MESSAGE_TYPE_PING];
 	}
 	
