@@ -10,12 +10,18 @@
 
 #import "BitcoinBlock.h"
 
+@protocol BitcoinBlockChainDelegate<NSObject>
+
+- (void) blockHeightChanged:(NSUInteger)height;
+
+@end;
+
 @interface BitcoinBlockChain : NSObject
 
 @property BitcoinBlock *chainHead;
 @property NSMutableDictionary *orphanBlocks;
 @property NSMutableDictionary *blocks;
-@property (weak) id manager;
+@property (weak) id<BitcoinBlockChainDelegate> manager;
 @property NSUInteger targetHeight;
 
 +(id)blockChain;

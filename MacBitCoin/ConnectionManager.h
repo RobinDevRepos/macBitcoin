@@ -16,8 +16,19 @@
 #import "BitcoinBlock.h"
 #import "BitcoinBlockChain.h"
 
-@interface ConnectionManager : NSObject
+@protocol ConnectionManagerDelegate<NSObject>
 
+- (void) peerCountChanged:(NSUInteger)count;
+- (void) blockHeightChanged:(NSUInteger)height;
+
+@end;
+
+@interface ConnectionManager : NSObject <BitcoinBlockChainDelegate>
+
+// Delegate
+@property (weak) id<ConnectionManagerDelegate> delegate;
+
+// Our network settings
 @property uint16_t listenPort;
 @property (nonatomic) BitcoinVersionMessage *ourVersion;
 
@@ -36,8 +47,8 @@
 // Block Chain
 @property BitcoinBlockChain *blockChain;
 
-+(id) connectionManager;
--(id) init;
++(id) connectionManager:(id<ConnectionManagerDelegate>)withDelegate;
+-(id) init:(id<ConnectionManagerDelegate>)withDelegate;
 
 -(BitcoinVersionMessage*)ourVersion;
 -(void) broadcastAddr;
@@ -67,7 +78,6 @@
 -(BitcoinBlock*) getBlockByHash:(NSData*)hash;
 -(BitcoinBlock*) getChainHead;
 -(NSUInteger) getBlockHeight;
--(void) setBlockHeight:(NSUInteger)height;
 -(NSArray*) getBlockLocatorHashes;
 -(BOOL) isBootstrapping;
 

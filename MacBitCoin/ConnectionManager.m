@@ -16,12 +16,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation ConnectionManager
 
-+(id) connectionManager{
-	return [[self alloc] init];
++(id) connectionManager:(id<ConnectionManagerDelegate>)withDelegate{
+	return [[self alloc] init:withDelegate];
 }
 
--(id) init{
+-(id) init:(id<ConnectionManagerDelegate>)withDelegate{
 	if (self = [super init]){
+		_delegate = withDelegate;
+		
 		_peers = [NSMutableArray arrayWithCapacity:10];
 		_downloadPeers = [NSMutableArray arrayWithCapacity:1];
 		
@@ -146,6 +148,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
 	
 	DDLogInfo(@"New peer count: %lld", (uint64_t)[self countOfPeers]);
+	[self.delegate peerCountChanged:[self countOfPeers]];
 	
 	// Only try to connect again if we're under the minimum
 	// We'll let filling to the maximum happen organically
@@ -328,8 +331,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return [self.blockChain getBlockHeight];
 }
 
--(void) setBlockHeight:(NSUInteger)height{
+-(void) blockHeightChanged:(NSUInteger)height{
 	self.ourVersion.start_height = height;
+	[self.delegate blockHeightChanged:height];
 }
 
 -(BOOL) isBootstrapping{
@@ -377,6 +381,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		[peer pushVersion];
 		
 		DDLogInfo(@"New peer count: %lld", (uint64_t)[self countOfPeers]);
+		[self.delegate peerCountChanged:[self countOfPeers]];
 		
 		// Potentially disconnect in 90m
 		// TODO: Different queue?

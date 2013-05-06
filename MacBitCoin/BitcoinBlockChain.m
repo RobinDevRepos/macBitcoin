@@ -64,6 +64,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			[block setBlockHeight:[self.chainHead blockHeight]+1];
 			[self.blocks setObject:block forKey:hash];
 			self.chainHead = block;
+			[self.manager blockHeightChanged:[block blockHeight]];
 			DDLogInfo(@"Added new block to the end of the chain: %@, length: %ld, height: %ld", hash, (unsigned long)[self.blocks count], (unsigned long)[block blockHeight]);
 
 			// Now try and connect orphans
@@ -76,6 +77,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 						[block setBlockHeight:[self.chainHead blockHeight]+1];
 						[self.blocks setObject:block forKey:hash];
 						self.chainHead = block;
+						[self.manager blockHeightChanged:[block blockHeight]];
 						[self.orphanBlocks removeObjectForKey:orphanHash];
 						DDLogInfo(@"Moved orphan to the end of the chain: %@", orphanHash);
 						

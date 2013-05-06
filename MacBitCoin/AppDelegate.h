@@ -10,11 +10,13 @@
 
 #import "ConnectionManager.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate> {
+@interface AppDelegate : NSObject <NSApplicationDelegate, ConnectionManagerDelegate> {
 @private	
 	ConnectionManager *connectionManager;
 }
 
 @property (assign) IBOutlet NSWindow *window;
+@property (weak) IBOutlet NSTextField *peerCount;
+@property (weak) IBOutlet NSTextField *blockHeight;
 
 @end

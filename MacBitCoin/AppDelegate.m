@@ -44,7 +44,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// The connection manager starts listening for incoming connections and manages our peers list
 	// Basically, it does everything. Once I start on the UI, I assume the UI will add listeners to
 	// the connection manager in order to receive updates about peers and block chain and the like
-	connectionManager = [ConnectionManager connectionManager];
+	connectionManager = [ConnectionManager connectionManager:self];
+}
+
+-(void) peerCountChanged:(NSUInteger)count{
+	[self.peerCount setStringValue:[NSString stringWithFormat:@"%ld", count]];
+}
+
+-(void) blockHeightChanged:(NSUInteger)height{
+	[self.blockHeight setStringValue:[NSString stringWithFormat:@"%ld", height]];
 }
 
 @end
