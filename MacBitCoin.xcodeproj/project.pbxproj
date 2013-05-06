@@ -128,8 +128,8 @@
 		41B7570D1712323B005931AE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		41B7570F1712323B005931AE /* MacBitCoin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MacBitCoin-Prefix.pch"; sourceTree = "<group>"; };
 		41B757111712323B005931AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		41B757131712323B005931AE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		41B757141712323B005931AE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		41B757131712323B005931AE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = MacBitCoin/AppDelegate.h; sourceTree = "<group>"; };
+		41B757141712323B005931AE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = MacBitCoin/AppDelegate.m; sourceTree = "<group>"; };
 		41B757171712323B005931AE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		41B7571E1712323B005931AE /* MacBitCoinTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacBitCoinTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B7571F1712323B005931AE /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -137,7 +137,7 @@
 		41B757281712323B005931AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		41B7572A1712323B005931AE /* MacBitCoinTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacBitCoinTests.h; sourceTree = "<group>"; };
 		41B7572B1712323B005931AE /* MacBitCoinTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacBitCoinTests.m; sourceTree = "<group>"; };
-		41DD6D861736E18D005BD347 /* MacBitCoin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MacBitCoin.entitlements; sourceTree = "<group>"; };
+		41DD6D861736E18D005BD347 /* MacBitCoin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = MacBitCoin.entitlements; path = MacBitCoin/MacBitCoin.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				41B757001712323B005931AE /* Frameworks */,
+				41DD6D8C17373CAC005BD347 /* GUI */,
 				4138AAA7171472270023BA3C /* Logging */,
 				41B757071712323B005931AE /* MacBitCoin */,
 				41B757241712323B005931AE /* MacBitCoinTests */,
@@ -248,8 +249,6 @@
 		41B757071712323B005931AE /* MacBitCoin */ = {
 			isa = PBXGroup;
 			children = (
-				41B757131712323B005931AE /* AppDelegate.h */,
-				41B757141712323B005931AE /* AppDelegate.m */,
 				413C181B171B173300EAD404 /* BitcoinAddress.h */,
 				413C181C171B173300EAD404 /* BitcoinAddress.m */,
 				4104537B17208B9B0038F985 /* BitcoinAddrMessage.h */,
@@ -281,8 +280,6 @@
 				418DFCD4171F69D10025F3A0 /* ConnectionManager.h */,
 				418DFCD5171F69D10025F3A0 /* ConnectionManager.m */,
 				412BFD3D17224AD1008FF441 /* Definitions.h */,
-				41DD6D861736E18D005BD347 /* MacBitCoin.entitlements */,
-				41B757161712323B005931AE /* MainMenu.xib */,
 				4138AC211715C6290023BA3C /* NSData+CryptoHashing.h */,
 				4138AC221715C6290023BA3C /* NSData+CryptoHashing.m */,
 				4147F4FA172C9AED001F5D23 /* NSData+DataToHexString.h */,
@@ -293,7 +290,6 @@
 				4147F501172CF0B2001F5D23 /* NSData+ReverseBytes.m */,
 				4147F4F4172C9A5B001F5D23 /* NSString+StringToHexData.h */,
 				4147F4F5172C9A5B001F5D23 /* NSString+StringToHexData.m */,
-				41B757081712323B005931AE /* Supporting Files */,
 			);
 			path = MacBitCoin;
 			sourceTree = "<group>";
@@ -308,6 +304,7 @@
 				41B757101712323B005931AE /* Credits.rtf */,
 			);
 			name = "Supporting Files";
+			path = MacBitCoin;
 			sourceTree = "<group>";
 		};
 		41B757241712323B005931AE /* MacBitCoinTests */ = {
@@ -327,6 +324,18 @@
 				41B757271712323B005931AE /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		41DD6D8C17373CAC005BD347 /* GUI */ = {
+			isa = PBXGroup;
+			children = (
+				41B757131712323B005931AE /* AppDelegate.h */,
+				41B757141712323B005931AE /* AppDelegate.m */,
+				41DD6D861736E18D005BD347 /* MacBitCoin.entitlements */,
+				41B757161712323B005931AE /* MainMenu.xib */,
+				41B757081712323B005931AE /* Supporting Files */,
+			);
+			name = GUI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -512,6 +521,7 @@
 				41B757171712323B005931AE /* en */,
 			);
 			name = MainMenu.xib;
+			path = MacBitCoin;
 			sourceTree = "<group>";
 		};
 		41B757271712323B005931AE /* InfoPlist.strings */ = {
