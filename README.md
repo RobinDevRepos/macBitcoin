@@ -10,7 +10,7 @@ General, and mine, interest in Bitcoin has fallen off over the last few years. D
 deserves a first-class Bitcoin client.
 
 Goals
-=====
+-----
 
 The main goal for the project was to have a client running persistently in the OS X menu bar that would alert you
 when you received a payment and let you quickly pay other addresses.
@@ -18,6 +18,6 @@ when you received a payment and let you quickly pay other addresses.
 It only got so far as joining the network.
 
 TODO
-====
+----
 
 OMG where to start?
